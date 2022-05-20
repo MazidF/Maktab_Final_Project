@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CircleShape" parent="">
+        <item name="cornerSize">50%</item>
+        <item name="cornerFamily">rounded</item>
+    </style>
+
+    <style name="ImageViewWithCorner" parent="">
+        <item name="cornerSize">15%</item>
+        <item name="cornerFamily">rounded</item>
+    </style>
+
+    <style name="SimpleItemNameTextView" parent="">
+        <item name="android:ellipsize">end</item>
+        <item name="maxLines">@integer/simple_item_max_line</item>
+        <item name="android:textColor">@color/item_name_black</item>
+        <item name="android:lines">@integer/simple_item_max_line</item>
+        <item name="android:textSize">@dimen/simple_item_text_size</item>
+        <item name="android:padding">@dimen/simple_item_text_padding</item>
+        <item name="android:text">گوشی موبایل اپل مدل iphone 13 Pro Max A2 که دارای فلان می باشد</item>
+    </style>
+
+    <style name="SimpleItemCostTextView" parent="">
+        <item name="android:text">189,620,000</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:textSize">@dimen/simple_item_text_size</item>
+        <item name="android:padding">@dimen/simple_item_text_padding</item>
+    </style>
+
+    <style name="SimpleItemDiscountTextView" parent="">
+        <item name="android:text">189,620,000</item>
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:background">@drawable/strike_through</item>
+        <item name="backgroundTint">@color/text_description_gray</item>
+        <item name="android:textColor">@color/text_description_gray</item>
+        <item name="android:textSize">@dimen/simple_item_text_size</item>
+        <item name="android:padding">@dimen/simple_item_text_padding</item>
+    </style>
+
+    <style name="DiscountIcon" parent="">
+        <item name="android:padding">3dp</item>
+        <item name="cardCornerRadius">10dp</item>
+        <item name="android:backgroundTint">@color/discount_red</item>
+    </style>
+
+    <style name="DiscountTextView">
+        <item name="android:textSize">@dimen/discount_icon_text_size</item>
+        <item name="android:text">15%</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+</resources>

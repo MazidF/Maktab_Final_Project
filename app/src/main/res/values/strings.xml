@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">OnlineShop</string>
+    <string name="home">Home</string>
+    <string name="categories">Categories</string>
+    <string name="cart">Cart</string>
+    <string name="profile">Profile</string>
+</resources>
