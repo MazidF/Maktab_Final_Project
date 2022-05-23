@@ -1,6 +1,6 @@
 package com.example.online_shop.di
 
-import com.example.online_shop.data.remote.network.ProductApi
+import com.example.online_shop.data.remote.api.ProductApi
 import com.example.online_shop.utils.BASE_URL
 import com.example.online_shop.utils.CONSUMER_KEY
 import com.example.online_shop.utils.CONSUMER_SECRET
@@ -12,7 +12,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
