@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.online_shop.ui.activity.MainActivity">
+    tools:context="com.example.onlineshop.ui.activity.MainActivity">
 
 
     <fragment
@@ -14,7 +14,7 @@
         android:layout_height="0dp"
         app:defaultNavHost="true"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
         app:navGraph="@navigation/navigation_graph_main"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
