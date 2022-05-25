@@ -52,4 +52,11 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="SimpleFooterTextView" parent="">
+        <item name="android:gravity">right</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/simple_footer_text_size</item>
+        <item name="android:text">@string/see_all</item>
+    </style>
+
 </resources>

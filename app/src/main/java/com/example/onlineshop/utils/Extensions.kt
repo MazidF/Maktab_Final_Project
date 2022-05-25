@@ -21,3 +21,13 @@ fun loadImageInto(url: String, imageView: ImageView) {
         .load(url)
         .into(imageView)
 }
+
+fun Any.clazz() = this::class.java
+
+inline fun <reified T> List<T>.insertFooter(t: T): List<T> {
+    return listOf(t, *this.toTypedArray())
+}
+
+inline fun <reified T> List<T>.insertHeader(t: T): List<T> {
+    return listOf(*this.toTypedArray(), t)
+}

@@ -34,4 +34,16 @@ class ProductRepository(
     suspend fun getCategories(): List<Category> {
         return remote.getCategories(1, 100)
     }
+
+    suspend fun getMostPopularProduct(size: Int): List<Product> {
+        return remote.getMostPopularProduct(1, size)
+    }
+
+    suspend fun getMostRatedProduct(size: Int): List<Product> {
+        return remote.getMostRatedProduct(1, size)
+    }
+
+    suspend fun getNewestProduct(size: Int): List<Product> {
+        return remote.getNewestProduct(1, size)
+    }
 }

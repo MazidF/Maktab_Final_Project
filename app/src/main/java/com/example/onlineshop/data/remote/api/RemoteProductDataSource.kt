@@ -29,21 +29,21 @@ class RemoteProductDataSource @Inject constructor(
         return api.getProductsOrderBy(orders.query, page, perPage)
     }
 
-    private suspend fun getNewestProduct(
+    suspend fun getNewestProduct(
         page: Int,
         perPage: Int,
     ): List<Product> {
         return getProductsOrderBy(ProductOrders.DATE, page, perPage)
     }
 
-    private suspend fun getMostPopularProduct(
+    suspend fun getMostPopularProduct(
         page: Int,
         perPage: Int,
     ): List<Product> {
         return getProductsOrderBy(ProductOrders.POPULARITY, page, perPage)
     }
 
-    private suspend fun getMostRatedProduct(
+    suspend fun getMostRatedProduct(
         page: Int,
         perPage: Int,
     ): List<Product> {

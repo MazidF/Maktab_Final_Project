@@ -8,6 +8,9 @@ import com.example.onlineshop.data.model.Product
 import com.example.onlineshop.utils.STARTING_PAGE_INDEX
 
 abstract class RemoteProductPagingDataSource : PagingSource<Int, Product>() {
+
+    abstract suspend fun getData(page: Int, loadSize: Int): List<Product>
+
     override fun getRefreshKey(state: PagingState<Int, Product>): Int? {
         return state.anchorPosition?.let { anchorPos ->
             state.closestPageToPosition(anchorPos)?.run {
@@ -15,8 +18,6 @@ abstract class RemoteProductPagingDataSource : PagingSource<Int, Product>() {
             }
         }
     }
-
-    abstract suspend fun getData(page: Int, loadSize: Int): List<Product>
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Product> {
         val key = params.key ?: STARTING_PAGE_INDEX
