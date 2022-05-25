@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.example.onlineshop.data.model.Product
 import com.example.onlineshop.ui.model.ProductListItem
 import com.example.onlineshop.utils.clazz
+import com.example.onlineshop.widgit.Refreshable
 
 class ProductDiffItemCallback : DiffUtil.ItemCallback<Product>() {
     override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean {

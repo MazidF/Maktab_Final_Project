@@ -6,7 +6,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
+import com.example.onlineshop.utils.result.SafeApiCall
 import kotlinx.coroutines.launch
+import retrofit2.Response
+import retrofit2.Retrofit
 
 fun Fragment.launchOnState(state: Lifecycle.State, block: suspend () -> Unit) {
     lifecycleScope.launch {
@@ -30,4 +33,8 @@ inline fun <reified T> List<T>.insertFooter(t: T): List<T> {
 
 inline fun <reified T> List<T>.insertHeader(t: T): List<T> {
     return listOf(*this.toTypedArray(), t)
+}
+
+fun <T> Response<T>.asSafeApiCall(): SafeApiCall<T> {
+    return SafeApiCall.fromResponse(this)
 }

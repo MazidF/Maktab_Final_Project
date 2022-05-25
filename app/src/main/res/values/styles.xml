@@ -59,4 +59,22 @@
         <item name="android:text">@string/see_all</item>
     </style>
 
+    <style name="Clickable">
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="ProductInfoTextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/product_info_text_size</item>
+        <item name="android:padding">@dimen/product_info_text_padding</item>
+        <item name="android:text">ماسک مو بویسا مدل ARGAN Vit E حجم 500 میلی لیتر</item>
+    </style>
+
+    <style name="AddToCartButton">
+        <item name="android:text">@string/add_to_cart</item>
+        <item name="android:backgroundTint">@color/discount_red</item>
+    </style>
+
 </resources>

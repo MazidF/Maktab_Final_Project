@@ -5,4 +5,5 @@
     <string name="cart">Cart</string>
     <string name="profile">Profile</string>
     <string name="see_all">show all</string>
+    <string name="add_to_cart">add to cart</string>
 </resources>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/tools"
     app:cardCornerRadius="@dimen/simple_item_corner_size"
     app:contentPadding="5dp"
+    style="@style/Clickable"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -61,20 +61,8 @@
 
             </LinearLayout>
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/simple_vertical_product_discount_percent_holder"
-                style="@style/DiscountIcon"
-                android:layout_width="@dimen/discount_icon_width_size"
-                android:layout_height="@dimen/discount_icon_height_size"
-                android:layout_marginEnd="4dp">
-
-                <TextView
-                    android:id="@+id/simple_vertical_product_discount_percent"
-                    style="@style/DiscountTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-            </com.google.android.material.card.MaterialCardView>
+            <include layout="@layout/discount_icon"
+                android:id="@+id/simple_vertical_product_discount"/>
 
         </LinearLayout>
 

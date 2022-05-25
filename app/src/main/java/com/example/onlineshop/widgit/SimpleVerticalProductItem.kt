@@ -60,7 +60,7 @@ class SimpleVerticalProductFooter @JvmOverloads constructor(
     init {
         val view = inflate(context, R.layout.simple_vertical_product_footer, this)
         view.layoutParams = FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
-            setMargins(10, 5, 30, 5)
+            setMargins(10, 5, 50, 5)
         }
         binding = SimpleVerticalProductFooterBinding.bind(view)
     }
@@ -86,8 +86,8 @@ class SimpleVerticalProductHeader @JvmOverloads constructor(
 
     init {
         val view = inflate(context, R.layout.simple_vertical_product_header, this)
-        view.layoutParams = LayoutParams(WRAP_CONTENT, WRAP_CONTENT).apply {
-            setMargins(30, 5, 10, 5)
+        view.layoutParams = LayoutParams(WRAP_CONTENT, MATCH_PARENT).apply {
+            setMargins(50, 5, 10, 5)
         }
         binding = SimpleVerticalProductHeaderBinding.bind(view)
     }

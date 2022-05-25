@@ -6,4 +6,5 @@
     <string name="cart">سبد خرید</string>
     <string name="profile">پروفایل</string>
     <string name="see_all">مشاهده همه</string>
+    <string name="add_to_cart">افزودن به سبد خرید</string>
 </resources>

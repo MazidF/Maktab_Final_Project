@@ -3,11 +3,15 @@ package com.example.onlineshop.data.remote.api
 import androidx.paging.*
 import com.example.onlineshop.data.model.Category
 import com.example.onlineshop.data.model.Product
+import com.example.onlineshop.data.model.ProductInfo
 import com.example.onlineshop.data.model.ProductOrders
 import com.example.onlineshop.utils.INITIAL_SIZE
 import com.example.onlineshop.utils.PAGE_SIZE
 import com.example.onlineshop.utils.PRE_FETCH_DISTANCE
+import com.example.onlineshop.utils.asSafeApiCall
+import com.example.onlineshop.utils.result.SafeApiCall
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 import javax.inject.Inject
 
 class RemoteProductDataSource @Inject constructor(
@@ -25,65 +29,69 @@ class RemoteProductDataSource @Inject constructor(
         orders: ProductOrders,
         page: Int,
         perPage: Int,
-    ): List<Product> {
-        return api.getProductsOrderBy(orders.query, page, perPage)
+    ): SafeApiCall<List<Product>> {
+        return api.getProductsOrderBy(orders.query, page, perPage).asSafeApiCall()
     }
 
     suspend fun getNewestProduct(
         page: Int,
         perPage: Int,
-    ): List<Product> {
+    ): SafeApiCall<List<Product>> {
         return getProductsOrderBy(ProductOrders.DATE, page, perPage)
     }
 
     suspend fun getMostPopularProduct(
         page: Int,
         perPage: Int,
-    ): List<Product> {
+    ): SafeApiCall<List<Product>> {
         return getProductsOrderBy(ProductOrders.POPULARITY, page, perPage)
     }
 
     suspend fun getMostRatedProduct(
         page: Int,
         perPage: Int,
-    ): List<Product> {
+    ): SafeApiCall<List<Product>> {
         return getProductsOrderBy(ProductOrders.RATING, page, perPage)
     }
 
     fun getMostRatedProduct(): Flow<PagingData<Product>> {
-        return RemoteProductPagingDataSource.getPager(config = pagingConfig) { page, perPage ->
+        return RemoteProductPagingSource.getPager(config = pagingConfig) { page, perPage ->
             getMostRatedProduct(page, perPage)
         }.flow
     }
 
     suspend fun getNewestProduct(): Flow<PagingData<Product>> {
-        return RemoteProductPagingDataSource.getPager(config = pagingConfig) { page, perPage ->
+        return RemoteProductPagingSource.getPager(config = pagingConfig) { page, perPage ->
             getNewestProduct(page, perPage)
         }.flow
     }
 
     suspend fun getMostPopularProduct(): Flow<PagingData<Product>> {
-        return RemoteProductPagingDataSource.getPager(config = pagingConfig) { page, perPage ->
+        return RemoteProductPagingSource.getPager(config = pagingConfig) { page, perPage ->
             getMostPopularProduct(page, perPage)
         }.flow
     }
 
     suspend fun getProductsByCategory(categoryId: String): Flow<PagingData<Product>> {
-        return RemoteProductPagingDataSource.getPager(config = pagingConfig) { page, perPage ->
-            api.getProductsByCategory(categoryId, page, perPage)
+        return RemoteProductPagingSource.getPager(config = pagingConfig) { page, perPage ->
+            api.getProductsByCategory(categoryId, page, perPage).asSafeApiCall()
         }.flow
     }
 
     suspend fun search(query: String): Flow<PagingData<Product>> {
-        return RemoteProductPagingDataSource.getPager(config = pagingConfig) { page, perPage ->
-            api.search(query, page, perPage)
+        return RemoteProductPagingSource.getPager(config = pagingConfig) { page, perPage ->
+            api.search(query, page, perPage).asSafeApiCall()
         }.flow
     }
 
-    suspend fun getCategories(page: Int, perPage: Int): List<Category> {
+    suspend fun getCategories(page: Int, perPage: Int): SafeApiCall<List<Category>> {
         return api.getCategories(
             page = page,
             perPage = perPage,
-        )
+        ).asSafeApiCall()
+    }
+
+    suspend fun getProductInfo(productId: Int): SafeApiCall<ProductInfo> {
+        return api.getProductInfo(productId).asSafeApiCall()
     }
 }

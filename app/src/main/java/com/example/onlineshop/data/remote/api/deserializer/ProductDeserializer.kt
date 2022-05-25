@@ -16,9 +16,7 @@ class ProductDeserializer : JsonDeserializer<Product> {
             id = this["id"].asLong,
             name = this["name"].asString,
             price = this["price"].asString,
-            regularPrice = this["regular_price"].asString.apply {
-                val a = this
-            },
+            regularPrice = this["regular_price"].asString,
             imageUrl = this["images"].asJsonArray.get(0)
                 .asJsonObject["src"].asString
         )

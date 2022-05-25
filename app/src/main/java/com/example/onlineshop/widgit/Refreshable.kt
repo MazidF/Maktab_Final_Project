@@ -1,8 +1,7 @@
 package com.example.onlineshop.widgit
 
-interface Refreshable<T> {
-
-    fun provider() : List<T>
+interface Refreshable<T> : Bindable<List<T>> {
+    val refreshableId: Int
 
     fun refresh(list: List<T>)
 }

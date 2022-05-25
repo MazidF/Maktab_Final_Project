@@ -1,19 +1,32 @@
 package com.example.onlineshop.widgit
 
 import android.content.Context
+import android.graphics.Color.RED
 import android.util.AttributeSet
+import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.get
 import com.example.onlineshop.R
 import com.example.onlineshop.databinding.HorizontalProductContainerBinding
 import com.example.onlineshop.ui.fragments.ProductAdapter
 import com.example.onlineshop.ui.model.ProductListItem
+import com.example.onlineshop.utils.insertFooter
+import com.example.onlineshop.utils.insertHeader
 
 class HorizontalProductContainer : ConstraintLayout, Refreshable<ProductListItem> {
-    private val binding: HorizontalProductContainerBinding
+
+    companion object {
+        const val REFRESHABLE_ID: Int = 1_000_1
+    }
+
+    override val refreshableId = REFRESHABLE_ID
+
+    private var imageId: Int = 0
+    private var onMoreButtonClick: () -> Unit = {}
+
     private lateinit var productAdapter: ProductAdapter
+    private val binding: HorizontalProductContainerBinding
 
     init {
         val view = inflate(context, R.layout.horizontal_product_container, this)
@@ -21,7 +34,9 @@ class HorizontalProductContainer : ConstraintLayout, Refreshable<ProductListItem
         initView()
     }
 
-    constructor(context: Context) : super(context)
+    constructor(context: Context, imageId: Int) : super(context) {
+        this.imageId = imageId
+    }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
@@ -43,17 +58,13 @@ class HorizontalProductContainer : ConstraintLayout, Refreshable<ProductListItem
                 val context = parent.context
                 return when (ProductListItem.getTypeView(viewType)) {
                     ProductListItem.Footer::class.java -> {
-                        SimpleVerticalProductFooter(context).apply {
-                            layoutParams = ViewGroup.LayoutParams(WRAP_CONTENT, MATCH_PARENT)
-                        }
+                        SimpleVerticalProductFooter(context)
                     }
                     ProductListItem.Item::class.java -> {
                         SimpleVerticalProductItem(context)
                     }
                     ProductListItem.Header::class.java -> {
-                        SimpleVerticalProductHeader(context).apply {
-                            layoutParams = ViewGroup.LayoutParams(WRAP_CONTENT, MATCH_PARENT)
-                        }
+                        SimpleVerticalProductHeader(context)
                     }
                     else -> {
                         throw Exception()
@@ -64,26 +75,44 @@ class HorizontalProductContainer : ConstraintLayout, Refreshable<ProductListItem
         horizontalContainerList.apply {
             adapter = productAdapter
         }
-    }
-
-    private var provider: () -> List<ProductListItem> = {
-        listOf()
-    }
-
-    fun setProvider(provider: () -> List<ProductListItem>) {
-        this.provider = provider
+        changeBackgroundColor(RED)
     }
 
     fun changeBackgroundColor(color: Int) {
         this.setBackgroundColor(color)
     }
 
-    override fun provider(): List<ProductListItem> {
-        return provider.invoke()
+    override fun refresh(list: List<ProductListItem>) {
+        val newList = list.insertFooter(
+            ProductListItem.Footer(
+                imageId = imageId,
+                onMoreButtonClick = onMoreButtonClick
+            )
+        ).insertHeader(
+            ProductListItem.Header(
+                onMoreButtonClick = onMoreButtonClick
+            )
+        )
+        productAdapter.submitList(newList) {
+            with(productAdapter) {
+                binding.horizontalContainerList.scrollToPosition(0)
+                notifyItemChanged(0)
+            }
+        }
     }
 
-    override fun refresh(list: List<ProductListItem>) {
-        productAdapter.submitList(list)
+    override fun bind(t: List<ProductListItem>?) {
+        t?.let {
+            refresh(it)
+        }
+    }
+
+    override fun getView(): View {
+        return this
+    }
+
+    fun setOnMoreButtonClick(block: () -> Unit) {
+        this.onMoreButtonClick = block
     }
 
 }
