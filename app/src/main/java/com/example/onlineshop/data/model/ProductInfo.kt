@@ -5,7 +5,7 @@ data class ProductInfo(
     val ratingCount: Int,
     val description: String,
     val averageRating: String,
-    val relatedList: List<Int>,
+    val relatedList: List<Long>,
     val imagesUrl: List<String>,
     val dimensions: List<String>,
     val attributes: List<ProductAttribute>

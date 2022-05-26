@@ -1,14 +1,15 @@
 package com.example.onlineshop.ui.fragments.home
 
-import android.graphics.Color.*
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.onlineshop.R
+import com.example.onlineshop.data.model.Product
 import com.example.onlineshop.databinding.FragmentHomeBinding
-import com.example.onlineshop.ui.fragments.RefreshableAdapter
+import com.example.onlineshop.ui.fragments.adapter.RefreshableAdapter
 import com.example.onlineshop.utils.result.SafeApiCall
 import com.example.onlineshop.widgit.HorizontalProductContainer
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,6 +17,9 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FragmentHome : Fragment(R.layout.fragment_home) {
+    private val navController by lazy {
+        findNavController()
+    }
     private val viewModel: ViewModelHome by viewModels()
 
     private var _binding: FragmentHomeBinding? = null
@@ -32,13 +36,17 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     }
 
     private fun init() = with(binding) {
-        loadData()
         root.setOnRefreshListener {
             loadData()
         }
         refreshableAdapter = createRefreshableAdapter()
         homeList.apply {
             adapter = refreshableAdapter
+        }
+        if (viewModel.hasBeenLoaded) {
+            refresh()
+        } else {
+            loadData()
         }
     }
 
@@ -66,15 +74,33 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     private fun createRefreshableAdapter(): RefreshableAdapter = with(viewModel) {
         return RefreshableAdapter(
             list = listOf(
-                HorizontalProductContainer(requireContext(), R.drawable.new_offer).apply { // newest
-                    changeBackgroundColor(RED)
-                },
-                HorizontalProductContainer(requireContext(), R.drawable.special_offer).apply { // most popular
-                    changeBackgroundColor(BLUE)
-                },
-                HorizontalProductContainer(requireContext(), R.drawable.special_offer).apply { // most rated
-                    changeBackgroundColor(GREEN)
-                },
+                HorizontalProductContainer(
+                    requireContext(),
+                    R.drawable.new_offer,
+                    "جدید ترین ها:"
+                ).apply {
+                    setOnItemClick {
+                        onClick(it)
+                    }
+                }, // newest
+                HorizontalProductContainer(
+                    requireContext(),
+                    R.drawable.special_offer
+                ).apply {
+                    changeBackgroundColor(requireContext().getColor(R.color.discount_red))
+                    setOnItemClick {
+                        onClick(it)
+                    }
+                }, // most popular
+                HorizontalProductContainer(
+                    requireContext(),
+                    R.drawable.special_offer,
+                    "بهترین ها:"
+                ).apply {
+                    setOnItemClick {
+                        onClick(it)
+                    }
+                } // most rated,
             ),
             producerList = listOf(
                 {
@@ -86,6 +112,14 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
                 {
                     (mostRatedProductListFlowState.value as SafeApiCall.Success).body()
                 },
+            )
+        )
+    }
+
+    private fun onClick(product: Product) {
+        navController.navigate(
+            FragmentHomeDirections.actionFragmentHomeToFragmentProductInfo(
+                product
             )
         )
     }

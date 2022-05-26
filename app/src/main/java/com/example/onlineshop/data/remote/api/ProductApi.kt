@@ -13,8 +13,13 @@ interface ProductApi {
 
     @GET("products/{id}")
     suspend fun getProductInfo(
-        @Path("id") id: Int,
+        @Path("id") id: String,
     ): Response<ProductInfo>
+
+    @GET("products")
+    suspend fun getProductsById(
+        @Query("include") ids: String,
+    ): Response<List<Product>>
 
     @GET("products")
     suspend fun getProductsOrderBy(

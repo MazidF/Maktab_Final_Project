@@ -9,5 +9,21 @@
         android:id="@+id/fragmentHome"
         android:name="com.example.onlineshop.ui.fragments.home.FragmentHome"
         android:label="FragmentHome"
-        tools:layout="@layout/fragment_home"/>
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_fragmentHome_to_fragmentProductInfo"
+            app:destination="@id/fragmentProductInfo" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentProductInfo"
+        android:name="com.example.onlineshop.ui.fragments.product_info.FragmentProductInfo"
+        android:label="FragmentProductInfo"
+        tools:layout="@layout/fragment_product_info">
+        <argument
+            android:name="product"
+            app:argType="com.example.onlineshop.data.model.Product" />
+        <action
+            android:id="@+id/action_fragmentProductInfo_self"
+            app:destination="@id/fragmentProductInfo" />
+    </fragment>
 </navigation>

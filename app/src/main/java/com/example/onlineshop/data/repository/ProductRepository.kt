@@ -33,12 +33,19 @@ class ProductRepository(
     suspend fun search(query: String): Flow<PagingData<Product>> {
         return remote.search(query = query)
     }
-    
-    private suspend fun <T> load(reload: Boolean, block: suspend () -> SafeApiCall<T>) = flow {
+
+    private suspend fun <T> load(
+        reload: Boolean,
+        fakeData: T? = null,
+        block: suspend () -> SafeApiCall<T>
+    ): Flow<SafeApiCall<T>> = flow {
         if (reload) {
             emit(SafeApiCall.reloading())
         } else {
             emit(SafeApiCall.loading())
+        }
+        fakeData?.let {
+            emit(SafeApiCall.success(it))
         }
         try {
             emit(block())
@@ -53,7 +60,10 @@ class ProductRepository(
         }
     }
 
-    suspend fun getMostPopularProduct(size: Int, reload: Boolean): Flow<SafeApiCall<List<Product>>> {
+    suspend fun getMostPopularProduct(
+        size: Int,
+        reload: Boolean
+    ): Flow<SafeApiCall<List<Product>>> {
         return load(reload) {
             remote.getMostPopularProduct(1, size)
         }
@@ -71,9 +81,18 @@ class ProductRepository(
         }
     }
 
-    suspend fun getProductInfo(productId: Int): Flow<SafeApiCall<ProductInfo>> {
+    suspend fun getProductInfo(productId: Long): Flow<SafeApiCall<ProductInfo>> {
         return load(false) {
             remote.getProductInfo(productId)
+        }
+    }
+
+    suspend fun getProductById(ids: Array<Long>): Flow<SafeApiCall<List<Product>>> {
+        val seed = System.currentTimeMillis()
+        return load(false, List(ids.size) {
+            Product.fake(seed + it)
+        }) {
+            remote.getProductById(ids)
         }
     }
 }

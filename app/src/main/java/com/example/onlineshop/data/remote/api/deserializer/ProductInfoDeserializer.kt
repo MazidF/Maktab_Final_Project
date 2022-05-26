@@ -13,7 +13,7 @@ class ProductInfoDeserializer : JsonDeserializer<ProductInfo> {
         context: JsonDeserializationContext?
     ): ProductInfo = with(json.asJsonObject) {
         ProductInfo(
-            description = this[""].asString,
+            description = this["description"].asString,
             totalSales = this["total_sales"].asInt,
             ratingCount = this["rating_count"].asInt,
             averageRating = this["average_rating"].asString,
@@ -21,10 +21,10 @@ class ProductInfoDeserializer : JsonDeserializer<ProductInfo> {
                 it.asJsonObject["src"].asString
             },
             relatedList = this["related_ids"].asJsonArray.map {
-                it.asInt
+                it.asLong
             },
-            dimensions = this["dimensions"].asJsonArray.map {
-                it.asString
+            dimensions = this["dimensions"].asJsonObject.let {
+                listOf(it["length"].asString, it["width"].asString, it["height"].asString, )
             },
             attributes = this["attributes"].asJsonArray.map {
                 ProductAttributeDeserializer().deserialize(

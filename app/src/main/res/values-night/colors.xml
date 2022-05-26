@@ -2,7 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="discount_red">#FF2525</color>
     <color name="item_name_black">#D5D5D5</color>
     <color name="text_description_gray">#A5A2A2</color>
 </resources>

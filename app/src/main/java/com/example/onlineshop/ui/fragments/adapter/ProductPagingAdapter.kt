@@ -1,13 +1,15 @@
-package com.example.onlineshop.ui.fragments
+package com.example.onlineshop.ui.fragments.adapter
 
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
-import com.example.onlineshop.data.model.Product
+import com.example.onlineshop.ui.fragments.adapter.diff_callback.ProductItemDiffItemCallback
 import com.example.onlineshop.ui.model.ProductListItem
 import com.example.onlineshop.widgit.Bindable
 
 abstract class ProductPagingAdapter :
-    PagingDataAdapter<ProductListItem.Item, ProductPagingAdapter.ProductHolder>(ProductItemDiffItemCallback()) {
+    PagingDataAdapter<ProductListItem.Item, ProductPagingAdapter.ProductHolder>(
+        ProductItemDiffItemCallback()
+    ) {
 
     inner class ProductHolder(
         bindable: Bindable<ProductListItem.Item>

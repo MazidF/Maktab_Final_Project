@@ -12,6 +12,7 @@ import com.example.onlineshop.utils.asSafeApiCall
 import com.example.onlineshop.utils.result.SafeApiCall
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
+import java.util.*
 import javax.inject.Inject
 
 class RemoteProductDataSource @Inject constructor(
@@ -91,7 +92,11 @@ class RemoteProductDataSource @Inject constructor(
         ).asSafeApiCall()
     }
 
-    suspend fun getProductInfo(productId: Int): SafeApiCall<ProductInfo> {
-        return api.getProductInfo(productId).asSafeApiCall()
+    suspend fun getProductInfo(productId: Long): SafeApiCall<ProductInfo> {
+        return api.getProductInfo(productId.toString()).asSafeApiCall()
+    }
+
+    suspend fun getProductById(ids: Array<Long>): SafeApiCall<List<Product>> {
+        return api.getProductsById(ids.contentToString()).asSafeApiCall()
     }
 }

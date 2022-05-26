@@ -3,22 +3,34 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_cart.xml" value="0.1465" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_cart_empty.xml" value="0.1935" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_close.xml" value="0.1465" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_left.xml" value="0.213" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_left_pointer.xml" value="0.213" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_like_empty.xml" value="0.1465" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_menu.xml" value="0.1465" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_option.xml" value="0.1465" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_search.xml" value="0.1465" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_star.xml" value="0.1" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable/ic_digikala_icon.xml" value="0.1465" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable/ic_search.xml" value="0.124" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable/shadow_background.xml" value="0.1" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable/strike_through.xml" value="0.2" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout-night/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout-night/simple_vertical_product_item.xml" value="0.536" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/a.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/discount_icon.xml" value="0.72" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_home.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_product_info.xml" value="0.536" />
-        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/horizontal_product_container.xml" value="0.24087591240875914" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_image_viewer.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_product_info.xml" value="0.264" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/horizontal_product_container.xml" value="0.1" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/simple_horizontal_product_item.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/simple_product_item.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/simple_vertical_product_footer.xml" value="0.1" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/simple_vertical_product_header.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/simple_vertical_product_item.xml" value="0.264" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/simple_vertical_product_item.xml" value="0.5889830508474576" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.1" />
       </map>
     </option>

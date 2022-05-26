@@ -65,16 +65,23 @@
         <item name="android:clickable">true</item>
     </style>
 
-    <style name="ProductInfoTextView">
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">@dimen/product_info_text_size</item>
-        <item name="android:padding">@dimen/product_info_text_padding</item>
-        <item name="android:text">ماسک مو بویسا مدل ARGAN Vit E حجم 500 میلی لیتر</item>
-    </style>
-
     <style name="AddToCartButton">
         <item name="android:text">@string/add_to_cart</item>
         <item name="android:backgroundTint">@color/discount_red</item>
+    </style>
+
+    <style name="ProductInfoNameTextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/product_info_name_text_size</item>
+        <item name="android:padding">@dimen/product_info_name_text_padding</item>
+        <item name="android:text">ماسک مو بویسا مدل ARGAN Vit E حجم 500 میلی لیتر</item>
+    </style>>
+
+    <style name="ProductInfoDescriptionTextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/product_info_description_text_size</item>
+        <item name="android:padding">@dimen/product_info_description_text_padding</item>
+        <item name="android:text">\n در کل میخواستم فاصله بندازم ببینم چی میشه.توضیحات اینجا قرار میگیره که فکر نمیکنم سرور اصلا چنین چیزی داشته باشه:)</item>
     </style>
 
 </resources>

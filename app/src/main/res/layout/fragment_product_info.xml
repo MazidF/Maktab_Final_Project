@@ -1,14 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/product_info_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:padding="10dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:visibility="gone">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:contentScrim="@color/discount_red"
+            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
+
+            <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_collapseMode="parallax">
+
+                <ImageView
+                    android:id="@+id/product_info_option"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:src="@drawable/ic_option"
+                    app:tint="@color/black" />
+
+                <ImageView
+                    android:id="@+id/product_info_like"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:src="@drawable/ic_like_empty"
+                    app:tint="@color/black" />
+
+                <ImageView
+                    android:id="@+id/product_info_cart"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_cart_empty"
+                    app:tint="@color/black" />
+
+                <ImageView
+                    android:id="@+id/product_info_close"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitEnd"
+                    android:src="@drawable/ic_close"
+                    app:tint="@color/black" />
+
+            </LinearLayout>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
     <ScrollView
+        android:visibility="gone"
+        android:id="@+id/product_info_scroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="@color/light_gray"
         android:fillViewport="true">
 
         <LinearLayout
@@ -16,74 +84,105 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.google.android.material.appbar.AppBarLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.appbar.CollapsingToolbarLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.appbar.AppBarLayout>
-
             <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/product_info_images"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:background="@color/white" />
 
             <com.google.android.material.textview.MaterialTextView
-                style="@style/ProductInfoTextView"
+                android:id="@+id/product_info_name"
+                style="@style/ProductInfoNameTextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:background="@color/white" />
 
             <LinearLayout
-                android:paddingEnd="10dp"
-                android:paddingStart="10dp"
-                android:gravity="right|center"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="right|center_vertical"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp">
 
                 <TextView
+                    android:id="@+id/product_info_sales_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12dp"
-                    android:text="(25)"/>
+                    android:layout_marginEnd="5dp"
+                    android:text="(25)"
+                    android:textSize="12dp" />
 
                 <TextView
+                    android:id="@+id/product_info_rate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="4.0"/>
+                    android:layout_marginEnd="3dp"
+                    android:text="4.0"
+                    android:textColor="@color/black" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_star"
-                    app:tint="#E1B619"/>
+                    app:tint="#E1B619" />
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/light_gray" />
+
+            <!--TODO: add attributes like a group radio button-->
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/product_info_description"
+                style="@style/ProductInfoDescriptionTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/product_info_separator"
+                android:background="@color/white" />
+
+            <com.example.onlineshop.widgit.HorizontalProductContainer
+                android:id="@+id/product_info_similar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="محصولات مشابه"
+                app:hideMoreBtn="true"
+                android:layout_marginTop="@dimen/product_info_separator"
+                android:background="@color/white" />
 
         </LinearLayout>
 
     </ScrollView>
 
     <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/product_info_linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:padding="20dp">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/product_info_discount_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <include layout="@layout/discount_icon" />
+                <include
+                    android:id="@+id/product_info_discount"
+                    layout="@layout/discount_icon" />
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/product_info_read_price"
                     style="@style/SimpleItemDiscountTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -101,6 +200,7 @@
                     android:src="@drawable/toman_icon" />
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/product_info_price"
                     style="@style/SimpleItemCostTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -110,10 +210,21 @@
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/product_info_add_to_cart"
             style="@style/AddToCartButton"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/product_info_lattie"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/three_dots_loading" />
 
 </LinearLayout>

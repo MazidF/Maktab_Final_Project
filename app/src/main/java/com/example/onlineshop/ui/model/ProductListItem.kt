@@ -6,7 +6,15 @@ import com.example.onlineshop.utils.clazz
 sealed class ProductListItem {
     data class Item(
         val product: Product
-    ) : ProductListItem()
+    ) : ProductListItem() {
+        companion object {
+            fun fake(id: Long) : Item {
+                return Item(
+                    Product.fake(id)
+                )
+            }
+        }
+    }
     data class Footer(
         val imageId: Int,
         val onMoreButtonClick: () -> Unit

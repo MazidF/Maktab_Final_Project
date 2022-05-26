@@ -1,29 +1,35 @@
 package com.example.onlineshop.widgit
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color.RED
+import android.graphics.Color.WHITE
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.get
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import com.example.onlineshop.R
+import com.example.onlineshop.data.model.Product
 import com.example.onlineshop.databinding.HorizontalProductContainerBinding
-import com.example.onlineshop.ui.fragments.ProductAdapter
+import com.example.onlineshop.ui.fragments.adapter.ProductAdapter
 import com.example.onlineshop.ui.model.ProductListItem
 import com.example.onlineshop.utils.insertFooter
 import com.example.onlineshop.utils.insertHeader
 
-class HorizontalProductContainer : ConstraintLayout, Refreshable<ProductListItem> {
+class HorizontalProductContainer : LinearLayout, Refreshable<ProductListItem> {
 
     companion object {
         const val REFRESHABLE_ID: Int = 1_000_1
     }
 
     override val refreshableId = REFRESHABLE_ID
-
     private var imageId: Int = 0
+
+    private var hasTitle = false
     private var onMoreButtonClick: () -> Unit = {}
+    private var onItemClick: (Product) -> Unit = {}
 
     private lateinit var productAdapter: ProductAdapter
     private val binding: HorizontalProductContainerBinding
@@ -34,20 +40,45 @@ class HorizontalProductContainer : ConstraintLayout, Refreshable<ProductListItem
         initView()
     }
 
-    constructor(context: Context, imageId: Int) : super(context) {
+    constructor(context: Context, imageId: Int, title: String? = null) : super(context) {
         this.imageId = imageId
+        title?.let {
+            showTitle(title)
+        }
     }
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    @SuppressLint("CustomViewStyleable")
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+        val attributes = context.obtainStyledAttributes(
+            attrs, R.styleable.horizontal_product_container
+        )
+        val title = attributes.getString(R.styleable.horizontal_product_container_title)
+        if (title != null) {
+            showTitle(title)
+            val hideMoreBtn = attributes.getBoolean(
+                R.styleable.horizontal_product_container_hideMoreBtn, false
+            )
+            if (hideMoreBtn) {
+                hideMoreButton()
+            }
+        }
+        attributes.recycle()
+    }
 
     private fun initView() = with(binding) {
-        productAdapter = object : ProductAdapter() {
+        productAdapter = object : ProductAdapter({
+            onItemClick(it)
+        }) {
 
             override fun getItemViewType(position: Int): Int {
-                return when (position) {
-                    0 -> ProductListItem.getViewType(ProductListItem.Footer::class.java)
-                    currentList.size - 1 -> ProductListItem.getViewType(ProductListItem.Header::class.java)
-                    else -> ProductListItem.getViewType(ProductListItem.Item::class.java)
+                return if (hasTitle) {
+                    ProductListItem.getViewType(ProductListItem.Item::class.java)
+                } else {
+                    when (position) {
+                        0 -> ProductListItem.getViewType(ProductListItem.Footer::class.java)
+                        currentList.size - 1 -> ProductListItem.getViewType(ProductListItem.Header::class.java)
+                        else -> ProductListItem.getViewType(ProductListItem.Item::class.java)
+                    }
                 }
             }
 
@@ -61,7 +92,7 @@ class HorizontalProductContainer : ConstraintLayout, Refreshable<ProductListItem
                         SimpleVerticalProductFooter(context)
                     }
                     ProductListItem.Item::class.java -> {
-                        SimpleVerticalProductItem(context)
+                        SimpleVerticalProductItem(context, hasTitle)
                     }
                     ProductListItem.Header::class.java -> {
                         SimpleVerticalProductHeader(context)
@@ -75,30 +106,63 @@ class HorizontalProductContainer : ConstraintLayout, Refreshable<ProductListItem
         horizontalContainerList.apply {
             adapter = productAdapter
         }
-        changeBackgroundColor(RED)
+    }
+
+    private fun showTitle(title: String): Unit = with(binding) {
+        hasTitle = true
+        horizontalContainerToolbar.apply {
+            isVisible = true
+            setOnClickListener {
+                onMoreButtonClick()
+            }
+        }
+        horizontalContainerToolbarTitle.text = title
+        changeBackgroundColor(WHITE)
+        horizontalContainerList.apply {
+            layoutParams = LayoutParams(MATCH_PARENT, WRAP_CONTENT).apply {
+                setMargins(0, 0, 0, 30)
+                setPadding(0, 0, 0, 0)
+            }
+        }
+    }
+
+    fun hideMoreButton() {
+        binding.horizontalContainerToolbarMoreBtn.isVisible = false
     }
 
     fun changeBackgroundColor(color: Int) {
-        this.setBackgroundColor(color)
+        binding.horizontalContainerList.setBackgroundColor(color)
     }
 
-    override fun refresh(list: List<ProductListItem>) {
-        val newList = list.insertFooter(
-            ProductListItem.Footer(
-                imageId = imageId,
-                onMoreButtonClick = onMoreButtonClick
-            )
-        ).insertHeader(
-            ProductListItem.Header(
-                onMoreButtonClick = onMoreButtonClick
-            )
-        )
+    fun refresh(list: List<ProductListItem>, addHeaderAndFooter: Boolean) {
+        val newList = list.let {
+            if (addHeaderAndFooter) {
+                it.insertFooter(
+                    ProductListItem.Footer(
+                        imageId = imageId,
+                        onMoreButtonClick = onMoreButtonClick
+                    )
+                ).insertHeader(
+                    ProductListItem.Header(
+                        onMoreButtonClick = onMoreButtonClick
+                    )
+                )
+            } else {
+                it
+            }
+        }
         productAdapter.submitList(newList) {
             with(productAdapter) {
                 binding.horizontalContainerList.scrollToPosition(0)
-                notifyItemChanged(0)
+                if (hasTitle.not()) {
+                    notifyItemChanged(0)
+                }
             }
         }
+    }
+
+    override fun refresh(list: List<ProductListItem>) {
+        refresh(list, hasTitle.not())
     }
 
     override fun bind(t: List<ProductListItem>?) {
@@ -113,6 +177,10 @@ class HorizontalProductContainer : ConstraintLayout, Refreshable<ProductListItem
 
     fun setOnMoreButtonClick(block: () -> Unit) {
         this.onMoreButtonClick = block
+    }
+
+    fun setOnItemClick(block: (Product) -> Unit) {
+        this.onItemClick = block
     }
 
 }

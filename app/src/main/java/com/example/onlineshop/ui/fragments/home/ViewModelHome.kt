@@ -7,6 +7,7 @@ import com.example.onlineshop.data.repository.ProductRepository
 import com.example.onlineshop.ui.model.ProductListItem
 import com.example.onlineshop.ui.model.ProductListItem.Item
 import com.example.onlineshop.utils.result.SafeApiCall
+import com.example.onlineshop.utils.transformer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -22,15 +23,8 @@ private typealias SafeProducts = SafeApiCall<List<ProductListItem>>
 class ViewModelHome @Inject constructor(
     private val repository: ProductRepository,
 ) : ViewModel() {
-
-    private val transformer = { safeApiCall: SafeApiCall<List<Product>> ->
-        safeApiCall.map<List<ProductListItem>> { data ->
-            data.map {
-                Item(it)
-            }
-        }
-    }
-    private var hasBeenLoaded = false
+    var hasBeenLoaded = false
+        private set
 
     private val _mostPopularProductListFLowState = MutableStateFlow<SafeProducts>(
         SafeApiCall.loading()

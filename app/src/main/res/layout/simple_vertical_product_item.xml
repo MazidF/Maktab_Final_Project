@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="@dimen/simple_item_corner_size"
     app:contentPadding="5dp"
     style="@style/Clickable"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <LinearLayout
+        android:id="@+id/simple_vertical_product_root"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/white"
@@ -21,7 +21,7 @@
             android:id="@+id/simple_vertical_product_image"
             android:layout_width="@dimen/simple_item_image_size"
             android:layout_height="@dimen/simple_item_image_size"
-            android:src="@drawable/img"
+            android:src="@drawable/ic_product_default"
             app:shapeAppearanceOverlay="@style/ImageViewWithCorner" />
 
         <com.google.android.material.textview.MaterialTextView
