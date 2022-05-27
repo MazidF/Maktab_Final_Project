@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_fragmentHome_to_fragmentProductInfo"
             app:destination="@id/fragmentProductInfo" />
+        <action
+            android:id="@+id/action_fragmentHome_to_fragmentProductList"
+            app:destination="@id/fragmentProductList" />
     </fragment>
     <fragment
         android:id="@+id/fragmentProductInfo"
@@ -25,5 +28,21 @@
         <action
             android:id="@+id/action_fragmentProductInfo_self"
             app:destination="@id/fragmentProductInfo" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentCategory"
+        android:name="com.example.onlineshop.ui.fragments.categories.FragmentCategory"
+        android:label="FragmentCategory" >
+        <action
+            android:id="@+id/action_fragmentCategory_to_fragmentProductList"
+            app:destination="@id/fragmentProductList" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentProductList"
+        android:name="com.example.onlineshop.ui.fragments.product_list.FragmentProductList"
+        android:label="FragmentProductList" >
+        <argument
+            android:name="productList"
+            app:argType="com.example.onlineshop.ui.model.ProductList" />
     </fragment>
 </navigation>

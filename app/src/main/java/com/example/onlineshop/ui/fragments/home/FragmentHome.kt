@@ -11,6 +11,7 @@ import com.example.onlineshop.R
 import com.example.onlineshop.data.model.Product
 import com.example.onlineshop.databinding.FragmentHomeBinding
 import com.example.onlineshop.ui.fragments.adapter.RefreshableAdapter
+import com.example.onlineshop.ui.model.ProductList
 import com.example.onlineshop.utils.result.SafeApiCall
 import com.example.onlineshop.widgit.HorizontalProductContainer
 import dagger.hilt.android.AndroidEntryPoint
@@ -92,6 +93,9 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
                     setOnItemClick {
                         onClick(it)
                     }
+                    setOnMoreButtonClick {
+                        showProductList(ProductList.Newest)
+                    }
                 }, // newest
                 HorizontalProductContainer(
                     requireContext(),
@@ -101,6 +105,9 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
                     setOnItemClick {
                         onClick(it)
                     }
+                    setOnMoreButtonClick {
+                        showProductList(ProductList.MostPopular)
+                    }
                 }, // most popular
                 HorizontalProductContainer(
                     requireContext(),
@@ -109,6 +116,9 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
                 ).apply {
                     setOnItemClick {
                         onClick(it)
+                    }
+                    setOnMoreButtonClick {
+                        showProductList(ProductList.MostRated)
                     }
                 } // most rated,
             ),
@@ -123,6 +133,12 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
                     (mostRatedProductListFlowState.value as SafeApiCall.Success).body()
                 },
             )
+        )
+    }
+
+    private fun showProductList(productList: ProductList) {
+        navController.navigate(
+            FragmentHomeDirections.actionFragmentHomeToFragmentProductList(productList)
         )
     }
 

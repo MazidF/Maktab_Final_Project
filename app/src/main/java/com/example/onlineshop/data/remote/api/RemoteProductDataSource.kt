@@ -61,19 +61,19 @@ class RemoteProductDataSource @Inject constructor(
         }.flow
     }
 
-    suspend fun getNewestProduct(): Flow<PagingData<Product>> {
+    fun getNewestProduct(): Flow<PagingData<Product>> {
         return RemoteProductPagingSource.getPager(config = pagingConfig) { page, perPage ->
             getNewestProduct(page, perPage)
         }.flow
     }
 
-    suspend fun getMostPopularProduct(): Flow<PagingData<Product>> {
+    fun getMostPopularProduct(): Flow<PagingData<Product>> {
         return RemoteProductPagingSource.getPager(config = pagingConfig) { page, perPage ->
             getMostPopularProduct(page, perPage)
         }.flow
     }
 
-    suspend fun getProductsByCategory(categoryId: String): Flow<PagingData<Product>> {
+    fun getProductsByCategory(categoryId: String): Flow<PagingData<Product>> {
         return RemoteProductPagingSource.getPager(config = pagingConfig) { page, perPage ->
             api.getProductsByCategory(categoryId, page, perPage).asSafeApiCall()
         }.flow

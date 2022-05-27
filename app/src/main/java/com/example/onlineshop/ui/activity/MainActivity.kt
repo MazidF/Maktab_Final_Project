@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(bottomNavigation, navController)
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.fragmentHome -> {
+                R.id.fragmentHome, R.id.fragmentCategory -> {
                     showAppbar()
                     bottomNavigation.isVisible = true
                 }

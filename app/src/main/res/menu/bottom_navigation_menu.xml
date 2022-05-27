@@ -10,6 +10,7 @@
         android:title="@string/cart" />
 
     <item
+        android:id="@id/fragmentCategory"
         android:icon="@drawable/ic_category"
         android:title="@string/categories" />
 

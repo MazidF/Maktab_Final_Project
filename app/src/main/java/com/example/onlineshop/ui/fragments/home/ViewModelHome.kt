@@ -70,15 +70,6 @@ class ViewModelHome @Inject constructor(
         }
     }
 
-/*    fun getMostRatedProduct(): Flow<PagingData<Item>> {
-        return repository.getMostRatedProduct()
-            .map { pagingData ->
-                pagingData.map {
-                    Item(it)
-                }
-            }.cachedIn(viewModelScope)
-    }*/
-
     fun loadDataAsync(): Deferred<Boolean> {
         return viewModelScope.async {
             val list = listOf(

@@ -16,15 +16,15 @@ class ProductRepository(
         return remote.getMostRatedProduct()
     }
 
-    suspend fun getNewestProduct(): Flow<PagingData<Product>> {
+    fun getNewestProduct(): Flow<PagingData<Product>> {
         return remote.getNewestProduct()
     }
 
-    suspend fun getMostPopularProduct(): Flow<PagingData<Product>> {
+    fun getMostPopularProduct(): Flow<PagingData<Product>> {
         return remote.getMostPopularProduct()
     }
 
-    suspend fun getProductsByCategory(categoryId: String): Flow<PagingData<Product>> {
+    fun getProductsByCategory(categoryId: String): Flow<PagingData<Product>> {
         return remote.getProductsByCategory(
             categoryId = categoryId,
         )
