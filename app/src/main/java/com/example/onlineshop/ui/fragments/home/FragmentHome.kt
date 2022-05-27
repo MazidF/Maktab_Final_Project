@@ -2,6 +2,7 @@ package com.example.onlineshop.ui.fragments.home
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -36,7 +37,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     }
 
     private fun init() = with(binding) {
-        root.setOnRefreshListener {
+        homeRoot.setOnRefreshListener {
             loadData()
         }
         refreshableAdapter = createRefreshableAdapter()
@@ -45,22 +46,31 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         }
         if (viewModel.hasBeenLoaded) {
             refresh()
+            hideLoading(true)
         } else {
-            loadData()
+            loadData(true)
         }
     }
 
-    private fun loadData() = with(binding) {
-        root.isRefreshing = true
+    private fun loadData(isFirstTime: Boolean = false) = with(binding) {
+        homeRoot.isRefreshing = true
         lifecycleScope.launch {
             val wasSuccessful = viewModel.loadDataAsync().await()
             if (wasSuccessful) {
-                root.isRefreshing = false
                 refresh()
             } else {
                 errorDialog()
             }
+            hideLoading(isFirstTime)
         }
+    }
+
+    private fun hideLoading(isFirstTime: Boolean) = with(binding) {
+        if (isFirstTime) {
+            homeLottie.isVisible = false
+            homeRoot.isVisible = true
+        }
+        homeRoot.isRefreshing = false
     }
 
     private fun errorDialog() {

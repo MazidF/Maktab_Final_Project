@@ -16,4 +16,5 @@
     <dimen name="product_info_description_text_size">18sp</dimen>
     <dimen name="title_text_size">18sp</dimen>
     <dimen name="product_info_separator">8dp</dimen>
+    <dimen name="lottie_size">100dp</dimen>
 </resources>
