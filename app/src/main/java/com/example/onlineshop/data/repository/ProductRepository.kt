@@ -60,6 +60,12 @@ class ProductRepository(
         }
     }
 
+    suspend fun getCategoriesByParentId(parentId: Long, reload: Boolean): Flow<SafeApiCall<List<Category>>> {
+        return load(reload) {
+            remote.getCategoriesByParentId(parentId, 1, 100)
+        }
+    }
+
     suspend fun getMostPopularProduct(
         size: Int,
         reload: Boolean

@@ -1,5 +1,6 @@
 package com.example.onlineshop.ui.fragments.categories
 
+import android.graphics.Color.WHITE
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -10,10 +11,12 @@ import androidx.navigation.fragment.findNavController
 import com.example.onlineshop.R
 import com.example.onlineshop.data.model.Category
 import com.example.onlineshop.databinding.FragmentCategoryBinding
-import com.example.onlineshop.ui.fragments.adapter.CategoryAdapter
+import com.example.onlineshop.ui.fragments.adapter.RefreshableAdapter
+import com.example.onlineshop.ui.model.CategoryListItem
 import com.example.onlineshop.ui.model.ProductList
 import com.example.onlineshop.utils.launchOnState
 import com.example.onlineshop.utils.result.SafeApiCall
+import com.example.onlineshop.widgit.HorizontalCategoryContainer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
@@ -24,7 +27,7 @@ class FragmentCategory : Fragment(R.layout.fragment_category) {
         get() = _binding!!
 
     private val viewModel: ViewModelCategory by viewModels()
-    private lateinit var categoryAdapter: CategoryAdapter
+    private lateinit var refreshableAdapter: RefreshableAdapter<CategoryListItem>
     private val navController by lazy {
         findNavController()
     }
@@ -33,27 +36,56 @@ class FragmentCategory : Fragment(R.layout.fragment_category) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentCategoryBinding.bind(view)
 
-        init()
         observe()
     }
 
-    private fun init() = with(binding) {
-        categoryRoot.setOnRefreshListener {
-            loadData()
+    private fun observe() = with(binding) {
+        launchOnState(Lifecycle.State.STARTED) {
+            viewModel.categoriesStateFlow.collectLatest {
+                when (it) {
+                    is SafeApiCall.Fail -> {
+                        errorDialog(it.error())
+                    }
+                    is SafeApiCall.Success -> {
+                        onSuccess()
+                    }
+                    else -> {
+                        // do nothing
+                    }
+                }
+            }
         }
-        categoryAdapter = CategoryAdapter {
-            onItemClick(it)
-        }
-        categoryList.adapter = categoryAdapter
     }
 
-    private fun loadData() = with(binding) {
-        viewModel.loadCategories()
+    private fun onSuccess() {
+        refreshableAdapter = createRefreshableAdapter()
+        binding.categoryList.adapter = refreshableAdapter
+        refreshableAdapter.refreshAll()
+        endLoading()
     }
 
     private fun errorDialog(error: Throwable): Unit = with(binding) {
-        endLoading(false)
+        endLoading()
         TODO("Not yet implemented")
+    }
+
+    private fun createRefreshableAdapter(): RefreshableAdapter<CategoryListItem> = with(viewModel) {
+        val list = viewModel.categoriesStateFlow.value.asSuccess()!!.body()
+        val categoryMap = viewModel.categoryMap
+        val context = requireContext()
+        return RefreshableAdapter(
+            list = List(list.size) {
+                HorizontalCategoryContainer(context, list[it].category.name).apply {
+                    setOnItemClick(this@FragmentCategory::onItemClick)
+                    setBackgroundColor(WHITE)
+                }
+            },
+            producerList = List(list.size) {
+                {
+                    categoryMap[list[it].category.id]!!.value.asSuccess()?.body()!!
+                }
+            }
+        )
     }
 
     private fun onItemClick(category: Category) {
@@ -66,36 +98,9 @@ class FragmentCategory : Fragment(R.layout.fragment_category) {
         )
     }
 
-    private fun observe() = with(binding) {
-        var hasBeenLoaded = false
-        launchOnState(Lifecycle.State.STARTED) {
-            viewModel.categoriesStateFlow.collectLatest {
-                when (it) {
-                    is SafeApiCall.Fail -> {
-                        errorDialog(it.error())
-                    }
-                    is SafeApiCall.Loading -> {
-                        hasBeenLoaded = false
-                    }
-                    is SafeApiCall.Reloading -> {
-                        categoryRoot.isRefreshing = true
-                    }
-                    is SafeApiCall.Success -> {
-                        endLoading(hasBeenLoaded.not())
-                        hasBeenLoaded = true
-                        categoryAdapter.refresh(it.body())
-                    }
-                }
-            }
-        }
-    }
-
-    private fun endLoading(firstTime: Boolean) = with(binding) {
-        if (firstTime) {
-            categoryLattie.isVisible = false
-            categoryRoot.isVisible = true
-        }
-        categoryRoot.isRefreshing = false
+    private fun endLoading() = with(binding) {
+        categoryLattie.isVisible = false
+        categoryList.isVisible = true
     }
 
     override fun onDestroyView() {

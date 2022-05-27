@@ -44,5 +44,24 @@
         <argument
             android:name="productList"
             app:argType="com.example.onlineshop.ui.model.ProductList" />
+        <action
+            android:id="@+id/action_fragmentProductList_to_fragmentProductInfo"
+            app:destination="@id/fragmentProductInfo" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentCart"
+        android:name="com.example.onlineshop.ui.fragments.cart.FragmentCart"
+        android:label="FragmentCart" >
+        <action
+            android:id="@+id/action_fragmentCart_to_fragmentProductInfo"
+            app:destination="@id/fragmentProductInfo" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentProfile"
+        android:name="com.example.onlineshop.ui.fragments.profile.FragmentProfile"
+        android:label="FragmentProfile" >
+        <action
+            android:id="@+id/action_fragmentProfile_to_fragmentProductInfo"
+            app:destination="@id/fragmentProductInfo" />
     </fragment>
 </navigation>

@@ -48,16 +48,20 @@ class FragmentProductList : Fragment(R.layout.fragment_product_list) {
     }
 
     private fun observe() = with(binding) {
-        launchOnState(Lifecycle.State.CREATED) {
+        var hasBeenLoaded = false
+        launchOnState(Lifecycle.State.STARTED) {
             viewModel.load(args.productList).collect {
+                // TODO: loading with paging
                 productAdapter.submitData(it)
-//                stopLoading()
             }
         }
     }
 
-    private fun stopLoading() = with(binding) {
-        productListLottie.isVisible = false
+    private fun stopLoading(): Unit = with(binding) {
+        productListLottie.apply {
+            pauseAnimation()
+            isVisible = false
+        }
         productListList.isVisible = true
     }
 

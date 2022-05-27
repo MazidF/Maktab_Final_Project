@@ -92,6 +92,14 @@ class RemoteProductDataSource @Inject constructor(
         ).asSafeApiCall()
     }
 
+    suspend fun getCategoriesByParentId(parentId: Long, page: Int, perPage: Int): SafeApiCall<List<Category>> {
+        return api.getCategoriesByParentId(
+            parentId = parentId,
+            page = page,
+            perPage = perPage,
+        ).asSafeApiCall()
+    }
+
     suspend fun getProductInfo(productId: Long): SafeApiCall<ProductInfo> {
         return api.getProductInfo(productId.toString()).asSafeApiCall()
     }

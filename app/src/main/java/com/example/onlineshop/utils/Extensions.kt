@@ -1,7 +1,9 @@
 package com.example.onlineshop.utils
 
 import android.graphics.drawable.Drawable
+import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -22,7 +24,7 @@ fun Fragment.launchOnState(state: Lifecycle.State, block: suspend () -> Unit) {
 }
 
 fun loadImageInto(
-    url: String,
+    url: Any,
     imageView: ImageView,
     option: RequestBuilder<Drawable>.() -> RequestBuilder<Drawable> = { this }
 ) {
@@ -46,4 +48,16 @@ inline fun <reified T> List<T>.insertHeader(t: T): List<T> {
 
 fun <T> Response<T>.asSafeApiCall(): SafeApiCall<T> {
     return SafeApiCall.fromResponse(this)
+}
+
+fun <K, V> HashMap<K, V>.getWithDefault(key: K, default: V): V {
+    return this[key] ?: default.also {
+        this[key] = it
+    }
+}
+
+fun View.setMargin(left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0) {
+    layoutParams = LinearLayout.LayoutParams(layoutParams).apply {
+        this.setMargins(left, top, right, bottom)
+    }
 }

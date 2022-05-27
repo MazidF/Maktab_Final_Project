@@ -2,20 +2,19 @@ package com.example.onlineshop.ui.fragments.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.onlineshop.ui.model.ProductListItem
 import com.example.onlineshop.widgit.Refreshable
 
-class RefreshableAdapter(
-    private val list: List<Refreshable<ProductListItem>>,
-    private val producerList: List<() -> List<ProductListItem>>
-) : RecyclerView.Adapter<RefreshableAdapter.RefreshableHolder>() {
+class RefreshableAdapter<T>(
+    private val list: List<Refreshable<T>>,
+    private val producerList: List<() -> List<T>>
+) : RecyclerView.Adapter<RefreshableAdapter<T>.RefreshableHolder>() {
 
     inner class RefreshableHolder(
-        private val refreshable: Refreshable<ProductListItem>
+        private val refreshable: Refreshable<T>
     ) : RecyclerView.ViewHolder(
         refreshable.getView()
     ) {
-        fun bind(item: List<ProductListItem>) {
+        fun bind(item: List<T>) {
             refreshable.bind(item)
         }
     }
@@ -30,6 +29,7 @@ class RefreshableAdapter(
 
     override fun onBindViewHolder(holder: RefreshableHolder, position: Int) {
 //        holder.bind(producerList[position].invoke())
+        // TODO: check and remove it
     }
 
     override fun getItemCount() = list.size

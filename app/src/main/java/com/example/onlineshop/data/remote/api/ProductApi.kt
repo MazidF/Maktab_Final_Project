@@ -47,4 +47,11 @@ interface ProductApi {
         @Query("page") page: Int,
         @Query("per_page") perPage: Int,
     ): Response<List<Category>>
+
+    @GET("products/categories")
+    suspend fun getCategoriesByParentId(
+        @Query("parent") parentId: Long,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int,
+    ): Response<List<Category>>
 }

@@ -1,6 +1,7 @@
 package com.example.onlineshop.ui.fragments.adapter
 
 import android.view.ViewGroup
+import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
 import com.example.onlineshop.ui.fragments.adapter.diff_callback.ProductItemDiffItemCallback
 import com.example.onlineshop.ui.model.ProductListItem

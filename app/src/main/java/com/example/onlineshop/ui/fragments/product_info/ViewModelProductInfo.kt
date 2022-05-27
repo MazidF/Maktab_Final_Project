@@ -7,7 +7,7 @@ import com.example.onlineshop.data.model.ProductInfo
 import com.example.onlineshop.data.repository.ProductRepository
 import com.example.onlineshop.ui.model.ProductListItem
 import com.example.onlineshop.utils.result.SafeApiCall
-import com.example.onlineshop.utils.transformer
+import com.example.onlineshop.utils.productToProductListItemTransformer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -43,7 +43,7 @@ class ViewModelProductInfo @Inject constructor(
 
     private fun loadSimilar(ids: List<Long>) {
         viewModelScope.launch {
-            repository.getProductById(ids.toTypedArray()).map(transformer).collect {
+            repository.getProductById(ids.toTypedArray()).map(productToProductListItemTransformer).collect {
                 _similarStateFlow.emit(it)
             }
         }

@@ -2,12 +2,10 @@ package com.example.onlineshop.ui.fragments.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.onlineshop.data.model.Product
 import com.example.onlineshop.data.repository.ProductRepository
 import com.example.onlineshop.ui.model.ProductListItem
-import com.example.onlineshop.ui.model.ProductListItem.Item
 import com.example.onlineshop.utils.result.SafeApiCall
-import com.example.onlineshop.utils.transformer
+import com.example.onlineshop.utils.productToProductListItemTransformer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -44,7 +42,7 @@ class ViewModelHome @Inject constructor(
 
     private fun getPopularAsync(): Deferred<SafeProducts> {
         return viewModelScope.async {
-            repository.getMostPopularProduct(15, hasBeenLoaded).map(transformer).collect {
+            repository.getMostPopularProduct(15, hasBeenLoaded).map(productToProductListItemTransformer).collect {
                 _mostPopularProductListFLowState.emit(it)
             }
             _mostPopularProductListFLowState.value
@@ -53,7 +51,7 @@ class ViewModelHome @Inject constructor(
 
     private fun getNewestAsync(): Deferred<SafeProducts> {
         return viewModelScope.async {
-            repository.getMostPopularProduct(15, hasBeenLoaded).map(transformer).collect {
+            repository.getMostPopularProduct(15, hasBeenLoaded).map(productToProductListItemTransformer).collect {
                 _newestProductListFLowState.emit(it)
             }
             _newestProductListFLowState.value
@@ -62,7 +60,7 @@ class ViewModelHome @Inject constructor(
 
     private fun getRatedAsync(): Deferred<SafeProducts> {
         return viewModelScope.async {
-            repository.getMostRatedProduct(15, hasBeenLoaded).map(transformer).collect {
+            repository.getMostRatedProduct(15, hasBeenLoaded).map(productToProductListItemTransformer).collect {
                 _mostRatedProductListFLowState.emit(it)
             }
             val a = _mostRatedProductListFLowState.value
@@ -70,6 +68,7 @@ class ViewModelHome @Inject constructor(
         }
     }
 
+    // TODO: load unloaded lists not all
     fun loadDataAsync(): Deferred<Boolean> {
         return viewModelScope.async {
             val list = listOf(

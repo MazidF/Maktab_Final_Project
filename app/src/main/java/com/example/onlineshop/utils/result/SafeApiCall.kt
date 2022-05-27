@@ -37,6 +37,13 @@ sealed class SafeApiCall<T>(
         }
     }
 
+    fun asSuccess(): Success<T>? {
+        if (isSuccessful) {
+            return (this as Success)
+        }
+        return null
+    }
+
     val isSuccessful = this is Success<*> && data != null
 
     fun <R> map(transformer: (T) -> R): SafeApiCall<R> {

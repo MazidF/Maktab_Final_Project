@@ -13,9 +13,6 @@ import java.lang.Exception
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val navController by lazy {
-        Runnable {
-
-        }
         findNavController(R.id.fragmentContainerView)
     }
     private lateinit var binding: ActivityMainBinding
@@ -32,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(bottomNavigation, navController)
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.fragmentHome, R.id.fragmentCategory -> {
+                R.id.fragmentCart, R.id.fragmentProfile, R.id.fragmentHome, R.id.fragmentCategory, -> {
                     showAppbar()
                     bottomNavigation.isVisible = true
                 }

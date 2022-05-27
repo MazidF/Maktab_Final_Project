@@ -12,6 +12,7 @@ import com.example.onlineshop.data.model.Product
 import com.example.onlineshop.databinding.FragmentHomeBinding
 import com.example.onlineshop.ui.fragments.adapter.RefreshableAdapter
 import com.example.onlineshop.ui.model.ProductList
+import com.example.onlineshop.ui.model.ProductListItem
 import com.example.onlineshop.utils.result.SafeApiCall
 import com.example.onlineshop.widgit.HorizontalProductContainer
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,7 +29,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     private val binding: FragmentHomeBinding
         get() = _binding!!
 
-    private lateinit var refreshableAdapter: RefreshableAdapter
+    private lateinit var refreshableAdapter: RefreshableAdapter<ProductListItem>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -82,7 +83,7 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         refreshableAdapter.refreshAll()
     }
 
-    private fun createRefreshableAdapter(): RefreshableAdapter = with(viewModel) {
+    private fun createRefreshableAdapter(): RefreshableAdapter<ProductListItem> = with(viewModel) {
         return RefreshableAdapter(
             list = listOf(
                 HorizontalProductContainer(

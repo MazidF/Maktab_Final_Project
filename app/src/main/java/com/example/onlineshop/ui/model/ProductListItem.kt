@@ -1,24 +1,25 @@
 package com.example.onlineshop.ui.model
 
 import com.example.onlineshop.data.model.Product
-import com.example.onlineshop.utils.clazz
 
 sealed class ProductListItem {
     data class Item(
         val product: Product
     ) : ProductListItem() {
         companion object {
-            fun fake(id: Long) : Item {
+            fun fake(id: Long): Item {
                 return Item(
                     Product.fake(id)
                 )
             }
         }
     }
+
     data class Footer(
         val imageId: Int,
         val onMoreButtonClick: () -> Unit
     ) : ProductListItem()
+
     data class Header(
         val onMoreButtonClick: () -> Unit
     ) : ProductListItem()
@@ -26,7 +27,7 @@ sealed class ProductListItem {
     companion object {
 
         fun getViewType(clazz: Class<out ProductListItem>): Int {
-            return when(clazz) {
+            return when (clazz) {
                 Footer::class.java -> 1
                 Item::class.java -> 2
                 Header::class.java -> 3
@@ -37,7 +38,7 @@ sealed class ProductListItem {
         }
 
         fun getTypeView(int: Int): Class<out ProductListItem> {
-            return when(int) {
+            return when (int) {
                 1 -> Footer::class.java
                 2 -> Item::class.java
                 3 -> Header::class.java
