@@ -36,9 +36,5 @@ abstract class FragmentConnectionObserver(
         }
     }
 
-    fun <T> handle(retry: () -> SafeApiCall<T>) {
-
-    }
-
     abstract fun navigateToConnectionFailed()
 }

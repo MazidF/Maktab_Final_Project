@@ -56,7 +56,7 @@ class FragmentHome : FragmentConnectionObserver(R.layout.fragment_home) {
 
     private fun loadData(isFirstTime: Boolean = false) = with(binding) {
         homeRoot.isRefreshing = true
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             val wasSuccessful = viewModel.loadDataAsync().await()
             if (wasSuccessful) {
                 refresh()

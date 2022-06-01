@@ -81,7 +81,7 @@ class FragmentCategory : FragmentConnectionObserver(R.layout.fragment_category) 
             },
             producerList = List(list.size) {
                 {
-                    categoryMap[list[it].category.id]!!.value.asSuccess()?.body()!!
+                    categoryMap[list[it].category.id] ?: listOf()
                 }
             }
         )

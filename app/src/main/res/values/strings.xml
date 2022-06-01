@@ -9,4 +9,11 @@
     <string name="search_in_all">جست و جو در همه کالاها</string>
     <string name="connection_error">خطا در برقراری ارتباط</string>
     <string name="retry_message">تلاش مجدد</string>
+    <string name="empty_cart_message">سبد خرید شما خالی است.</string>
+    <string name="login_message">ورود یا ثبت نام</string>
+    <string name="login_description_message">برای خرید کالا ها و امکانات بیشتر لطفا وارد شوید.</string>
+    <string name="cart_summary">خلاصه سبد</string>
+    <string name="total_cost_of_cart">جمع سبد خرید</string>
+    <string name="cart_discount">سود شما از این خرید</string>
+    <string name="continue_buying">ادامه فرایند خرید</string>
 </resources>

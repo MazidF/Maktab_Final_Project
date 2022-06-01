@@ -7,11 +7,14 @@ import com.example.onlineshop.ui.model.CategoryListItem
 import com.example.onlineshop.utils.categoryToCategoryListItemTransformer
 import com.example.onlineshop.utils.getWithDefault
 import com.example.onlineshop.utils.result.SafeApiCall
+import com.example.onlineshop.utils.result.SafeApiCall.Companion.fail
 import com.example.onlineshop.utils.result.SafeApiCall.Companion.loading
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import javax.inject.Inject
 
 private typealias SafeCategoryList = SafeApiCall<List<CategoryListItem>>
@@ -26,7 +29,7 @@ class ViewModelCategory @Inject constructor(
     )
     val categoriesStateFlow get() = _categoryTitlesStateFlow.asStateFlow()
 
-    val categoryMap = HashMap<Long, MutableStateFlow<SafeCategoryList>>()
+    val categoryMap = HashMap<Long, ArrayList<CategoryListItem>>()
 
     init {
         loadCategoriesTitles()
@@ -36,24 +39,28 @@ class ViewModelCategory @Inject constructor(
         viewModelScope.launch {
             repository.getCategoriesByParentId(0, false).collect {
                 val list = categoryToCategoryListItemTransformer(it)
-                refresh(list)
-                _categoryTitlesStateFlow.emit(list)
+                if (refresh(list)) {
+                    _categoryTitlesStateFlow.emit(list)
+                } else {
+                    _categoryTitlesStateFlow.emit(fail(Exception("Failed to load categories!!")))
+                }
             }
         }
     }
 
-    private suspend fun refresh(sac: SafeCategoryList) {
-        sac.asSuccess()?.let { apiCall ->
-            for (i in apiCall.body()) {
-                loadCategoriesByParent(i.category.id)
+    private suspend fun refresh(sac: SafeCategoryList): Boolean {
+        sac.asSuccess()?.let { _ ->
+            val list = repository.getCategories(false).first {
+                when(it) {
+                    is SafeApiCall.Fail, is SafeApiCall.Success -> true
+                    else -> false
+                }
+            }.asSuccess()?.body() ?: return false
+            list.forEach {
+                categoryMap.getWithDefault(it.parent, ArrayList()).add(CategoryListItem.Item(it))
             }
+            return true
         }
-    }
-
-    private suspend fun loadCategoriesByParent(parentId: Long) {
-        repository.getCategoriesByParentId(parentId, true).collect {
-            categoryMap.getWithDefault(parentId, MutableStateFlow(loading()))
-                .emit(categoryToCategoryListItemTransformer(it))
-        }
+        return false
     }
 }

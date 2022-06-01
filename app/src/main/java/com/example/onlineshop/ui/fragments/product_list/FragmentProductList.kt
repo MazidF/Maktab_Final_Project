@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.navArgs
@@ -35,11 +34,11 @@ class FragmentProductList : FragmentConnectionObserver(R.layout.fragment_product
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentProductListBinding.bind(view)
 
-        init()
+        initView()
         observe()
     }
 
-    private fun init() = with(binding) {
+    private fun initView() = with(binding) {
         productAdapter = object : ProductPagingAdapter<ProductListItem.Item>(
             ProductItemDiffItemCallback(),
             onItemClick = this@FragmentProductList::onItemClick
@@ -51,8 +50,7 @@ class FragmentProductList : FragmentConnectionObserver(R.layout.fragment_product
                 return SimpleVerticalProductItem(parent.context, true)
             }
         }
-        productAdapter.withLoadStateFooter(LoadingAdapter())
-        productListList.adapter = productAdapter
+        productListList.adapter = productAdapter.withLoadStateFooter(LoadingAdapter())
     }
 
     private fun onItemClick(item: ProductListItem.Item) {
@@ -109,6 +107,11 @@ class FragmentProductList : FragmentConnectionObserver(R.layout.fragment_product
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        println()
     }
 
     override fun navigateToConnectionFailed() {

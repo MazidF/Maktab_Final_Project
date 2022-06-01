@@ -10,7 +10,10 @@ import com.example.onlineshop.ui.model.ProductList
 import com.example.onlineshop.ui.model.ProductListItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,10 +21,10 @@ class ViewModelProductList @Inject constructor(
     private val repository: ProductRepository,
 ) : ViewModel() {
 
-    private var pagingDataFlow: Flow<PagingData<ProductListItem.Item>>? = null
+    private var pagingDataStateFlow: StateFlow<PagingData<ProductListItem.Item>>? = null
 
     fun load(productList: ProductList): Flow<PagingData<ProductListItem.Item>> {
-        return pagingDataFlow ?: when(productList) {
+        return pagingDataStateFlow ?: when(productList) {
             is ProductList.ByCategory -> {
                 repository.getProductsByCategory(productList.category.id.toString())
             }
@@ -39,7 +42,9 @@ class ViewModelProductList @Inject constructor(
                 ProductListItem.Item(it)
             }
         }.also {
-            pagingDataFlow = it
+            viewModelScope.launch {
+                pagingDataStateFlow = it.stateIn(this)
+            }
         }.cachedIn(viewModelScope)
     }
 
