@@ -1,4 +1,4 @@
-package com.example.onlineshop.ui.activity
+package com.example.onlineshop.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -21,12 +21,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        init()
+        initView()
     }
 
-    private fun init() = with(binding) {
+    private fun initView() = with(binding) {
         setSupportActionBar(toolbar)
         NavigationUI.setupWithNavController(bottomNavigation, navController)
+        navigationInit()
+        drawerBtn.setOnClickListener {
+            openOrCloseDrawer()
+        }
+        searchBtn.setOnClickListener {
+            navController.navigate(R.id.fragmentSearch)
+        }
+    }
+
+    private fun navigationInit() = with(binding) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.fragmentCart, R.id.fragmentProfile, R.id.fragmentHome, R.id.fragmentCategory, -> {
@@ -38,12 +48,6 @@ class MainActivity : AppCompatActivity() {
                     bottomNavigation.isVisible = false
                 }
             }
-        }
-        drawerBtn.setOnClickListener {
-            openOrCloseDrawer()
-        }
-        searchBtn.setOnClickListener {
-
         }
     }
 

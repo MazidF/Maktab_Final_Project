@@ -40,7 +40,7 @@ class HorizontalProductContainer : LinearLayout, Refreshable<ProductListItem> {
         initView()
     }
 
-    constructor(context: Context, imageId: Int, title: String? = null) : super(context) {
+    constructor(context: Context, imageId: Int = 0, title: String? = null) : super(context) {
         this.imageId = imageId
         title?.let {
             showTitle(title)

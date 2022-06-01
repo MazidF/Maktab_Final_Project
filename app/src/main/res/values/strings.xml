@@ -7,4 +7,6 @@
     <string name="see_all">مشاهده همه</string>
     <string name="add_to_cart">افزودن به سبد خرید</string>
     <string name="search_in_all">جست و جو در همه کالاها</string>
+    <string name="connection_error">خطا در برقراری ارتباط</string>
+    <string name="retry_message">تلاش مجدد</string>
 </resources>

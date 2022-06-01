@@ -18,19 +18,10 @@ class ViewModelProductList @Inject constructor(
     private val repository: ProductRepository,
 ) : ViewModel() {
 
-
-
-/*    fun getMostRatedProduct(): Flow<PagingData<Item>> {
-        return repository.getMostRatedProduct()
-            .map { pagingData ->
-                pagingData.map {
-                    Item(it)
-                }
-            }.cachedIn(viewModelScope)
-    }*/
+    private var pagingDataFlow: Flow<PagingData<ProductListItem.Item>>? = null
 
     fun load(productList: ProductList): Flow<PagingData<ProductListItem.Item>> {
-        return when(productList) {
+        return pagingDataFlow ?: when(productList) {
             is ProductList.ByCategory -> {
                 repository.getProductsByCategory(productList.category.id.toString())
             }
@@ -47,6 +38,8 @@ class ViewModelProductList @Inject constructor(
             pagingData.map {
                 ProductListItem.Item(it)
             }
+        }.also {
+            pagingDataFlow = it
         }.cachedIn(viewModelScope)
     }
 

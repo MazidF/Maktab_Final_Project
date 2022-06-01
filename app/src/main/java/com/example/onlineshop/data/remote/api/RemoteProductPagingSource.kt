@@ -8,11 +8,11 @@ import com.example.onlineshop.data.model.Product
 import com.example.onlineshop.utils.STARTING_PAGE_INDEX
 import com.example.onlineshop.utils.result.SafeApiCall
 
-abstract class RemoteProductPagingSource : PagingSource<Int, Product>() {
+abstract class RemoteProductPagingSource<T : Any> : PagingSource<Int, T>() {
 
-    abstract suspend fun getData(page: Int, loadSize: Int): SafeApiCall<List<Product>>
+    abstract suspend fun getData(page: Int, loadSize: Int): SafeApiCall<List<T>>
 
-    override fun getRefreshKey(state: PagingState<Int, Product>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, T>): Int? {
         return state.anchorPosition?.let { anchorPos ->
             state.closestPageToPosition(anchorPos)?.run {
                 prevKey?.plus(1) ?: nextKey?.minus(1)
@@ -20,7 +20,7 @@ abstract class RemoteProductPagingSource : PagingSource<Int, Product>() {
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Product> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, T> {
         val key = params.key ?: STARTING_PAGE_INDEX
         return try {
             val safeApiCall = getData(key, params.loadSize)
@@ -41,15 +41,15 @@ abstract class RemoteProductPagingSource : PagingSource<Int, Product>() {
     }
 
     companion object {
-        fun getPager(
+        fun <T : Any> getPager(
             config: PagingConfig,
-            producer: suspend (Int, Int) -> SafeApiCall<List<Product>>
-        ): Pager<Int, Product> {
+            producer: suspend (Int, Int) -> SafeApiCall<List<T>>
+        ): Pager<Int, T> {
             return Pager(
                 config = config,
             ) {
-                object : RemoteProductPagingSource() {
-                    override suspend fun getData(page: Int, loadSize: Int): SafeApiCall<List<Product>> {
+                object : RemoteProductPagingSource<T>() {
+                    override suspend fun getData(page: Int, loadSize: Int): SafeApiCall<List<T>> {
                         return producer(page, loadSize)
                     }
                 }

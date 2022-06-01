@@ -4,13 +4,18 @@ import androidx.paging.PagingData
 import com.example.onlineshop.data.model.Category
 import com.example.onlineshop.data.model.Product
 import com.example.onlineshop.data.model.ProductInfo
+import com.example.onlineshop.data.model.ProductSearchItem
 import com.example.onlineshop.data.remote.api.RemoteProductDataSource
+import com.example.onlineshop.di.qualifier.DispatcherIO
 import com.example.onlineshop.utils.result.SafeApiCall
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
 class ProductRepository(
     private val remote: RemoteProductDataSource,
+    @DispatcherIO private val dispatcher: CoroutineDispatcher,
 ) {
     fun getMostRatedProduct(): Flow<PagingData<Product>> {
         return remote.getMostRatedProduct()
@@ -30,7 +35,7 @@ class ProductRepository(
         )
     }
 
-    suspend fun search(query: String): Flow<PagingData<Product>> {
+    fun search(query: String): Flow<PagingData<ProductSearchItem>> {
         return remote.search(query = query)
     }
 
@@ -38,7 +43,7 @@ class ProductRepository(
         reload: Boolean,
         fakeData: T? = null,
         block: suspend () -> SafeApiCall<T>
-    ): Flow<SafeApiCall<T>> = flow {
+    ): Flow<SafeApiCall<T>> = flow<SafeApiCall<T>> {
         if (reload) {
             emit(SafeApiCall.reloading())
         } else {
@@ -47,11 +52,9 @@ class ProductRepository(
         fakeData?.let {
             emit(SafeApiCall.success(it))
         }
-        try {
-            emit(block())
-        } catch (e: Exception) {
-            emit(SafeApiCall.fail(e))
-        }
+        emit(block())
+    }.catch { cause ->
+        emit(SafeApiCall.fail(cause))
     }
 
     suspend fun getCategories(reload: Boolean): Flow<SafeApiCall<List<Category>>> {

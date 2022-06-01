@@ -4,13 +4,17 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.navArgs
+import androidx.paging.LoadState
 import com.example.onlineshop.R
 import com.example.onlineshop.databinding.FragmentProductListBinding
+import com.example.onlineshop.ui.fragments.FragmentConnectionObserver
+import com.example.onlineshop.ui.fragments.adapter.LoadingAdapter
 import com.example.onlineshop.ui.fragments.adapter.ProductPagingAdapter
+import com.example.onlineshop.ui.fragments.adapter.diff_callback.ProductItemDiffItemCallback
 import com.example.onlineshop.ui.model.ProductListItem
 import com.example.onlineshop.utils.launchOnState
 import com.example.onlineshop.widgit.Bindable
@@ -18,14 +22,14 @@ import com.example.onlineshop.widgit.SimpleVerticalProductItem
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class FragmentProductList : Fragment(R.layout.fragment_product_list) {
+class FragmentProductList : FragmentConnectionObserver(R.layout.fragment_product_list) {
     private var _binding: FragmentProductListBinding? = null
     private val binding: FragmentProductListBinding
         get() = _binding!!
 
     private val viewModel: ViewModelProductList by viewModels()
     private val args: FragmentProductListArgs by navArgs()
-    private lateinit var productAdapter: ProductPagingAdapter
+    private lateinit var productAdapter: ProductPagingAdapter<ProductListItem.Item>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,7 +40,10 @@ class FragmentProductList : Fragment(R.layout.fragment_product_list) {
     }
 
     private fun init() = with(binding) {
-        productAdapter = object : ProductPagingAdapter() {
+        productAdapter = object : ProductPagingAdapter<ProductListItem.Item>(
+            ProductItemDiffItemCallback(),
+            onItemClick = this@FragmentProductList::onItemClick
+        ) {
             override fun onCreateBindable(
                 parent: ViewGroup,
                 viewType: Int
@@ -44,17 +51,51 @@ class FragmentProductList : Fragment(R.layout.fragment_product_list) {
                 return SimpleVerticalProductItem(parent.context, true)
             }
         }
+        productAdapter.withLoadStateFooter(LoadingAdapter())
         productListList.adapter = productAdapter
     }
 
+    private fun onItemClick(item: ProductListItem.Item) {
+        navController.navigate(
+            FragmentProductListDirections.actionFragmentProductListToFragmentProductInfo(
+                item.product
+            )
+        )
+    }
+
     private fun observe() = with(binding) {
-        var hasBeenLoaded = false
         launchOnState(Lifecycle.State.STARTED) {
             viewModel.load(args.productList).collect {
-                // TODO: loading with paging
                 productAdapter.submitData(it)
             }
         }
+        launchOnState(Lifecycle.State.STARTED) {
+            productAdapter.loadStateFlow.collect {
+                when (it.refresh) {
+                    is LoadState.NotLoading -> {
+                        stopLoading()
+                    }
+                    LoadState.Loading -> {
+                        startLoading()
+                    }
+                    is LoadState.Error -> {
+                        handleError()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun handleError() {
+        // TODO: handle the error
+    }
+
+    private fun startLoading(): Unit = with(binding) {
+        productListLottie.apply {
+            playAnimation()
+            isVisible = true
+        }
+        productListList.isVisible = false
     }
 
     private fun stopLoading(): Unit = with(binding) {
@@ -68,5 +109,11 @@ class FragmentProductList : Fragment(R.layout.fragment_product_list) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun navigateToConnectionFailed() {
+        navController.navigate(
+            FragmentProductListDirections.actionFragmentProductListToFragmentNetworkConnectionFailed()
+        )
     }
 }

@@ -2,11 +2,13 @@ package com.example.onlineshop.ui.fragments.profile
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import com.example.onlineshop.R
 import com.example.onlineshop.databinding.FragmentProfileBinding
+import com.example.onlineshop.ui.fragments.FragmentConnectionObserver
+import dagger.hilt.android.AndroidEntryPoint
 
-class FragmentProfile : Fragment(R.layout.fragment_profile) {
+@AndroidEntryPoint
+class FragmentProfile : FragmentConnectionObserver(R.layout.fragment_profile) {
     private var _binding: FragmentProfileBinding? = null
     private val binding: FragmentProfileBinding
         get() = _binding!!
@@ -30,5 +32,9 @@ class FragmentProfile : Fragment(R.layout.fragment_profile) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun navigateToConnectionFailed() {
+        navController.navigate(FragmentProfileDirections.actionFragmentProfileToFragmentNetworkConnectionFailed())
     }
 }

@@ -51,7 +51,7 @@ class ViewModelHome @Inject constructor(
 
     private fun getNewestAsync(): Deferred<SafeProducts> {
         return viewModelScope.async {
-            repository.getMostPopularProduct(15, hasBeenLoaded).map(productToProductListItemTransformer).collect {
+            repository.getNewestProduct(15, hasBeenLoaded).map(productToProductListItemTransformer).collect {
                 _newestProductListFLowState.emit(it)
             }
             _newestProductListFLowState.value

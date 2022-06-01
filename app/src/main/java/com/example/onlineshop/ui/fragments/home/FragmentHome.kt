@@ -4,13 +4,16 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.onlineshop.R
 import com.example.onlineshop.data.model.Product
 import com.example.onlineshop.databinding.FragmentHomeBinding
+import com.example.onlineshop.ui.fragments.FragmentConnectionObserver
 import com.example.onlineshop.ui.fragments.adapter.RefreshableAdapter
+import com.example.onlineshop.ui.fragments.cart.FragmentCartDirections
 import com.example.onlineshop.ui.model.ProductList
 import com.example.onlineshop.ui.model.ProductListItem
 import com.example.onlineshop.utils.result.SafeApiCall
@@ -19,11 +22,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class FragmentHome : Fragment(R.layout.fragment_home) {
-    private val navController by lazy {
-        findNavController()
-    }
-    private val viewModel: ViewModelHome by viewModels()
+class FragmentHome : FragmentConnectionObserver(R.layout.fragment_home) {
+    private val viewModel: ViewModelHome by activityViewModels()
 
     private var _binding: FragmentHomeBinding? = null
     private val binding: FragmentHomeBinding
@@ -76,51 +76,43 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
     }
 
     private fun errorDialog() {
-        TODO("Not yet implemented")
+        // TODO: handle error
     }
 
     private fun refresh() {
         refreshableAdapter.refreshAll()
     }
 
+    private fun createHorizontalProductContainer(
+        title: String? = null,
+        imageId: Int = 0,
+        onMoreButtonClick: () -> Unit
+    ): HorizontalProductContainer {
+        return HorizontalProductContainer(
+            requireContext(),
+            imageId = imageId,
+            title = title
+        ).apply {
+            setOnItemClick {
+                onClick(it)
+            }
+            setOnMoreButtonClick(onMoreButtonClick)
+        }
+    }
+
     private fun createRefreshableAdapter(): RefreshableAdapter<ProductListItem> = with(viewModel) {
         return RefreshableAdapter(
             list = listOf(
-                HorizontalProductContainer(
-                    requireContext(),
-                    R.drawable.new_offer,
-                    "جدید ترین ها:"
-                ).apply {
-                    setOnItemClick {
-                        onClick(it)
-                    }
-                    setOnMoreButtonClick {
-                        showProductList(ProductList.Newest)
-                    }
+                createHorizontalProductContainer("جدید ترین ها:") {
+                    showProductList(ProductList.Newest)
                 }, // newest
-                HorizontalProductContainer(
-                    requireContext(),
-                    R.drawable.special_offer
-                ).apply {
+                createHorizontalProductContainer(imageId = R.drawable.special_offer) {
+                    showProductList(ProductList.MostPopular)
+                }.apply {
                     changeBackgroundColor(requireContext().getColor(R.color.discount_red))
-                    setOnItemClick {
-                        onClick(it)
-                    }
-                    setOnMoreButtonClick {
-                        showProductList(ProductList.MostPopular)
-                    }
                 }, // most popular
-                HorizontalProductContainer(
-                    requireContext(),
-                    R.drawable.special_offer,
-                    "بهترین ها:"
-                ).apply {
-                    setOnItemClick {
-                        onClick(it)
-                    }
-                    setOnMoreButtonClick {
-                        showProductList(ProductList.MostRated)
-                    }
+                createHorizontalProductContainer("بهترین ها:") {
+                    showProductList(ProductList.MostRated)
                 } // most rated,
             ),
             producerList = listOf(
@@ -155,5 +147,9 @@ class FragmentHome : Fragment(R.layout.fragment_home) {
         super.onDestroyView()
         binding.homeList.adapter = null
         _binding = null
+    }
+
+    override fun navigateToConnectionFailed() {
+        navController.navigate(FragmentHomeDirections.actionFragmentHomeToFragmentNetworkConnectionFailed())
     }
 }

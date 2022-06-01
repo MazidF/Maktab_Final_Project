@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_fragmentHome_to_fragmentProductList"
             app:destination="@id/fragmentProductList" />
+        <action
+            android:id="@+id/action_fragmentHome_to_fragmentNetworkConnectionFailed"
+            app:destination="@id/fragmentNetworkConnectionFailed" />
     </fragment>
     <fragment
         android:id="@+id/fragmentProductInfo"
@@ -28,6 +31,9 @@
         <action
             android:id="@+id/action_fragmentProductInfo_self"
             app:destination="@id/fragmentProductInfo" />
+        <action
+            android:id="@+id/action_fragmentProductInfo_to_fragmentNetworkConnectionFailed"
+            app:destination="@id/fragmentNetworkConnectionFailed" />
     </fragment>
     <fragment
         android:id="@+id/fragmentCategory"
@@ -36,6 +42,9 @@
         <action
             android:id="@+id/action_fragmentCategory_to_fragmentProductList"
             app:destination="@id/fragmentProductList" />
+        <action
+            android:id="@+id/action_fragmentCategory_to_fragmentNetworkConnectionFailed"
+            app:destination="@id/fragmentNetworkConnectionFailed" />
     </fragment>
     <fragment
         android:id="@+id/fragmentProductList"
@@ -47,6 +56,9 @@
         <action
             android:id="@+id/action_fragmentProductList_to_fragmentProductInfo"
             app:destination="@id/fragmentProductInfo" />
+        <action
+            android:id="@+id/action_fragmentProductList_to_fragmentNetworkConnectionFailed"
+            app:destination="@id/fragmentNetworkConnectionFailed" />
     </fragment>
     <fragment
         android:id="@+id/fragmentCart"
@@ -55,13 +67,33 @@
         <action
             android:id="@+id/action_fragmentCart_to_fragmentProductInfo"
             app:destination="@id/fragmentProductInfo" />
+        <action
+            android:id="@+id/action_fragmentCart_to_fragmentNetworkConnectionFailed"
+            app:destination="@id/fragmentNetworkConnectionFailed" />
     </fragment>
     <fragment
         android:id="@+id/fragmentProfile"
         android:name="com.example.onlineshop.ui.fragments.profile.FragmentProfile"
-        android:label="FragmentProfile" >
+        android:label="FragmentProfile"
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_fragmentProfile_to_fragmentProductInfo"
             app:destination="@id/fragmentProductInfo" />
+        <action
+            android:id="@+id/action_fragmentProfile_to_fragmentNetworkConnectionFailed"
+            app:destination="@id/fragmentNetworkConnectionFailed" />
     </fragment>
+    <fragment
+        android:id="@+id/fragmentSearch"
+        android:name="com.example.onlineshop.ui.fragments.search.FragmentSearch"
+        android:label="FragmentSearch" >
+        <action
+            android:id="@+id/action_fragmentSearch_to_fragmentNetworkConnectionFailed"
+            app:destination="@id/fragmentNetworkConnectionFailed" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentNetworkConnectionFailed"
+        android:name="com.example.onlineshop.ui.fragments.network.FragmentNetworkConnectionFailed"
+        android:label="FragmentNetworkConnectionFailed"
+        tools:layout="@layout/fragment_network_connection_failed"/>
 </navigation>

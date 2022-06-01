@@ -1,12 +1,16 @@
 package com.example.onlineshop.data.remote.api.deserializer
 
+import android.os.Build
+import android.text.Html
+import android.text.Spanned
+import android.widget.TextView
 import com.example.onlineshop.data.model.ProductInfo
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import java.lang.reflect.Type
 
-class ProductInfoDeserializer : JsonDeserializer<ProductInfo> {
+object ProductInfoDeserializer : JsonDeserializer<ProductInfo> {
     override fun deserialize(
         json: JsonElement,
         typeOfT: Type,

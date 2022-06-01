@@ -1,22 +1,23 @@
 package com.example.onlineshop.data.remote.api
 
 import androidx.paging.*
-import com.example.onlineshop.data.model.Category
-import com.example.onlineshop.data.model.Product
-import com.example.onlineshop.data.model.ProductInfo
-import com.example.onlineshop.data.model.ProductOrders
+import com.example.onlineshop.data.model.*
+import com.example.onlineshop.di.qualifier.DispatcherIO
 import com.example.onlineshop.utils.INITIAL_SIZE
 import com.example.onlineshop.utils.PAGE_SIZE
 import com.example.onlineshop.utils.PRE_FETCH_DISTANCE
 import com.example.onlineshop.utils.asSafeApiCall
 import com.example.onlineshop.utils.result.SafeApiCall
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import retrofit2.Response
 import java.util.*
 import javax.inject.Inject
 
 class RemoteProductDataSource @Inject constructor(
     private val api: ProductApi,
+    @DispatcherIO private val dispatcher: CoroutineDispatcher,
 ) {
 
     private val pagingConfig = PagingConfig(
@@ -58,31 +59,31 @@ class RemoteProductDataSource @Inject constructor(
     fun getMostRatedProduct(): Flow<PagingData<Product>> {
         return RemoteProductPagingSource.getPager(config = pagingConfig) { page, perPage ->
             getMostRatedProduct(page, perPage)
-        }.flow
+        }.flow.flowOn(dispatcher)
     }
 
     fun getNewestProduct(): Flow<PagingData<Product>> {
         return RemoteProductPagingSource.getPager(config = pagingConfig) { page, perPage ->
             getNewestProduct(page, perPage)
-        }.flow
+        }.flow.flowOn(dispatcher)
     }
 
     fun getMostPopularProduct(): Flow<PagingData<Product>> {
         return RemoteProductPagingSource.getPager(config = pagingConfig) { page, perPage ->
             getMostPopularProduct(page, perPage)
-        }.flow
+        }.flow.flowOn(dispatcher)
     }
 
     fun getProductsByCategory(categoryId: String): Flow<PagingData<Product>> {
         return RemoteProductPagingSource.getPager(config = pagingConfig) { page, perPage ->
             api.getProductsByCategory(categoryId, page, perPage).asSafeApiCall()
-        }.flow
+        }.flow.flowOn(dispatcher)
     }
 
-    suspend fun search(query: String): Flow<PagingData<Product>> {
+    fun search(query: String): Flow<PagingData<ProductSearchItem>> {
         return RemoteProductPagingSource.getPager(config = pagingConfig) { page, perPage ->
             api.search(query, page, perPage).asSafeApiCall()
-        }.flow
+        }.flow.flowOn(dispatcher)
     }
 
     suspend fun getCategories(page: Int, perPage: Int): SafeApiCall<List<Category>> {

@@ -18,8 +18,11 @@ import com.example.onlineshop.ui.fragments.product_info.viewpager.FragmentImageV
 import com.example.onlineshop.ui.fragments.product_info.viewpager.ProductImageViewPagerAdapter
 import com.example.onlineshop.utils.launchOnState
 import com.example.onlineshop.utils.result.SafeApiCall
+import com.example.onlineshop.utils.setHtmlText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
+// TODO: handle rotation
 
 @AndroidEntryPoint
 class FragmentProductInfo : Fragment(R.layout.fragment_product_info) {
@@ -109,7 +112,7 @@ class FragmentProductInfo : Fragment(R.layout.fragment_product_info) {
             }
         }
         with(info) {
-            productInfoDescription.text = description
+            productInfoDescription.setHtmlText(description)
             productInfoSalesCount.text = "($totalSales)"
             productInfoRate.text = ratingCount.toString()
         }

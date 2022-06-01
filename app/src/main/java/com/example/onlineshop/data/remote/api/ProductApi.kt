@@ -1,9 +1,6 @@
 package com.example.onlineshop.data.remote.api
 
-import com.example.onlineshop.data.model.Category
-import com.example.onlineshop.data.model.Product
-import com.example.onlineshop.data.model.ProductInfo
-import com.example.onlineshop.data.model.ProductOrders
+import com.example.onlineshop.data.model.*
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -40,7 +37,7 @@ interface ProductApi {
         @Query("search") query: String,
         @Query("page") page: Int,
         @Query("per_page") perPage: Int,
-    ): Response<List<Product>>
+    ): Response<List<ProductSearchItem>>
 
     @GET("products/categories")
     suspend fun getCategories(

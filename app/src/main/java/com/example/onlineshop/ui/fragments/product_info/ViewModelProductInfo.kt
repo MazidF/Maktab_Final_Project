@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+// TODO: refactor to livedata or not!!!
+
 @HiltViewModel
 class ViewModelProductInfo @Inject constructor(
     private val repository: ProductRepository,

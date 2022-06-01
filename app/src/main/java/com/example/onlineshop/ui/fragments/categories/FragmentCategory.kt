@@ -5,13 +5,16 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.onlineshop.R
 import com.example.onlineshop.data.model.Category
 import com.example.onlineshop.databinding.FragmentCategoryBinding
+import com.example.onlineshop.ui.fragments.FragmentConnectionObserver
 import com.example.onlineshop.ui.fragments.adapter.RefreshableAdapter
+import com.example.onlineshop.ui.fragments.cart.FragmentCartDirections
 import com.example.onlineshop.ui.model.CategoryListItem
 import com.example.onlineshop.ui.model.ProductList
 import com.example.onlineshop.utils.launchOnState
@@ -21,16 +24,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
-class FragmentCategory : Fragment(R.layout.fragment_category) {
+class FragmentCategory : FragmentConnectionObserver(R.layout.fragment_category) {
     private var _binding: FragmentCategoryBinding? = null
     private val binding: FragmentCategoryBinding
         get() = _binding!!
 
-    private val viewModel: ViewModelCategory by viewModels()
+    private val viewModel: ViewModelCategory by activityViewModels()
     private lateinit var refreshableAdapter: RefreshableAdapter<CategoryListItem>
-    private val navController by lazy {
-        findNavController()
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -66,7 +66,6 @@ class FragmentCategory : Fragment(R.layout.fragment_category) {
 
     private fun errorDialog(error: Throwable): Unit = with(binding) {
         endLoading()
-        TODO("Not yet implemented")
     }
 
     private fun createRefreshableAdapter(): RefreshableAdapter<CategoryListItem> = with(viewModel) {
@@ -107,5 +106,9 @@ class FragmentCategory : Fragment(R.layout.fragment_category) {
         super.onDestroyView()
         binding.categoryList.adapter = null
         _binding = null
+    }
+
+    override fun navigateToConnectionFailed() {
+        navController.navigate(FragmentCategoryDirections.actionFragmentCategoryToFragmentNetworkConnectionFailed())
     }
 }

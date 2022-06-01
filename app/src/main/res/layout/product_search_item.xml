@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/product_search_root"
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/product_search_name"
+            android:layout_weight="2"
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:textSize="13sp"
+            style="@style/SimpleItemNameTextView"/>
+
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:layout_width="match_parent">
+
+            <androidx.constraintlayout.utils.widget.ImageFilterView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:tint="@color/gold"
+                android:src="@drawable/ic_star"/>
+
+            <TextView
+                android:id="@+id/product_search_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:layout_marginStart="3dp"
+                android:text="4.0"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="2"
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:layout_width="@dimen/simple_item_icon_size"
+                android:layout_height="@dimen/simple_item_icon_size"
+                android:src="@drawable/toman_icon" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/product_search_price"
+                    style="@style/SimpleItemCostTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/product_search_real_price"
+                    style="@style/SimpleItemDiscountTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <include layout="@layout/discount_icon"
+                android:id="@+id/product_search_discount"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/product_search_image"
+        android:layout_marginStart="20dp"
+        app:shapeAppearanceOverlay="@style/ImageViewWithCorner"
+        android:layout_width="@dimen/simple_item_image_size"
+        android:layout_height="@dimen/simple_item_image_size"
+        android:src="@drawable/ic_product_default"/>
+
+</LinearLayout>
