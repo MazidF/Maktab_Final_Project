@@ -29,6 +29,7 @@ class ViewModelCart @Inject constructor(
     init {
         viewModelScope.launch {
             map = repository.loadCartMap()
+            val a = map
         }
     }
 
@@ -49,14 +50,20 @@ class ViewModelCart @Inject constructor(
 
     fun updateCart(productId: Long, count: Int) {
         mapChanged = true
-        map[productId] = count
+        if (count == 0) {
+            map.remove(productId)
+        } else {
+            map[productId] = count
+        }
     }
 
     fun loadProducts() {
         if (hasBeenLoaded.not() || mapChanged) {
             mapChanged = false
             getProducts()
-        }
+        }/* else {
+            retry()
+        }*/
     }
 
     fun retry() {
@@ -67,7 +74,7 @@ class ViewModelCart @Inject constructor(
     private fun getProducts() {
         viewModelScope.launch {
             val list = map.keys.toList().toTypedArray()
-            repository.getProductById(list).collect {
+            repository.getProductById(list, false).collect {
                 _productStateFlow.emit(
                     it.map { mapList ->
                         mapList.map { product ->

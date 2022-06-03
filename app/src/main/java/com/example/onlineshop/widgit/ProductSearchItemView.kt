@@ -27,7 +27,10 @@ class ProductSearchItemView @JvmOverloads constructor(
             productSearchName.text = product.name
             productSearchPrice.text = product.price
             productSearchRate.text = item.averageRating
-            productSearchRealPrice.text = product.regularPrice
+            productSearchRealPrice.apply {
+                text = product.regularPrice
+                isVisible = product.isOnSale()
+            }
             productSearchDiscount.discountPercentHolder.isVisible = product.isOnSale()
         }
     }

@@ -104,12 +104,20 @@ class ProductRepository(
         }
     }
 
-    suspend fun getProductById(ids: Array<Long>): Flow<SafeApiCall<List<Product>>> {
+    suspend fun getProductById(ids: Array<Long>, fake: Boolean = true): Flow<SafeApiCall<List<Product>>> {
         val seed = System.currentTimeMillis()
-        return load(false, List(ids.size) {
-            Product.fake(seed + it)
-        }) {
-            remoteProduct.getProductById(ids)
+        return if (fake) {
+            load(false, List(ids.size) {
+                Product.fake(seed + it)
+            }) {
+                remoteProduct.getProductById(ids)
+            }
+        } else {
+            load(false) {
+                val a = remoteProduct.getProductById(ids)
+                val t = a
+                a
+            }
         }
     }
 
