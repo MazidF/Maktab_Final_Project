@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +15,7 @@ import com.example.onlineshop.R
 import com.example.onlineshop.data.model.Product
 import com.example.onlineshop.data.model.ProductInfo
 import com.example.onlineshop.databinding.FragmentProductInfoBinding
+import com.example.onlineshop.ui.fragments.cart.ViewModelCart
 import com.example.onlineshop.ui.fragments.product_info.viewpager.FragmentImageViewer
 import com.example.onlineshop.ui.fragments.product_info.viewpager.ProductImageViewPagerAdapter
 import com.example.onlineshop.utils.launchOnState
@@ -35,6 +37,7 @@ class FragmentProductInfo : Fragment(R.layout.fragment_product_info) {
     private val binding: FragmentProductInfoBinding
         get() = _binding!!
 
+    private val cartViewModel: ViewModelCart by activityViewModels()
     private val viewModel: ViewModelProductInfo by viewModels()
     private lateinit var info: ProductInfo
 
@@ -42,11 +45,11 @@ class FragmentProductInfo : Fragment(R.layout.fragment_product_info) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentProductInfoBinding.bind(view)
 
-        init()
+        initView()
         observe()
     }
 
-    private fun init() = with(binding) {
+    private fun initView() = with(binding) {
         if (::info.isInitialized.not()) {
             viewModel.loadProductInfo(args.product)
         }
@@ -60,6 +63,13 @@ class FragmentProductInfo : Fragment(R.layout.fragment_product_info) {
             setOnItemClick {
                 onClick(it)
             }
+        }
+        productInfoAddToCart.apply {
+            val productId = args.product.id
+            setOnCountChangeListener {
+                cartViewModel.updateCart(productId, it)
+            }
+            this.setupCount(cartViewModel.getProductCount(productId))
         }
     }
 

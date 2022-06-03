@@ -31,7 +31,7 @@ object ProductInfoDeserializer : JsonDeserializer<ProductInfo> {
                 listOf(it["length"].asString, it["width"].asString, it["height"].asString, )
             },
             attributes = this["attributes"].asJsonArray.map {
-                ProductAttributeDeserializer().deserialize(
+                ProductAttributeDeserializer.deserialize(
                     it, typeOfT, context
                 )
             }

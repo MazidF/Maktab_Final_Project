@@ -2,12 +2,13 @@ package com.example.onlineshop.ui.fragments.search
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import com.example.onlineshop.R
+import com.example.onlineshop.data.model.ProductSearchItem
 import com.example.onlineshop.databinding.FragmentSearchBinding
 import com.example.onlineshop.ui.fragments.FragmentConnectionObserver
-import com.example.onlineshop.utils.onEnteredKeyPressed
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,16 +28,34 @@ class FragmentSearch : FragmentConnectionObserver(R.layout.fragment_search) {
     }
 
     private fun initView() = with(binding) {
-        fragmentSearchQuery.onEnteredKeyPressed { text, _, _ ->
+        fragmentSearchQuery.doOnTextChanged { t, _, _, _ ->
+            val text = t.toString()
             if (text.isNotBlank()) {
                 binding.fragmentSearchPagingView.setProducer(
                     this@FragmentSearch,
                     viewModel.search(text)
                 )
-                return@onEnteredKeyPressed true
             }
-            false
         }
+        fragmentSearchPagingView.apply {
+            setup(this@FragmentSearch)
+            setOnItemClickListener {
+                onItemClickListener(it)
+            }
+        }
+        fragmentSearchPagingAppbar.apply {
+            setStartIconOnClickListener {
+                (requireActivity() as? AppCompatActivity)?.onBackPressed()
+            }
+        }
+    }
+
+    private fun onItemClickListener(item: ProductSearchItem) {
+        navController.navigate(
+            FragmentSearchDirections.actionFragmentSearchToFragmentProductInfo(
+                item.product
+            )
+        )
     }
 
     private fun observe() = with(binding) {

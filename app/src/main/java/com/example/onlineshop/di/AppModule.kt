@@ -1,8 +1,11 @@
 package com.example.onlineshop.di
 
-import com.example.onlineshop.data.remote.api.RemoteProductDataSource
+import com.example.onlineshop.data.local.ILocalDataStore
+import com.example.onlineshop.data.remote.RemoteCustomerDataSource
+import com.example.onlineshop.data.remote.RemoteProductDataSource
 import com.example.onlineshop.data.repository.ProductRepository
 import com.example.onlineshop.di.qualifier.DispatcherIO
+import com.example.onlineshop.di.qualifier.LocalCustomerDataStoreAnnotation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,11 +20,15 @@ class AppModule {
     @Provides
     @Singleton
     fun provideProductRepository(
-        remote: RemoteProductDataSource,
+        remoteProduct: RemoteProductDataSource,
+        remoteCustomer: RemoteCustomerDataSource,
+        @LocalCustomerDataStoreAnnotation local: ILocalDataStore,
         @DispatcherIO dispatcher: CoroutineDispatcher,
     ) : ProductRepository {
         return ProductRepository(
-            remote = remote,
+            remoteProduct = remoteProduct,
+            remoteCustomer = remoteCustomer,
+            local = local,
             dispatcher = dispatcher,
         )
     }

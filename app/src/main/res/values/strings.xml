@@ -16,4 +16,8 @@
     <string name="total_cost_of_cart">جمع سبد خرید</string>
     <string name="cart_discount">سود شما از این خرید</string>
     <string name="continue_buying">ادامه فرایند خرید</string>
+    <string name="required_message">الزامی</string>
+    <string name="login_condition">با ورود یا ثبت نام در دیجیکالا شما شرایط و قوانین استفاده از سرویس های سایت دیجیکالا و قوانین حریم خصوصی آن را میپذیرم.</string>
+    <string name="change_to_sign_in">اکانت ندارید؟</string>
+    <string name="change_to_log_in">اکانت دارید؟</string>
 </resources>

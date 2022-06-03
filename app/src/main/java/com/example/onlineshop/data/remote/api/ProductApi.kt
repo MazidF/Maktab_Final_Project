@@ -51,4 +51,7 @@ interface ProductApi {
         @Query("page") page: Int,
         @Query("per_page") perPage: Int,
     ): Response<List<Category>>
+
+    @GET("products/608")
+    suspend fun getMainPosterProducts(): Response<ProductImages>
 }

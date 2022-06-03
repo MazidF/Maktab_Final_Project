@@ -1,8 +1,10 @@
 package com.example.onlineshop.utils
 
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.Html
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -15,9 +17,15 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.example.onlineshop.R
 import com.example.onlineshop.utils.result.SafeApiCall
+import com.google.gson.JsonObject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import retrofit2.Response
+import java.io.File
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
+import java.io.OutputStream
 import java.util.function.Predicate
 
 fun Fragment.launchOnState(state: Lifecycle.State, block: suspend () -> Unit): Job {
@@ -95,4 +103,31 @@ fun TextView.onEnteredKeyPressed(cb: (text: String, actionId: Int, event: KeyEve
             false
         }
     }
+}
+
+fun <T> readObjectFromFile(fileName: String, root: File): /*HashMap<Long, Int>*/ T? {
+    val file = File(root, fileName)
+    if (file.exists().not()) {
+        return null
+    }
+    return ObjectInputStream(file.inputStream()).use {
+        it.readUnshared() as? T
+    }
+}
+
+fun writeObjectOnFile(any: Any, fileName: String, root: File) {
+    val file = File(root, fileName)
+    if (file.exists()) {
+        file.delete()
+    } else {
+        file.createNewFile()
+    }
+    ObjectOutputStream(file.outputStream()).use {
+        it.writeUnshared(any)
+        it.flush()
+    }
+}
+
+fun logger(msg: String) {
+    Log.d("online_shop_logger", msg)
 }

@@ -1,7 +1,8 @@
-package com.example.onlineshop.data.remote.api
+package com.example.onlineshop.data.remote
 
 import androidx.paging.*
 import com.example.onlineshop.data.model.*
+import com.example.onlineshop.data.remote.api.ProductApi
 import com.example.onlineshop.di.qualifier.DispatcherIO
 import com.example.onlineshop.utils.INITIAL_SIZE
 import com.example.onlineshop.utils.PAGE_SIZE
@@ -10,9 +11,9 @@ import com.example.onlineshop.utils.asSafeApiCall
 import com.example.onlineshop.utils.result.SafeApiCall
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import retrofit2.Response
-import java.util.*
 import javax.inject.Inject
 
 class RemoteProductDataSource @Inject constructor(
@@ -107,5 +108,9 @@ class RemoteProductDataSource @Inject constructor(
 
     suspend fun getProductById(ids: Array<Long>): SafeApiCall<List<Product>> {
         return api.getProductsById(ids.contentToString()).asSafeApiCall()
+    }
+
+    suspend fun getMainPosterProducts(): SafeApiCall<ProductImages> {
+        return api.getMainPosterProducts().asSafeApiCall()
     }
 }

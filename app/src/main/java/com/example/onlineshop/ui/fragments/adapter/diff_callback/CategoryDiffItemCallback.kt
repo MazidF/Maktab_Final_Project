@@ -12,3 +12,4 @@ class CategoryDiffItemCallback : DiffUtil.ItemCallback<Category>() {
         return oldItem == newItem
     }
 }
+

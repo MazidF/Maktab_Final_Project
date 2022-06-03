@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="horizontal_product_container">
-        <attr name="title" format="string"/>
-        <attr name="hideMoreBtn" format="boolean"/>
+        <attr name="title" format="string" />
+        <attr name="hideMoreBtn" format="boolean" />
     </declare-styleable>
 
-    <declare-styleable name="paging_view" >
+    <declare-styleable name="paging_view">
         <attr name="spanCount" />
-        <attr name="layoutManager"/>
+        <attr name="layoutManager" />
+    </declare-styleable>
+
+    <declare-styleable name="custom_text_input_layout">
+        <attr name="hasPassword" format="boolean" />
+        <attr name="layout_hint" format="string" />
     </declare-styleable>
 </resources>

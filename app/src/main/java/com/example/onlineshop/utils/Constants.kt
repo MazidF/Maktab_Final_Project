@@ -15,3 +15,5 @@ const val PRE_FETCH_DISTANCE = 5
 const val STARTING_PAGE_INDEX = 1
 
 val glideDiskCacheStrategy = RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL)
+
+const val EMAIL_PATTERN = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$"

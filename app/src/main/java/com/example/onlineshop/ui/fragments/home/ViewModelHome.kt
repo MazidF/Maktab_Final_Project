@@ -2,6 +2,8 @@ package com.example.onlineshop.ui.fragments.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.onlineshop.data.model.Product
+import com.example.onlineshop.data.model.ProductImages
 import com.example.onlineshop.data.repository.ProductRepository
 import com.example.onlineshop.ui.model.ProductListItem
 import com.example.onlineshop.utils.result.SafeApiCall
@@ -39,6 +41,17 @@ class ViewModelHome @Inject constructor(
     )
     val newestProductListFlowState get() = _newestProductListFLowState.asStateFlow()
 
+    private val _imagesFlowState = MutableStateFlow<SafeApiCall<ProductImages>>(SafeApiCall.loading())
+    val imagesFlowState get() = _imagesFlowState.asStateFlow()
+
+    private fun getImagesAsync(): Deferred<SafeApiCall<ProductImages>> {
+        return viewModelScope.async {
+            repository.getMainPosterProducts().also {
+                _imagesFlowState.emit(it)
+            }
+            _imagesFlowState.value
+        }
+    }
 
     private fun getPopularAsync(): Deferred<SafeProducts> {
         return viewModelScope.async {
@@ -72,6 +85,7 @@ class ViewModelHome @Inject constructor(
     fun loadDataAsync(): Deferred<Boolean> {
         return viewModelScope.async {
             val list = listOf(
+                getImagesAsync(),
                 getRatedAsync(),
                 getNewestAsync(),
                 getPopularAsync(),

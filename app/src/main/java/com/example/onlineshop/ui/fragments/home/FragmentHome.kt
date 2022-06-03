@@ -3,17 +3,16 @@ package com.example.onlineshop.ui.fragments.home
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.example.onlineshop.R
 import com.example.onlineshop.data.model.Product
+import com.example.onlineshop.data.model.ProductImages
 import com.example.onlineshop.databinding.FragmentHomeBinding
 import com.example.onlineshop.ui.fragments.FragmentConnectionObserver
 import com.example.onlineshop.ui.fragments.adapter.RefreshableAdapter
-import com.example.onlineshop.ui.fragments.cart.FragmentCartDirections
+import com.example.onlineshop.ui.fragments.product_info.viewpager.FragmentImageViewer
+import com.example.onlineshop.ui.fragments.product_info.viewpager.ProductImageViewPagerAdapter
 import com.example.onlineshop.ui.model.ProductList
 import com.example.onlineshop.ui.model.ProductListItem
 import com.example.onlineshop.utils.result.SafeApiCall
@@ -35,10 +34,10 @@ class FragmentHome : FragmentConnectionObserver(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
 
-        init()
+        initView()
     }
 
-    private fun init() = with(binding) {
+    private fun initView() = with(binding) {
         homeRoot.setOnRefreshListener {
             loadData()
         }
@@ -47,7 +46,7 @@ class FragmentHome : FragmentConnectionObserver(R.layout.fragment_home) {
             adapter = refreshableAdapter
         }
         if (viewModel.hasBeenLoaded) {
-            refresh()
+            refresh(viewModel.imagesFlowState.value.asSuccess()?.body()?.images ?: listOf())
             hideLoading(true)
         } else {
             loadData(true)
@@ -59,7 +58,8 @@ class FragmentHome : FragmentConnectionObserver(R.layout.fragment_home) {
         viewLifecycleOwner.lifecycleScope.launch {
             val wasSuccessful = viewModel.loadDataAsync().await()
             if (wasSuccessful) {
-                refresh()
+                val list = viewModel.imagesFlowState.value.asSuccess()?.body()?.images
+                refresh(list ?: listOf())
             } else {
                 errorDialog()
             }
@@ -79,7 +79,15 @@ class FragmentHome : FragmentConnectionObserver(R.layout.fragment_home) {
         // TODO: handle error
     }
 
-    private fun refresh() {
+    private fun refresh(images: List<String>) = with(binding) {
+        homeSlider.adapter = ProductImageViewPagerAdapter(
+            fragment = this@FragmentHome,
+            fragments = List(images.size) {
+                FragmentSlideViewer().apply {
+                    setImage(images[it])
+                }
+            }
+        )
         refreshableAdapter.refreshAll()
     }
 

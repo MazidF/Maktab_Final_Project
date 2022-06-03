@@ -1,42 +1,47 @@
 package com.example.onlineshop.data.repository
 
 import androidx.paging.PagingData
-import com.example.onlineshop.data.model.Category
-import com.example.onlineshop.data.model.Product
-import com.example.onlineshop.data.model.ProductInfo
-import com.example.onlineshop.data.model.ProductSearchItem
-import com.example.onlineshop.data.remote.api.RemoteProductDataSource
+import com.example.onlineshop.data.local.ILocalDataStore
+import com.example.onlineshop.data.model.*
+import com.example.onlineshop.data.model.customer.Customer
+import com.example.onlineshop.data.model.customer.RawCustomer
+import com.example.onlineshop.data.remote.RemoteCustomerDataSource
+import com.example.onlineshop.data.remote.RemoteProductDataSource
 import com.example.onlineshop.di.qualifier.DispatcherIO
+import com.example.onlineshop.utils.logger
 import com.example.onlineshop.utils.result.SafeApiCall
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class ProductRepository(
-    private val remote: RemoteProductDataSource,
+    private val remoteProduct: RemoteProductDataSource,
+    private val remoteCustomer: RemoteCustomerDataSource,
+    private val local: ILocalDataStore,
     @DispatcherIO private val dispatcher: CoroutineDispatcher,
 ) {
     fun getMostRatedProduct(): Flow<PagingData<Product>> {
-        return remote.getMostRatedProduct()
+        return remoteProduct.getMostRatedProduct()
     }
 
     fun getNewestProduct(): Flow<PagingData<Product>> {
-        return remote.getNewestProduct()
+        return remoteProduct.getNewestProduct()
     }
 
     fun getMostPopularProduct(): Flow<PagingData<Product>> {
-        return remote.getMostPopularProduct()
+        return remoteProduct.getMostPopularProduct()
     }
 
     fun getProductsByCategory(categoryId: String): Flow<PagingData<Product>> {
-        return remote.getProductsByCategory(
+        return remoteProduct.getProductsByCategory(
             categoryId = categoryId,
         )
     }
 
     fun search(query: String): Flow<PagingData<ProductSearchItem>> {
-        return remote.search(query = query)
+        return remoteProduct.search(query = query)
     }
 
     private suspend fun <T> load(
@@ -55,17 +60,20 @@ class ProductRepository(
         emit(block())
     }.catch { cause ->
         emit(SafeApiCall.fail(cause))
-    }
+    }.flowOn(dispatcher)
 
     suspend fun getCategories(reload: Boolean): Flow<SafeApiCall<List<Category>>> {
         return load(reload) {
-            remote.getCategories(1, 100)
+            remoteProduct.getCategories(1, 100)
         }
     }
 
-    suspend fun getCategoriesByParentId(parentId: Long, reload: Boolean): Flow<SafeApiCall<List<Category>>> {
+    suspend fun getCategoriesByParentId(
+        parentId: Long,
+        reload: Boolean
+    ): Flow<SafeApiCall<List<Category>>> {
         return load(reload) {
-            remote.getCategoriesByParentId(parentId, 1, 100)
+            remoteProduct.getCategoriesByParentId(parentId, 1, 100)
         }
     }
 
@@ -74,25 +82,25 @@ class ProductRepository(
         reload: Boolean
     ): Flow<SafeApiCall<List<Product>>> {
         return load(reload) {
-            remote.getMostPopularProduct(1, size)
+            remoteProduct.getMostPopularProduct(1, size)
         }
     }
 
     suspend fun getMostRatedProduct(size: Int, reload: Boolean): Flow<SafeApiCall<List<Product>>> {
         return load(reload) {
-            remote.getMostRatedProduct(1, size)
+            remoteProduct.getMostRatedProduct(1, size)
         }
     }
 
     suspend fun getNewestProduct(size: Int, reload: Boolean): Flow<SafeApiCall<List<Product>>> {
         return load(reload) {
-            remote.getNewestProduct(1, size)
+            remoteProduct.getNewestProduct(1, size)
         }
     }
 
     suspend fun getProductInfo(productId: Long): Flow<SafeApiCall<ProductInfo>> {
         return load(false) {
-            remote.getProductInfo(productId)
+            remoteProduct.getProductInfo(productId)
         }
     }
 
@@ -101,7 +109,56 @@ class ProductRepository(
         return load(false, List(ids.size) {
             Product.fake(seed + it)
         }) {
-            remote.getProductById(ids)
+            remoteProduct.getProductById(ids)
         }
+    }
+
+    //////////////////////////////////// customers /////////////////////////////////////
+
+    suspend fun getCustomerById(userId: Long, reload: Boolean): Flow<SafeApiCall<Customer>> {
+        return load(reload) {
+            remoteCustomer.getCustomerById(userId)
+        }
+    }
+
+    suspend fun signIn(email: String, password: String): Flow<SafeApiCall<Customer>> {
+        return load(false) {
+            val raw = RawCustomer(
+                email = email,
+                password = password
+            )
+            remoteCustomer.signIn(raw)
+        }
+    }
+
+    suspend fun logIn(email: String, password: String): Flow<SafeApiCall<Customer>> {
+        return load(false) {
+            val customer = remoteCustomer.getCustomerByEmail(email)
+            if (customer.asSuccess()!!.body().password == password) {
+                customer
+            } else {
+                throw Exception("Email or Password was wrong!!")
+            }
+        }
+    }
+
+    suspend fun logIn(customerId: Long): Flow<SafeApiCall<Customer>> {
+        return load(false) {
+            remoteCustomer.logIn(customerId)
+        }
+    }
+
+    /////////////////////////// local //////////////////////////
+
+    suspend fun loadCartMap(): HashMap<Long, Int> {
+        return local.loadCartMap()
+    }
+
+    suspend fun saveCartMap(map: HashMap<Long, Int>) {
+        return local.saveCartMap(map)
+    }
+
+    suspend fun getMainPosterProducts(): SafeApiCall<ProductImages> {
+        return remoteProduct.getMainPosterProducts()
     }
 }

@@ -6,7 +6,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 // TODO: change this
 class ProductImageViewPagerAdapter(
     fragment: Fragment,
-    private val fragments: List<FragmentImageViewer>,
+    private val fragments: List<Fragment>,
 ) : FragmentStateAdapter(fragment) {
 
     override fun getItemCount() = fragments.size

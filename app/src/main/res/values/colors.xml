@@ -12,4 +12,6 @@
     <color name="text_description_gray">#7E7E7E</color>
     <color name="light_gray">#CACACA</color>
     <color name="gold">#E1B619</color>
+    <color name="blue">#2971FF</color>
+    <color name="orange">#FF6A1A</color>
 </resources>

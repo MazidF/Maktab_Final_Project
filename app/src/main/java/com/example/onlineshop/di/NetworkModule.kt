@@ -1,15 +1,9 @@
 package com.example.onlineshop.di
 
-import com.example.onlineshop.data.model.Category
-import com.example.onlineshop.data.model.Product
-import com.example.onlineshop.data.model.ProductInfo
-import com.example.onlineshop.data.model.ProductSearchItem
+import com.example.onlineshop.data.model.*
 import com.example.onlineshop.data.remote.api.CustomerApi
 import com.example.onlineshop.data.remote.api.ProductApi
-import com.example.onlineshop.data.remote.api.deserializer.CategoryDeserializer
-import com.example.onlineshop.data.remote.api.deserializer.ProductDeserializer
-import com.example.onlineshop.data.remote.api.deserializer.ProductInfoDeserializer
-import com.example.onlineshop.data.remote.api.deserializer.ProductSearchItemDeserializer
+import com.example.onlineshop.data.remote.api.deserializer.*
 import com.example.onlineshop.utils.BASE_URL
 import com.example.onlineshop.utils.CONSUMER_KEY
 import com.example.onlineshop.utils.CONSUMER_SECRET
@@ -74,6 +68,7 @@ class NetworkModule {
             .registerTypeAdapter(Product::class.java, ProductDeserializer)
             .registerTypeAdapter(Category::class.java, CategoryDeserializer)
             .registerTypeAdapter(ProductInfo::class.java, ProductInfoDeserializer)
+            .registerTypeAdapter(ProductImages::class.java, ProductImagesDeserializer)
             .registerTypeAdapter(ProductSearchItem::class.java, ProductSearchItemDeserializer)
             .create()
     }

@@ -9,10 +9,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.PagingData
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.onlineshop.R
 import com.example.onlineshop.data.model.ProductSearchItem
 import com.example.onlineshop.databinding.PagingViewBinding
@@ -21,7 +20,6 @@ import com.example.onlineshop.ui.fragments.adapter.diff_callback.ProductSearchIt
 import com.example.onlineshop.utils.launchOnState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @SuppressLint("CustomViewStyleable")
@@ -49,6 +47,10 @@ class ProductSearchPagingView @JvmOverloads constructor(
     init {
         val view = inflate(context, R.layout.paging_view, this)
         binding = PagingViewBinding.bind(view)
+        binding.pagingViewList.apply {
+            layoutManager = GridLayoutManager(context, 1)
+            this.adapter = this@ProductSearchPagingView.adapter
+        }
     }
 
     private fun onItemClick(item: ProductSearchItem) {
@@ -59,21 +61,42 @@ class ProductSearchPagingView @JvmOverloads constructor(
         onItemClick = block
     }
 
-    fun setProducer(fragment: Fragment, flow: Flow<PagingData<ProductSearchItem>>): Unit = with(binding) {
-        producerJob?.cancel()
-        if (producerJob == null) {
-            fragment.lifecycleScope.launch {
-                adapter.loadStateFlow.collect {
-                    val isLoading = it.refresh !is LoadState.Loading
-                    pagingViewLottie.isVisible = isLoading
-                    pagingViewList.isVisible = isLoading.not()
+    fun setup(fragment: Fragment) {
+        fragment.launchOnState(Lifecycle.State.STARTED) {
+            adapter.loadStateFlow.collect {
+                when (it.refresh) {
+                    is LoadState.NotLoading -> {
+                        stopLoading()
+                    }
+                    LoadState.Loading -> {
+                        startLoading()
+                    }
+                    is LoadState.Error -> {
+                        handleError()
+                    }
                 }
             }
         }
+    }
+
+    fun setProducer(fragment: Fragment, flow: Flow<PagingData<ProductSearchItem>>): Unit = with(binding) {
+        producerJob?.cancel()
         producerJob = fragment.launchOnState(Lifecycle.State.STARTED) {
             flow.collect {
                 adapter.submitData(it)
             }
         }
+    }
+
+    private fun startLoading() {
+        binding.pagingViewLottie.isVisible = true
+    }
+
+    private fun stopLoading() {
+        binding.pagingViewLottie.isVisible = false
+    }
+
+    private fun handleError() {
+
     }
 }

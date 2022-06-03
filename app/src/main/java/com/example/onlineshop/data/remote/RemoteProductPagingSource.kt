@@ -1,10 +1,9 @@
-package com.example.onlineshop.data.remote.api
+package com.example.onlineshop.data.remote
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.onlineshop.data.model.Product
 import com.example.onlineshop.utils.STARTING_PAGE_INDEX
 import com.example.onlineshop.utils.result.SafeApiCall
 

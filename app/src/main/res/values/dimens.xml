@@ -18,4 +18,6 @@
     <dimen name="product_info_separator">8dp</dimen>
     <dimen name="lottie_size">100dp</dimen>
     <dimen name="login_icon_size">35dp</dimen>
+    <dimen name="login_text_layout_corner_size">10dp</dimen>
+    <dimen name="login_big_icon_size">150dp</dimen>
 </resources>

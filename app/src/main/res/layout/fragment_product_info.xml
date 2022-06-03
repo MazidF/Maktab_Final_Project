@@ -205,11 +205,10 @@
 
         </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
+        <com.example.onlineshop.widgit.ProductCounter
             android:id="@+id/product_info_add_to_cart"
-            style="@style/AddToCartButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 

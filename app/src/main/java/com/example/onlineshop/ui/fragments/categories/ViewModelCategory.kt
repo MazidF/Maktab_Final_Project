@@ -39,7 +39,7 @@ class ViewModelCategory @Inject constructor(
         viewModelScope.launch {
             repository.getCategoriesByParentId(0, false).collect {
                 val list = categoryToCategoryListItemTransformer(it)
-                if (refresh(list)) {
+                if (it is SafeApiCall.Loading || refresh(list)) {
                     _categoryTitlesStateFlow.emit(list)
                 } else {
                     _categoryTitlesStateFlow.emit(fail(Exception("Failed to load categories!!")))

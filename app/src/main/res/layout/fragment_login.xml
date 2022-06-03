@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/fragment_login_close"
+            android:layout_weight="1"
+            android:scaleType="fitStart"
+            android:layout_width="@dimen/login_icon_size"
+            android:layout_height="@dimen/login_icon_size"
+            android:src="@drawable/ic_close"/>
+
+        <ImageView
+            android:id="@+id/fragment_login_setting"
+            android:layout_weight="1"
+            android:scaleType="fitEnd"
+            android:layout_width="@dimen/login_icon_size"
+            android:layout_height="@dimen/login_icon_size"
+            android:src="@drawable/ic_setting"/>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:layout_width="@dimen/login_big_icon_size"
+                android:layout_height="0dp"
+                app:tint="@color/discount_red"
+                android:src="@drawable/ic_digikala_icon"/>
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/fragment_login_error"
+                android:textColor="@color/discount_red"
+                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="نام کاربری یا رمز اشتباه میباشد."/>
+
+            <com.example.onlineshop.widgit.CustomTextInputLayout
+                android:id="@+id/fragment_login_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_hint="ایمیل"/>
+
+            <com.example.onlineshop.widgit.CustomTextInputLayout
+                app:endIconMode="password_toggle"
+                android:id="@+id/fragment_login_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hasPassword="true"
+                app:layout_hint="رمز"/>
+
+            <com.example.onlineshop.widgit.CustomTextInputLayout
+                android:id="@+id/fragment_login_retry_password"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_hint="تکرار دوباره رمز"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/fragment_login_btn"
+                android:layout_margin="10dp"
+                android:padding="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/discount_red"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                style="@style/ImageViewWithCorner"
+                android:text="ورود به دیجیکالا"/>
+
+            <TextView
+                android:id="@+id/fragment_login_change"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/blue"
+                android:textStyle="bold"
+                android:text="@string/change_to_sign_in"/>
+
+            <View
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/text_description_gray"/>
+
+            <TextView
+                android:layout_marginBottom="20dp"
+                android:textColor="#424242"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/login_condition"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

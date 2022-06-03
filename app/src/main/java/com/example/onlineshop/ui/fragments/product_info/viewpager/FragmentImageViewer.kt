@@ -3,11 +3,9 @@ package com.example.onlineshop.ui.fragments.product_info.viewpager
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import com.example.onlineshop.R
 import com.example.onlineshop.databinding.FragmentImageViewerBinding
-import com.example.onlineshop.utils.launchOnState
 import com.example.onlineshop.utils.loadImageInto
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest

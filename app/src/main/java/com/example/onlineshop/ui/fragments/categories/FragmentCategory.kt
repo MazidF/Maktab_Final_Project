@@ -41,7 +41,7 @@ class FragmentCategory : FragmentConnectionObserver(R.layout.fragment_category) 
 
     private fun observe() = with(binding) {
         launchOnState(Lifecycle.State.STARTED) {
-            viewModel.categoriesStateFlow.collectLatest {
+            viewModel.categoriesStateFlow.collect {
                 when (it) {
                     is SafeApiCall.Fail -> {
                         errorDialog(it.error())

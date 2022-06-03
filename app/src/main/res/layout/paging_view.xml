@@ -5,13 +5,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:visibility="gone"
         android:id="@+id/paging_view_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
 
     <com.airbnb.lottie.LottieAnimationView
+        android:visibility="gone"
         android:id="@+id/paging_view_lottie"
         android:layout_gravity="center"
         android:layout_width="@dimen/lottie_size"

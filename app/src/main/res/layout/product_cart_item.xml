@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/product_cart_root"
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/product_cart_name"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:textSize="13sp"
+            style="@style/SimpleItemNameTextView"/>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:layout_width="@dimen/simple_item_icon_size"
+                android:layout_height="@dimen/simple_item_icon_size"
+                android:src="@drawable/toman_icon" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/product_cart_price"
+                style="@style/SimpleItemCostTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <com.example.onlineshop.widgit.ProductCounter
+            android:id="@+id/product_cart_counter"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/product_cart_image"
+        android:layout_marginStart="20dp"
+        app:shapeAppearanceOverlay="@style/ImageViewWithCorner"
+        android:layout_width="@dimen/simple_item_image_size"
+        android:layout_height="@dimen/simple_item_image_size"
+        android:src="@drawable/ic_product_default"/>
+
+</LinearLayout>

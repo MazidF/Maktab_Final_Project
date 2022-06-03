@@ -38,7 +38,8 @@
     <fragment
         android:id="@+id/fragmentCategory"
         android:name="com.example.onlineshop.ui.fragments.categories.FragmentCategory"
-        android:label="FragmentCategory" >
+        android:label="FragmentCategory"
+        tools:layout="@layout/fragment_category">
         <action
             android:id="@+id/action_fragmentCategory_to_fragmentProductList"
             app:destination="@id/fragmentProductList" />
@@ -49,7 +50,8 @@
     <fragment
         android:id="@+id/fragmentProductList"
         android:name="com.example.onlineshop.ui.fragments.product_list.FragmentProductList"
-        android:label="FragmentProductList" >
+        android:label="FragmentProductList"
+        tools:layout="@layout/fragment_product_list">
         <argument
             android:name="productList"
             app:argType="com.example.onlineshop.ui.model.ProductList" />
@@ -63,13 +65,17 @@
     <fragment
         android:id="@+id/fragmentCart"
         android:name="com.example.onlineshop.ui.fragments.cart.FragmentCart"
-        android:label="FragmentCart" >
+        android:label="FragmentCart"
+        tools:layout="@layout/fragment_cart">
         <action
             android:id="@+id/action_fragmentCart_to_fragmentProductInfo"
             app:destination="@id/fragmentProductInfo" />
         <action
             android:id="@+id/action_fragmentCart_to_fragmentNetworkConnectionFailed"
             app:destination="@id/fragmentNetworkConnectionFailed" />
+        <action
+            android:id="@+id/action_fragmentCart_to_fragmentProfile"
+            app:destination="@id/fragmentProfile" />
     </fragment>
     <fragment
         android:id="@+id/fragmentProfile"
@@ -82,18 +88,41 @@
         <action
             android:id="@+id/action_fragmentProfile_to_fragmentNetworkConnectionFailed"
             app:destination="@id/fragmentNetworkConnectionFailed" />
+        <action
+            android:id="@+id/action_fragmentProfile_to_fragmentLogin"
+            app:destination="@id/fragmentLogin"
+            app:popUpTo="@id/fragmentHome"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/fragmentSearch"
         android:name="com.example.onlineshop.ui.fragments.search.FragmentSearch"
-        android:label="FragmentSearch" >
+        android:label="FragmentSearch"
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_fragmentSearch_to_fragmentNetworkConnectionFailed"
             app:destination="@id/fragmentNetworkConnectionFailed" />
+        <action
+            android:id="@+id/action_fragmentSearch_to_fragmentProductInfo"
+            app:destination="@id/fragmentProductInfo" />
     </fragment>
     <fragment
         android:id="@+id/fragmentNetworkConnectionFailed"
         android:name="com.example.onlineshop.ui.fragments.network.FragmentNetworkConnectionFailed"
         android:label="FragmentNetworkConnectionFailed"
         tools:layout="@layout/fragment_network_connection_failed"/>
+    <fragment
+        android:id="@+id/fragmentLogin"
+        android:name="com.example.onlineshop.ui.fragments.login.FragmentLogin"
+        android:label="FragmentLogin"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_fragmentLogin_to_fragmentNetworkConnectionFailed"
+            app:destination="@id/fragmentNetworkConnectionFailed" />
+        <action
+            android:id="@+id/action_fragmentLogin_to_fragmentProfile"
+            app:destination="@id/fragmentProfile"
+            app:popUpTo="@id/fragmentHome"
+            app:popUpToInclusive="false" />
+    </fragment>
 </navigation>

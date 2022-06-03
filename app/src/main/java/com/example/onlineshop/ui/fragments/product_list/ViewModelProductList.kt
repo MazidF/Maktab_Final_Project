@@ -21,10 +21,8 @@ class ViewModelProductList @Inject constructor(
     private val repository: ProductRepository,
 ) : ViewModel() {
 
-    private var pagingDataStateFlow: StateFlow<PagingData<ProductListItem.Item>>? = null
-
     fun load(productList: ProductList): Flow<PagingData<ProductListItem.Item>> {
-        return pagingDataStateFlow ?: when(productList) {
+        return when(productList) {
             is ProductList.ByCategory -> {
                 repository.getProductsByCategory(productList.category.id.toString())
             }
@@ -40,10 +38,6 @@ class ViewModelProductList @Inject constructor(
         }.map { pagingData ->
             pagingData.map {
                 ProductListItem.Item(it)
-            }
-        }.also {
-            viewModelScope.launch {
-                pagingDataStateFlow = it.stateIn(this)
             }
         }.cachedIn(viewModelScope)
     }

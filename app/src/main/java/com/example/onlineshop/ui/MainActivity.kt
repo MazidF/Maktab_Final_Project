@@ -1,12 +1,14 @@
 package com.example.onlineshop.ui
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.onlineshop.R
 import com.example.onlineshop.databinding.ActivityMainBinding
+import com.example.onlineshop.ui.fragments.cart.ViewModelCart
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Exception
 
@@ -16,6 +18,8 @@ class MainActivity : AppCompatActivity() {
         findNavController(R.id.fragmentContainerView)
     }
     private lateinit var binding: ActivityMainBinding
+
+    private val cartViewModel: ViewModelCart by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +45,10 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.fragmentCart, R.id.fragmentProfile, R.id.fragmentHome, R.id.fragmentCategory, -> {
                     showAppbar()
+                    bottomNavigation.isVisible = true
+                }
+                R.id.fragmentLogin -> {
+                    hideAppbar()
                     bottomNavigation.isVisible = true
                 }
                 else -> {
@@ -85,5 +93,10 @@ class MainActivity : AppCompatActivity() {
                 openOrCloseDrawer()
             }
         }
+    }
+
+    override fun onStop() {
+        cartViewModel.save()
+        super.onStop()
     }
 }
