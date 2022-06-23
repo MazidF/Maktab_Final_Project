@@ -1,8 +1,11 @@
 package com.example.onlineshop.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.os.Handler
+import android.provider.Settings.Secure
 import android.text.Html
 import android.util.Log
 import android.view.KeyEvent
@@ -13,20 +16,19 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.example.onlineshop.R
-import com.example.onlineshop.utils.result.SafeApiCall
-import com.google.gson.JsonObject
+import com.example.onlineshop.data.result.Resource
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 import retrofit2.Response
 import java.io.File
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
-import java.io.OutputStream
-import java.util.function.Predicate
+import java.security.AccessController.getContext
+
 
 fun Fragment.launchOnState(state: Lifecycle.State, block: suspend () -> Unit): Job {
     return lifecycleScope.launch {
@@ -59,8 +61,8 @@ inline fun <reified T> List<T>.insertHeader(t: T): List<T> {
     return listOf(*this.toTypedArray(), t)
 }
 
-fun <T> Response<T>.asSafeApiCall(): SafeApiCall<T> {
-    return SafeApiCall.fromResponse(this)
+fun <T> Response<T>.asResource(): Resource<T> {
+    return Resource.fromResponse(this)
 }
 
 fun <K, V> HashMap<K, V>.getWithDefault(key: K, default: V): V {
@@ -130,4 +132,65 @@ fun writeObjectOnFile(any: Any, fileName: String, root: File) {
 
 fun logger(msg: String) {
     Log.d("online_shop_logger", msg)
+}
+
+@SuppressLint("ClickableViewAccessibility")
+fun ViewPager2.autoScroll(interval: Long) {
+    val handler = Handler()
+    var scrollPosition = 0
+    val runnable = object : Runnable {
+        override fun run() {
+            /**
+             * Calculate "scroll position" with
+             * adapter pages count and current
+             * value of scrollPosition.
+             */
+            val count = adapter?.itemCount ?: 0
+            setCurrentItem(scrollPosition++ % count, true)
+
+            handler.postDelayed(this, interval)
+        }
+    }
+
+    registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            // Updating "scroll position" when user scrolls manually
+            scrollPosition = position + 1
+        }
+
+        override fun onPageScrollStateChanged(state: Int) {
+            // Not necessary
+        }
+
+        override fun onPageScrolled(
+            position: Int,
+            positionOffset: Float,
+            positionOffsetPixels: Int
+        ) {
+            // Not necessary
+        }
+    })
+
+    handler.post(runnable)
+    setOnTouchListener { _, motionEvent ->
+        when(motionEvent.action) {
+            KeyEvent.ACTION_DOWN -> {
+                handler.removeCallbacks(runnable)
+                true
+            }
+            KeyEvent.ACTION_UP -> {
+                handler.post(runnable)
+                true
+            }
+            else -> false
+        }
+    }
+}
+
+@SuppressLint("HardwareIds")
+fun getDeviceId(context: Context): String {
+    return Secure.getString(
+        context.contentResolver,
+        Secure.ANDROID_ID
+    )
 }

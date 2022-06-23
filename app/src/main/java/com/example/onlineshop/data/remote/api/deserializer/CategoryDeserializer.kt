@@ -14,11 +14,11 @@ object CategoryDeserializer : JsonDeserializer<Category> {
     ): Category = with(json.asJsonObject) {
         Category(
             id = this["id"].asLong,
-            parent = this["parent"].asLong,
             name = this["name"].asString,
+            parent = this["parent"].asLong,
             imageUrl = this["image"].asJsonObject
                 .asJsonObject["src"].asString,
-            count = this["count"].asInt
+            count = this["count"].asInt,
         )
     }
 }

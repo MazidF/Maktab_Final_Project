@@ -2,11 +2,10 @@ package com.example.onlineshop.ui.fragments.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.onlineshop.data.model.Product
 import com.example.onlineshop.data.model.ProductImages
 import com.example.onlineshop.data.repository.ProductRepository
 import com.example.onlineshop.ui.model.ProductListItem
-import com.example.onlineshop.utils.result.SafeApiCall
+import com.example.onlineshop.data.result.Resource
 import com.example.onlineshop.utils.productToProductListItemTransformer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Deferred
@@ -17,7 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-private typealias SafeProducts = SafeApiCall<List<ProductListItem>>
+private typealias SafeProducts = Resource<List<ProductListItem>>
 
 @HiltViewModel
 class ViewModelHome @Inject constructor(
@@ -27,24 +26,24 @@ class ViewModelHome @Inject constructor(
         private set
 
     private val _mostPopularProductListFLowState = MutableStateFlow<SafeProducts>(
-        SafeApiCall.loading()
+        Resource.loading()
     )
     val mostPopularProductListFlowState get() = _mostPopularProductListFLowState.asStateFlow()
 
     private val _mostRatedProductListFLowState = MutableStateFlow<SafeProducts>(
-        SafeApiCall.loading()
+        Resource.loading()
     )
     val mostRatedProductListFlowState get() = _mostRatedProductListFLowState.asStateFlow()
 
     private val _newestProductListFLowState = MutableStateFlow<SafeProducts>(
-        SafeApiCall.loading()
+        Resource.loading()
     )
     val newestProductListFlowState get() = _newestProductListFLowState.asStateFlow()
 
-    private val _imagesFlowState = MutableStateFlow<SafeApiCall<ProductImages>>(SafeApiCall.loading())
+    private val _imagesFlowState = MutableStateFlow<Resource<ProductImages>>(Resource.loading())
     val imagesFlowState get() = _imagesFlowState.asStateFlow()
 
-    private fun getImagesAsync(): Deferred<SafeApiCall<ProductImages>> {
+    private fun getImagesAsync(): Deferred<Resource<ProductImages>> {
         return viewModelScope.async {
             repository.getMainPosterProducts().also {
                 _imagesFlowState.emit(it)

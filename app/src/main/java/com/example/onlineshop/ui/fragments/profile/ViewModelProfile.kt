@@ -6,7 +6,7 @@ import com.example.onlineshop.data.local.data_store.main.MainDataStore
 import com.example.onlineshop.data.local.data_store.main.MainInfo
 import com.example.onlineshop.data.model.customer.Customer
 import com.example.onlineshop.data.repository.ProductRepository
-import com.example.onlineshop.utils.result.SafeApiCall
+import com.example.onlineshop.data.result.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -20,7 +20,7 @@ class ViewModelProfile @Inject constructor(
 
     private lateinit var mainInfoStateFlow: StateFlow<MainInfo>
 
-    private val _customerStateFlow = MutableStateFlow<SafeApiCall<Customer>>(SafeApiCall.loading())
+    private val _customerStateFlow = MutableStateFlow<Resource<Customer>>(Resource.loading())
     val customerStateFlow get() = _customerStateFlow.asStateFlow()
 
     init {

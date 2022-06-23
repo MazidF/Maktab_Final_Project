@@ -4,9 +4,9 @@ import com.example.onlineshop.data.model.Category
 import com.example.onlineshop.data.model.Product
 import com.example.onlineshop.ui.model.CategoryListItem
 import com.example.onlineshop.ui.model.ProductListItem
-import com.example.onlineshop.utils.result.SafeApiCall
+import com.example.onlineshop.data.result.Resource
 
-val productToProductListItemTransformer = { safeApiCall: SafeApiCall<List<Product>> ->
+val productToProductListItemTransformer = { safeApiCall: Resource<List<Product>> ->
     safeApiCall.map<List<ProductListItem>> { data ->
         data.map {
             ProductListItem.Item(it)
@@ -14,7 +14,7 @@ val productToProductListItemTransformer = { safeApiCall: SafeApiCall<List<Produc
     }
 }
 
-val categoryToCategoryListItemTransformer = { safeApiCall: SafeApiCall<List<Category>> ->
+val categoryToCategoryListItemTransformer = { safeApiCall: Resource<List<Category>> ->
     safeApiCall.map<List<CategoryListItem>> { data ->
         data.map {
             CategoryListItem.Item(it)

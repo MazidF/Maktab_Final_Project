@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.onlineshop.data.local.data_store.main.MainDataStore
 import com.example.onlineshop.data.model.customer.Customer
 import com.example.onlineshop.data.repository.ProductRepository
-import com.example.onlineshop.utils.result.SafeApiCall
+import com.example.onlineshop.data.result.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +19,7 @@ class ViewModelLogin @Inject constructor(
     private val mainDataStore: MainDataStore,
 ) : ViewModel() {
 
-    private val _customerStateFlow = MutableStateFlow<SafeApiCall<Customer>>(SafeApiCall.loading())
+    private val _customerStateFlow = MutableStateFlow<Resource<Customer>>(Resource.loading())
     val customerStateFlow get() = _customerStateFlow.asStateFlow()
 
     fun signIn(email: String, password: String) {

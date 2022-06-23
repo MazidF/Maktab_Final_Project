@@ -1,25 +1,22 @@
 package com.example.onlineshop.data.repository
 
 import androidx.paging.PagingData
-import com.example.onlineshop.data.local.ILocalDataStore
+import com.example.onlineshop.data.local.ILocalDataSource
 import com.example.onlineshop.data.model.*
 import com.example.onlineshop.data.model.customer.Customer
 import com.example.onlineshop.data.model.customer.RawCustomer
+import com.example.onlineshop.data.model.order.Order
 import com.example.onlineshop.data.remote.RemoteCustomerDataSource
 import com.example.onlineshop.data.remote.RemoteProductDataSource
 import com.example.onlineshop.di.qualifier.DispatcherIO
-import com.example.onlineshop.utils.logger
-import com.example.onlineshop.utils.result.SafeApiCall
+import com.example.onlineshop.data.result.Resource
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.*
 
 class ProductRepository(
     private val remoteProduct: RemoteProductDataSource,
     private val remoteCustomer: RemoteCustomerDataSource,
-    private val local: ILocalDataStore,
+    private val local: ILocalDataSource,
     @DispatcherIO private val dispatcher: CoroutineDispatcher,
 ) {
     fun getMostRatedProduct(): Flow<PagingData<Product>> {
@@ -44,26 +41,28 @@ class ProductRepository(
         return remoteProduct.search(query = query)
     }
 
-    private suspend fun <T> load(
+    // TODO: move to utils
+    private suspend fun <T> safeApiCall( //safe_api_call
         reload: Boolean,
         fakeData: T? = null,
-        block: suspend () -> SafeApiCall<T>
-    ): Flow<SafeApiCall<T>> = flow<SafeApiCall<T>> {
-        if (reload) {
-            emit(SafeApiCall.reloading())
-        } else {
-            emit(SafeApiCall.loading())
-        }
+        block: suspend () -> Resource<T>
+    ): Flow<Resource<T>> = flow<Resource<T>> {
         fakeData?.let {
-            emit(SafeApiCall.success(it))
+            emit(Resource.success(it))
         }
         emit(block())
     }.catch { cause ->
-        emit(SafeApiCall.fail(cause))
+        emit(Resource.fail(cause))
+    }.onStart {
+        if (reload) {
+            emit(Resource.reloading())
+        } else {
+            emit(Resource.loading())
+        }
     }.flowOn(dispatcher)
 
-    suspend fun getCategories(reload: Boolean): Flow<SafeApiCall<List<Category>>> {
-        return load(reload) {
+    suspend fun getCategories(reload: Boolean): Flow<Resource<List<Category>>> {
+        return safeApiCall(reload) {
             remoteProduct.getCategories(1, 100)
         }
     }
@@ -71,8 +70,8 @@ class ProductRepository(
     suspend fun getCategoriesByParentId(
         parentId: Long,
         reload: Boolean
-    ): Flow<SafeApiCall<List<Category>>> {
-        return load(reload) {
+    ): Flow<Resource<List<Category>>> {
+        return safeApiCall(reload) {
             remoteProduct.getCategoriesByParentId(parentId, 1, 100)
         }
     }
@@ -80,57 +79,55 @@ class ProductRepository(
     suspend fun getMostPopularProduct(
         size: Int,
         reload: Boolean
-    ): Flow<SafeApiCall<List<Product>>> {
-        return load(reload) {
+    ): Flow<Resource<List<Product>>> {
+        return safeApiCall(reload) {
             remoteProduct.getMostPopularProduct(1, size)
         }
     }
 
-    suspend fun getMostRatedProduct(size: Int, reload: Boolean): Flow<SafeApiCall<List<Product>>> {
-        return load(reload) {
+    suspend fun getMostRatedProduct(size: Int, reload: Boolean): Flow<Resource<List<Product>>> {
+        return safeApiCall(reload) {
             remoteProduct.getMostRatedProduct(1, size)
         }
     }
 
-    suspend fun getNewestProduct(size: Int, reload: Boolean): Flow<SafeApiCall<List<Product>>> {
-        return load(reload) {
+    suspend fun getNewestProduct(size: Int, reload: Boolean): Flow<Resource<List<Product>>> {
+        return safeApiCall(reload) {
             remoteProduct.getNewestProduct(1, size)
         }
     }
 
-    suspend fun getProductInfo(productId: Long): Flow<SafeApiCall<ProductInfo>> {
-        return load(false) {
+    suspend fun getProductInfo(productId: Long): Flow<Resource<ProductInfo>> {
+        return safeApiCall(false) {
             remoteProduct.getProductInfo(productId)
         }
     }
 
-    suspend fun getProductById(ids: Array<Long>, fake: Boolean = true): Flow<SafeApiCall<List<Product>>> {
+    suspend fun getProductById(ids: Array<Long>, fake: Boolean = true): Flow<Resource<List<Product>>> {
         val seed = System.currentTimeMillis()
         return if (fake) {
-            load(false, List(ids.size) {
+            safeApiCall(false, List(ids.size) {
                 Product.fake(seed + it)
             }) {
                 remoteProduct.getProductById(ids)
             }
         } else {
-            load(false) {
-                val a = remoteProduct.getProductById(ids)
-                val t = a
-                a
+            safeApiCall(false) {
+                remoteProduct.getProductById(ids)
             }
         }
     }
 
     //////////////////////////////////// customers /////////////////////////////////////
 
-    suspend fun getCustomerById(userId: Long, reload: Boolean): Flow<SafeApiCall<Customer>> {
-        return load(reload) {
+    suspend fun getCustomerById(userId: Long, reload: Boolean): Flow<Resource<Customer>> {
+        return safeApiCall(reload) {
             remoteCustomer.getCustomerById(userId)
         }
     }
 
-    suspend fun signIn(email: String, password: String): Flow<SafeApiCall<Customer>> {
-        return load(false) {
+    suspend fun signIn(email: String, password: String): Flow<Resource<Customer>> {
+        return safeApiCall(false) {
             val raw = RawCustomer(
                 email = email,
                 password = password
@@ -139,8 +136,8 @@ class ProductRepository(
         }
     }
 
-    suspend fun logIn(email: String, password: String): Flow<SafeApiCall<Customer>> {
-        return load(false) {
+    suspend fun logIn(email: String, password: String): Flow<Resource<Customer>> {
+        return safeApiCall(false) {
             val customer = remoteCustomer.getCustomerByEmail(email)
             if (customer.asSuccess()!!.body().password == password) {
                 customer
@@ -150,10 +147,18 @@ class ProductRepository(
         }
     }
 
-    suspend fun logIn(customerId: Long): Flow<SafeApiCall<Customer>> {
-        return load(false) {
+    suspend fun logIn(customerId: Long): Flow<Resource<Customer>> {
+        return safeApiCall(false) {
             remoteCustomer.logIn(customerId)
         }
+    }
+
+    fun getPendingOrders(customerId: Long): Flow<PagingData<Order>> {
+        return remoteCustomer.getOrders(customerId)
+    }
+
+    fun getFinishedOrders(customerId: Long): Flow<PagingData<Order>> {
+        return remoteCustomer.getFinishedOrders(customerId)
     }
 
     /////////////////////////// local //////////////////////////
@@ -166,7 +171,7 @@ class ProductRepository(
         return local.saveCartMap(map)
     }
 
-    suspend fun getMainPosterProducts(): SafeApiCall<ProductImages> {
+    suspend fun getMainPosterProducts(): Resource<ProductImages> {
         return remoteProduct.getMainPosterProducts()
     }
 }

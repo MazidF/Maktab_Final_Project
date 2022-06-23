@@ -20,4 +20,14 @@
     <string name="login_condition">با ورود یا ثبت نام در دیجیکالا شما شرایط و قوانین استفاده از سرویس های سایت دیجیکالا و قوانین حریم خصوصی آن را میپذیرم.</string>
     <string name="change_to_sign_in">اکانت ندارید؟</string>
     <string name="change_to_log_in">اکانت دارید؟</string>
+    <string name="send_to">ارسال به</string>
+    <string name="change_or_edit_address">تغییر یا ویرایش آدرس</string>
+    <string name="add_address">اضافه کردن آدرس</string>
+    <string name="sending_info">شیوه و زمان ارسال</string>
+    <string name="send_cost">هزینه ارسال</string>
+    <string name="regular_send">ارسال عادی</string>
+    <string name="discount_card">کارت تخفیف</string>
+    <string name="add_discount_card">افزودن کارت هدیه</string>
+    <string name="pay_info">جزئیات پرداخت</string>
+    <string name="total_cost">قابل پرداخت</string>
 </resources>

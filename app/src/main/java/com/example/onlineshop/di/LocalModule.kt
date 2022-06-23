@@ -1,8 +1,8 @@
 package com.example.onlineshop.di
 
 import android.content.Context
-import com.example.onlineshop.data.local.ILocalDataStore
-import com.example.onlineshop.data.local.LocalCustomerDataStore
+import com.example.onlineshop.data.local.ILocalDataSource
+import com.example.onlineshop.data.local.LocalCustomerDataSource
 import com.example.onlineshop.di.qualifier.DispatcherIO
 import com.example.onlineshop.di.qualifier.LocalCustomerDataStoreAnnotation
 import dagger.Module
@@ -23,8 +23,8 @@ class LocalModule {
     fun provideLocalDataStore(
         @DispatcherIO dispatcher: CoroutineDispatcher,
         @ApplicationContext context: Context,
-    ) : ILocalDataStore {
-        return LocalCustomerDataStore(
+    ) : ILocalDataSource {
+        return LocalCustomerDataSource(
             dispatcher = dispatcher,
             context = context,
         )

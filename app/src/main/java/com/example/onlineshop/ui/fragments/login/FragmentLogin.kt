@@ -12,7 +12,7 @@ import com.example.onlineshop.R
 import com.example.onlineshop.databinding.FragmentLoginBinding
 import com.example.onlineshop.ui.fragments.FragmentConnectionObserver
 import com.example.onlineshop.utils.launchOnState
-import com.example.onlineshop.utils.result.SafeApiCall
+import com.example.onlineshop.data.result.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
@@ -77,10 +77,10 @@ class FragmentLogin : FragmentConnectionObserver(R.layout.fragment_login) {
         launchOnState(Lifecycle.State.STARTED) {
             viewModel.customerStateFlow.collectLatest {
                 when (it) {
-                    is SafeApiCall.Fail -> {
+                    is Resource.Fail -> {
                         fragmentLoginError.isVisible = true
                     }
-                    is SafeApiCall.Success -> {
+                    is Resource.Success -> {
                         viewModel.login(it.body().id).join()
                         navController.navigate(
                             FragmentLoginDirections.actionFragmentLoginToFragmentProfile()

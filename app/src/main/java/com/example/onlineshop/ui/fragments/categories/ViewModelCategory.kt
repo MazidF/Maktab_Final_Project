@@ -6,9 +6,9 @@ import com.example.onlineshop.data.repository.ProductRepository
 import com.example.onlineshop.ui.model.CategoryListItem
 import com.example.onlineshop.utils.categoryToCategoryListItemTransformer
 import com.example.onlineshop.utils.getWithDefault
-import com.example.onlineshop.utils.result.SafeApiCall
-import com.example.onlineshop.utils.result.SafeApiCall.Companion.fail
-import com.example.onlineshop.utils.result.SafeApiCall.Companion.loading
+import com.example.onlineshop.data.result.Resource
+import com.example.onlineshop.data.result.Resource.Companion.fail
+import com.example.onlineshop.data.result.Resource.Companion.loading
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 import javax.inject.Inject
 
-private typealias SafeCategoryList = SafeApiCall<List<CategoryListItem>>
+private typealias SafeCategoryList = Resource<List<CategoryListItem>>
 
 @HiltViewModel
 class ViewModelCategory @Inject constructor(
@@ -39,7 +39,7 @@ class ViewModelCategory @Inject constructor(
         viewModelScope.launch {
             repository.getCategoriesByParentId(0, false).collect {
                 val list = categoryToCategoryListItemTransformer(it)
-                if (it is SafeApiCall.Loading || refresh(list)) {
+                if (it is Resource.Loading || refresh(list)) {
                     _categoryTitlesStateFlow.emit(list)
                 } else {
                     _categoryTitlesStateFlow.emit(fail(Exception("Failed to load categories!!")))
@@ -52,7 +52,7 @@ class ViewModelCategory @Inject constructor(
         sac.asSuccess()?.let { _ ->
             val list = repository.getCategories(false).first {
                 when(it) {
-                    is SafeApiCall.Fail, is SafeApiCall.Success -> true
+                    is Resource.Fail, is Resource.Success -> true
                     else -> false
                 }
             }.asSuccess()?.body() ?: return false

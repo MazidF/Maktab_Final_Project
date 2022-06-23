@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentProductInfo"
-        android:name="com.example.onlineshop.ui.fragments.product_info.FragmentProductInfo"
+        android:name="com.example.onlineshop.ui.fragments.productinfo.FragmentProductInfo"
         android:label="FragmentProductInfo"
         tools:layout="@layout/fragment_product_info">
         <argument
@@ -49,7 +49,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentProductList"
-        android:name="com.example.onlineshop.ui.fragments.product_list.FragmentProductList"
+        android:name="com.example.onlineshop.ui.fragments.productlist.FragmentProductList"
         android:label="FragmentProductList"
         tools:layout="@layout/fragment_product_list">
         <argument
@@ -64,9 +64,9 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentCart"
-        android:name="com.example.onlineshop.ui.fragments.cart.FragmentCart"
+        android:name="com.example.onlineshop.ui.fragments.cart.main.FragmentCart"
         android:label="FragmentCart"
-        tools:layout="@layout/fragment_cart">
+        tools:layout="@layout/fragment_current_cart">
         <action
             android:id="@+id/action_fragmentCart_to_fragmentProductInfo"
             app:destination="@id/fragmentProductInfo" />

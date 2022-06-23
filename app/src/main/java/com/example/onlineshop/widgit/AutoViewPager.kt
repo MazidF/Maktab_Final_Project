@@ -5,8 +5,7 @@ import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.onlineshop.R
 import com.example.onlineshop.databinding.SliderBinding
-import com.example.onlineshop.ui.fragments.product_info.viewpager.FragmentImageViewer
-import com.example.onlineshop.ui.fragments.product_info.viewpager.ProductImageViewPagerAdapter
+import com.example.onlineshop.ui.fragments.productinfo.viewpager.ProductImageViewPagerAdapter
 
 class AutoViewPager @JvmOverloads constructor(
     context: Context,

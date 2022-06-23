@@ -14,4 +14,11 @@
         <attr name="hasPassword" format="boolean" />
         <attr name="layout_hint" format="string" />
     </declare-styleable>
+
+    <declare-styleable name="ProductCounter">
+        <attr name="withLoading" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="CustomLottie">
+        <attr name="lottie_rawRes" format="reference"/>
+    </declare-styleable>
 </resources>

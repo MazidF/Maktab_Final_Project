@@ -7,15 +7,15 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.onlineshop.R
 import com.example.onlineshop.data.model.Product
-import com.example.onlineshop.data.model.ProductImages
 import com.example.onlineshop.databinding.FragmentHomeBinding
 import com.example.onlineshop.ui.fragments.FragmentConnectionObserver
 import com.example.onlineshop.ui.fragments.adapter.RefreshableAdapter
-import com.example.onlineshop.ui.fragments.product_info.viewpager.FragmentImageViewer
-import com.example.onlineshop.ui.fragments.product_info.viewpager.ProductImageViewPagerAdapter
+import com.example.onlineshop.ui.fragments.productinfo.viewpager.ProductImageViewPagerAdapter
+import com.example.onlineshop.ui.fragments.productinfo.viewpager.ZoomOutPageTransformer
 import com.example.onlineshop.ui.model.ProductList
 import com.example.onlineshop.ui.model.ProductListItem
-import com.example.onlineshop.utils.result.SafeApiCall
+import com.example.onlineshop.utils.autoScroll
+import com.example.onlineshop.data.result.Resource
 import com.example.onlineshop.widgit.HorizontalProductContainer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -80,14 +80,18 @@ class FragmentHome : FragmentConnectionObserver(R.layout.fragment_home) {
     }
 
     private fun refresh(images: List<String>) = with(binding) {
-        homeSlider.adapter = ProductImageViewPagerAdapter(
-            fragment = this@FragmentHome,
-            fragments = List(images.size) {
-                FragmentSlideViewer().apply {
-                    setImage(images[it])
+        homeSlider.apply {
+            adapter = ProductImageViewPagerAdapter(
+                fragment = this@FragmentHome,
+                fragments = List(images.size) {
+                    FragmentSlideViewer().apply {
+                        setImage(images[it])
+                    }
                 }
-            }
-        )
+            )
+            autoScroll(3_000)
+            setPageTransformer(ZoomOutPageTransformer())
+        }
         refreshableAdapter.refreshAll()
     }
 
@@ -125,13 +129,13 @@ class FragmentHome : FragmentConnectionObserver(R.layout.fragment_home) {
             ),
             producerList = listOf(
                 {
-                    (newestProductListFlowState.value as SafeApiCall.Success).body()
+                    (newestProductListFlowState.value as Resource.Success).body()
                 },
                 {
-                    (mostPopularProductListFlowState.value as SafeApiCall.Success).body()
+                    (mostPopularProductListFlowState.value as Resource.Success).body()
                 },
                 {
-                    (mostRatedProductListFlowState.value as SafeApiCall.Success).body()
+                    (mostRatedProductListFlowState.value as Resource.Success).body()
                 },
             )
         )

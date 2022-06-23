@@ -3,6 +3,7 @@ package com.example.onlineshop.data.remote.api
 import com.example.onlineshop.data.model.customer.Customer
 import com.example.onlineshop.data.model.customer.RawCustomer
 import com.example.onlineshop.data.model.order.Order
+import com.example.onlineshop.data.model.order.OrderStatus
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -44,4 +45,13 @@ interface CustomerApi {
     suspend fun getOrder(
         @Path("id") id: Long,
     ) : Response<Order>
+
+    @GET("orders")
+    suspend fun getOrders(
+        @Query("customer") customerId: Long,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int,
+        @Query("orderby") orderBy: String = "data",
+        @Query("status") status: String = OrderStatus.ANY.value,
+    ) : Response<List<Order>>
 }

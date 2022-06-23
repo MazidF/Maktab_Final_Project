@@ -13,9 +13,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
+import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
+import okio.BufferedSource
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -45,7 +45,17 @@ class NetworkModule {
             val newRequest = oldRequest.newBuilder()
                 .url(newUrl)
                 .build()
-            it.proceed(newRequest)
+            try {
+                it.proceed(newRequest)
+            } catch (e: Exception) {
+                okhttp3.Response.Builder()
+                    .request(newRequest)
+                    .protocol(Protocol.HTTP_1_1)
+                    .code(987)
+                    .message(e.message ?: "message")
+                    .body(ResponseBody.create(null, "{$e}"))
+                    .build()
+            }
         }
     }
 

@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.navArgs
 import com.example.onlineshop.R
 import com.example.onlineshop.data.local.data_store.main.MainDataStore
 import com.example.onlineshop.data.model.customer.Customer
 import com.example.onlineshop.databinding.FragmentProfileBinding
 import com.example.onlineshop.ui.fragments.FragmentConnectionObserver
 import com.example.onlineshop.utils.launchOnState
-import com.example.onlineshop.utils.result.SafeApiCall
+import com.example.onlineshop.data.result.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -51,16 +50,16 @@ class FragmentProfile : FragmentConnectionObserver(R.layout.fragment_profile) {
         launchOnState(Lifecycle.State.STARTED) {
             viewModel.customerStateFlow.collect {
                 when(it) {
-                    is SafeApiCall.Fail -> {
+                    is Resource.Fail -> {
                         handleError(it.error())
                     }
-                    is SafeApiCall.Loading -> {
+                    is Resource.Loading -> {
                         startLoading()
                     }
-                    is SafeApiCall.Reloading -> {
+                    is Resource.Reloading -> {
                         // do nothing
                     }
-                    is SafeApiCall.Success -> {
+                    is Resource.Success -> {
                         onSuccess(it.body())
                     }
                 }

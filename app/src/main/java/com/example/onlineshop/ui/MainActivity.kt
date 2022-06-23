@@ -8,7 +8,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.onlineshop.R
 import com.example.onlineshop.databinding.ActivityMainBinding
-import com.example.onlineshop.ui.fragments.cart.ViewModelCart
+import com.example.onlineshop.ui.fragments.cart.main.ViewModelCart
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Exception
 
