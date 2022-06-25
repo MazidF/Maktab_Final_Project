@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.onlineshop.data.model.Product
 import com.example.onlineshop.data.model.ProductInfo
-import com.example.onlineshop.data.repository.ProductRepository
+import com.example.onlineshop.data.repository.ShopRepository
 import com.example.onlineshop.ui.model.ProductListItem
 import com.example.onlineshop.data.result.Resource
 import com.example.onlineshop.utils.productToProductListItemTransformer
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ViewModelProductInfo @Inject constructor(
-    private val repository: ProductRepository,
+    private val repository: ShopRepository,
 ) : ViewModel() {
 
     private val _productInfoStateFlow = MutableStateFlow<Resource<ProductInfo>>(

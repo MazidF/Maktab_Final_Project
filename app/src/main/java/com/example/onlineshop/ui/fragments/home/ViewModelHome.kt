@@ -3,7 +3,7 @@ package com.example.onlineshop.ui.fragments.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.onlineshop.data.model.ProductImages
-import com.example.onlineshop.data.repository.ProductRepository
+import com.example.onlineshop.data.repository.ShopRepository
 import com.example.onlineshop.ui.model.ProductListItem
 import com.example.onlineshop.data.result.Resource
 import com.example.onlineshop.utils.productToProductListItemTransformer
@@ -20,7 +20,7 @@ private typealias SafeProducts = Resource<List<ProductListItem>>
 
 @HiltViewModel
 class ViewModelHome @Inject constructor(
-    private val repository: ProductRepository,
+    private val repository: ShopRepository,
 ) : ViewModel() {
     var hasBeenLoaded = false
         private set

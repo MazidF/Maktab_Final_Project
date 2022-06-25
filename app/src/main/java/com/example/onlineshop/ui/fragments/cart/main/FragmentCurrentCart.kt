@@ -10,11 +10,14 @@ import androidx.lifecycle.Lifecycle
 import com.example.onlineshop.R
 import com.example.onlineshop.data.local.data_store.main.MainDataStore
 import com.example.onlineshop.data.model.Product
+import com.example.onlineshop.data.model.order.Order
 import com.example.onlineshop.data.result.Resource
 import com.example.onlineshop.databinding.FragmentCurrentCartBinding
 import com.example.onlineshop.ui.fragments.FragmentConnectionObserver
-import com.example.onlineshop.ui.model.ProductCartItem
+import com.example.onlineshop.ui.model.LineItemWithImage
+import com.example.onlineshop.ui.model.OrderItem
 import com.example.onlineshop.utils.launchOnState
+import com.example.onlineshop.utils.toSimpleLineItem
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
@@ -26,7 +29,7 @@ class FragmentCurrentCart : FragmentConnectionObserver(R.layout.fragment_current
         get() = _binding!!
 
     private val viewModel: ViewModelCart by activityViewModels()
-    private lateinit var productAdapter: ProductCartAdapter
+    private lateinit var productAdapter: LineItemAdapter
 
 
     @Inject
@@ -40,15 +43,16 @@ class FragmentCurrentCart : FragmentConnectionObserver(R.layout.fragment_current
         observe()
     }
 
-    private fun initView() = with(binding) {
-        viewModel.loadProducts()
+    private fun initView() : Unit = with(binding) {
         fragmentCartLogin.root.setOnClickListener {
             navController.navigate(FragmentCartDirections.actionFragmentCartToFragmentProfile())
         }
-        productAdapter = ProductCartAdapter(
+        productAdapter = LineItemAdapter(
             onItemClick = this@FragmentCurrentCart::onItemClick,
-            onCountChanged = { id, count ->
-                viewModel.updateCart(id, count)
+            onCountChanged = { item, count, result ->
+                viewModel.updateCart(item.toSimpleLineItem(), count) {
+                    result(it)
+                }
             }
         )
         fragmentCartList.apply {
@@ -56,8 +60,12 @@ class FragmentCurrentCart : FragmentConnectionObserver(R.layout.fragment_current
         }
     }
 
-    private fun onItemClick(item: Product) {
-        navController.navigate(FragmentCartDirections.actionFragmentCartToFragmentProductInfo(item))
+    private fun onItemClick(item: LineItemWithImage) {
+        navController.navigate(
+            FragmentCartDirections.actionFragmentCartToFragmentProductInfo(
+                item.product
+            )
+        )
     }
 
     private fun observe() = with(binding) {
@@ -67,7 +75,7 @@ class FragmentCurrentCart : FragmentConnectionObserver(R.layout.fragment_current
             }
         }
         launchOnState(Lifecycle.State.STARTED) {
-            viewModel.productStateFlow.collect {
+            viewModel.orderStateFlow.collect {
                 when (it) {
                     is Resource.Loading -> {
                         fragmentCartLottie.isVisible = true
@@ -84,7 +92,8 @@ class FragmentCurrentCart : FragmentConnectionObserver(R.layout.fragment_current
     }
 
     @SuppressLint("SetTextI18n")
-    private fun onSuccess(list: List<ProductCartItem>) = with(binding) {
+    private fun onSuccess(order: OrderItem) = with(binding) {
+        val list = order.lineItems
         val isEmpty = list.isEmpty()
         fragmentCartRoot.isVisible = isEmpty.not()
         fragmentCartEmptyContainer.isVisible = isEmpty
@@ -105,7 +114,6 @@ class FragmentCurrentCart : FragmentConnectionObserver(R.layout.fragment_current
     private fun onFail(error: Throwable) = with(binding) {
         Toast.makeText(requireContext(), "Failed to load data", Toast.LENGTH_SHORT).show()
         viewModel.retry()
-        // TODO: refactor retry method to retry with user order
         fragmentCartLottie.isVisible = false
     }
 

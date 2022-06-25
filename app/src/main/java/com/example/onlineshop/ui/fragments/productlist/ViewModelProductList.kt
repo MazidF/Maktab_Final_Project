@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.example.onlineshop.data.repository.ProductRepository
+import com.example.onlineshop.data.repository.ShopRepository
 import com.example.onlineshop.ui.model.ProductList
 import com.example.onlineshop.ui.model.ProductListItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ViewModelProductList @Inject constructor(
-    private val repository: ProductRepository,
+    private val repository: ShopRepository,
 ) : ViewModel() {
 
     fun load(productList: ProductList): Flow<PagingData<ProductListItem.Item>> {

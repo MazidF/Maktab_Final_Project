@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.onlineshop.data.local.data_store.main.MainDataStore
 import com.example.onlineshop.data.model.customer.Customer
-import com.example.onlineshop.data.repository.ProductRepository
+import com.example.onlineshop.data.repository.ShopRepository
 import com.example.onlineshop.data.result.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ViewModelLogin @Inject constructor(
-    private val repository: ProductRepository,
+    private val repository: ShopRepository,
     private val mainDataStore: MainDataStore,
 ) : ViewModel() {
 

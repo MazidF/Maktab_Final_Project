@@ -34,6 +34,7 @@
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_cart.xml" value="0.2" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_cart_buying_info.xml" value="0.2" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_category.xml" value="0.14990942028985507" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_current_cart.xml" value="0.16486486486486487" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_home.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_image_viewer.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_loadable.xml" value="0.128" />
@@ -45,13 +46,15 @@
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_search.xml" value="0.24561403508771928" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_setting.xml" value="0.16486486486486487" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_slide_viewer.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_splash.xml" value="0.16486486486486487" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/horizontal_category_container.xml" value="0.20606884057971014" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/horizontal_product_container.xml" value="0.1" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/line_item.xml" value="0.128" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/loading_item.xml" value="0.176" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/login_item.xml" value="0.264" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/paging_view.xml" value="0.2" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/product_cart_item.xml" value="0.264" />
-        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/product_counter.xml" value="0.1" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/product_counter.xml" value="0.2" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/product_search_item.xml" value="0.264" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/simple_horizontal_product_item.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/simple_product_item.xml" value="0.25416666666666665" />

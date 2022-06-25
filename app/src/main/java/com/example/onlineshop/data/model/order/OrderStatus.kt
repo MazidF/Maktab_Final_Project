@@ -1,12 +1,15 @@
 package com.example.onlineshop.data.model.order
 
+import com.google.gson.annotations.SerializedName
+
 enum class OrderStatus(
     val value: String,
 ) {
     ANY("any"),
     FAILED("failed"),
-    PENDING("pending"),
     UNKNOWN("unknown"),
+    PENDING("pending"),
+    PROCESSING("processing"),
     COMPLETED("completed");
 
     companion object {

@@ -94,9 +94,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    override fun onStop() {
-        cartViewModel.save()
-        super.onStop()
-    }
 }

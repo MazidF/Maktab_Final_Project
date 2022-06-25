@@ -6,16 +6,19 @@ import com.example.onlineshop.data.model.customer.Customer
 import com.example.onlineshop.data.model.customer.RawCustomer
 import com.example.onlineshop.data.model.order.Order
 import com.example.onlineshop.data.model.order.OrderStatus
+import com.example.onlineshop.data.model.order.SimpleOrder
 import com.example.onlineshop.data.remote.api.CustomerApi
 import com.example.onlineshop.di.qualifier.DispatcherIO
 import com.example.onlineshop.utils.asResource
 import com.example.onlineshop.data.result.Resource
+import com.example.onlineshop.ui.model.OrderItem
 import com.example.onlineshop.utils.INITIAL_SIZE
 import com.example.onlineshop.utils.PAGE_SIZE
 import com.example.onlineshop.utils.PRE_FETCH_DISTANCE
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
+import retrofit2.Response
 import javax.inject.Inject
 
 class RemoteCustomerDataSource @Inject constructor(
@@ -46,13 +49,23 @@ class RemoteCustomerDataSource @Inject constructor(
         return api.getCustomer(customerId).asResource()
     }
 
-    fun getOrders(customerId: Long): Flow<PagingData<Order>> {
-        return RemotePagingSource.getPager(config = pagingConfig) { page, perPage ->
-            api.getOrders(
-                customerId, page, perPage,
-                status = OrderStatus.PENDING.value,
-            ).asResource()
-        }.flow.flowOn(dispatcher)
+    suspend fun updateOrder(order: SimpleOrder): Resource<Order> {
+        return api.updateOrder(order.id, order).asResource()
+    }
+
+    suspend fun getPendingOrders(customerId: Long): Resource<List<Order>> {
+        return getCurrentOrder(
+            customerId,
+        ).asResource()
+    }
+
+    private suspend fun getCurrentOrder(
+        id: Long,
+    ) : Response<List<Order>> {
+        return api.getOrders(
+            customerId = id, 1, 1,
+            OrderStatus.PROCESSING.value,
+        )
     }
 
     fun getFinishedOrders(customerId: Long): Flow<PagingData<Order>> {

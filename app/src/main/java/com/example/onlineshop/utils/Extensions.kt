@@ -85,7 +85,7 @@ fun TextView.setHtmlText(html: String) {
     }
 }
 
-fun <T> LiveData<T>.observeOnce(observer: Observer<T>, filter: (T) -> Boolean = { true }) {
+fun <T> LiveData<T>.observeOnce(filter: (T) -> Boolean = { true }, observer: Observer<T>) {
     var cb: Observer<T>? = null
     cb = Observer {
         if (filter(it)) {

@@ -66,11 +66,12 @@ class FragmentProductInfo : Fragment(R.layout.fragment_product_info) {
             }
         }
         productInfoAddToCart.apply {
-            val productId = args.product.id
-            setOnCountChangeListener {
-                cartViewModel.updateCart(productId, it)
+            val product = args.product
+            setOnCountChangeListener { count ->
+                cartViewModel.updateCart(product.id, count) { newCount ->
+                    setLoadingResult(newCount)
+                }
             }
-            this.setupCount(cartViewModel.getProductCount(productId))
         }
     }
 
@@ -110,7 +111,17 @@ class FragmentProductInfo : Fragment(R.layout.fragment_product_info) {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun setup() = with(binding) {
+    private fun setup() : Unit = with(binding) {
+        cartViewModel.run {
+            if (orderStateFlow.value !is Resource.Success) {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    // TODO: show a dialog for retry
+                    retry().join()
+                    setup()
+                }
+                return
+            }
+        }
         setupImages(info.imagesUrl)
         with(args.product) {
             productInfoName.text = name

@@ -2,7 +2,7 @@ package com.example.onlineshop.ui.fragments.categories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.onlineshop.data.repository.ProductRepository
+import com.example.onlineshop.data.repository.ShopRepository
 import com.example.onlineshop.ui.model.CategoryListItem
 import com.example.onlineshop.utils.categoryToCategoryListItemTransformer
 import com.example.onlineshop.utils.getWithDefault
@@ -21,7 +21,7 @@ private typealias SafeCategoryList = Resource<List<CategoryListItem>>
 
 @HiltViewModel
 class ViewModelCategory @Inject constructor(
-    private val repository: ProductRepository,
+    private val repository: ShopRepository,
 ) : ViewModel() {
 
     private val _categoryTitlesStateFlow = MutableStateFlow<SafeCategoryList>(

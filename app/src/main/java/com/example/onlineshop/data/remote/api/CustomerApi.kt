@@ -4,6 +4,7 @@ import com.example.onlineshop.data.model.customer.Customer
 import com.example.onlineshop.data.model.customer.RawCustomer
 import com.example.onlineshop.data.model.order.Order
 import com.example.onlineshop.data.model.order.OrderStatus
+import com.example.onlineshop.data.model.order.SimpleOrder
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -38,7 +39,7 @@ interface CustomerApi {
     @PUT("orders/{id}")
     suspend fun updateOrder(
         @Path("id") id: Long,
-        @Body order: Order,
+        @Body order: SimpleOrder,
     ) : Response<Order>
 
     @GET("orders/{id}")

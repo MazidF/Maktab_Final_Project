@@ -123,6 +123,12 @@ class ProductCounter @JvmOverloads constructor(
         }
     }
 
+    fun setLoadingResult(newCount: Int) {
+        if (withLoading.not()) return
+        setupCount(newCount)
+        stopLoading()
+    }
+
     fun setOnCountChangeListener(block: ((Int) -> Unit)?) {
         this.onCountChangeListener = block
     }

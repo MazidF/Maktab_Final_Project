@@ -6,19 +6,31 @@ import com.example.onlineshop.data.model.*
 import com.example.onlineshop.data.model.customer.Customer
 import com.example.onlineshop.data.model.customer.RawCustomer
 import com.example.onlineshop.data.model.order.Order
+import com.example.onlineshop.data.model.order.SimpleOrder
 import com.example.onlineshop.data.remote.RemoteCustomerDataSource
 import com.example.onlineshop.data.remote.RemoteProductDataSource
 import com.example.onlineshop.di.qualifier.DispatcherIO
 import com.example.onlineshop.data.result.Resource
+import com.example.onlineshop.ui.model.LineItemWithImage
+import com.example.onlineshop.ui.model.OrderItem
+import com.example.onlineshop.woker.SetupWorker
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
+import java.lang.IndexOutOfBoundsException
 
-class ProductRepository(
+class ShopRepository(
     private val remoteProduct: RemoteProductDataSource,
     private val remoteCustomer: RemoteCustomerDataSource,
     private val local: ILocalDataSource,
     @DispatcherIO private val dispatcher: CoroutineDispatcher,
 ) {
+    lateinit var customer: Customer
+        private set
+
+    fun setupCustomer(worker: SetupWorker, customer: Customer) {
+        this.customer = customer
+    }
+
     fun getMostRatedProduct(): Flow<PagingData<Product>> {
         return remoteProduct.getMostRatedProduct()
     }
@@ -103,7 +115,10 @@ class ProductRepository(
         }
     }
 
-    suspend fun getProductById(ids: Array<Long>, fake: Boolean = true): Flow<Resource<List<Product>>> {
+    suspend fun getProductById(
+        ids: Array<Long>,
+        fake: Boolean = true
+    ): Flow<Resource<List<Product>>> {
         val seed = System.currentTimeMillis()
         return if (fake) {
             safeApiCall(false, List(ids.size) {
@@ -153,8 +168,56 @@ class ProductRepository(
         }
     }
 
-    fun getPendingOrders(customerId: Long): Flow<PagingData<Order>> {
-        return remoteCustomer.getOrders(customerId)
+    private suspend fun createOrderOrGetCurrent(customerId: Long): Resource<OrderItem> {
+        val result = remoteCustomer.getPendingOrders(customerId)
+        return if (result is Resource.Success) {
+            val orders = result.body()
+            if (orders.isEmpty()) {
+                Resource.fail(IndexOutOfBoundsException())
+            } else {
+                val order = orders[0]
+                return orderToOrderItem(order)
+            }
+        } else {
+            result.map {
+                OrderItem.fromOrder(it[0], listOf())
+            }
+        }
+    }
+
+    private suspend fun orderToOrderItem(order: Order): Resource<OrderItem> {
+        val list = order.lineItems
+        val ids = list.map {
+            it.productId
+        }
+        val product = remoteProduct.getProductById(ids.toTypedArray()).asSuccess()?.body()
+            ?: return Resource.fail(Exception("Unable to load Product list!!!"))
+        val orderItem = OrderItem.fromOrder(
+            order, list.map { lineItem ->
+                LineItemWithImage(
+                    lineItem,
+                    product.firstOrNull {
+                        it.id == lineItem.productId
+                    } ?: Product.fromLineItem(lineItem)
+                )
+            }
+        )
+        return Resource.success(orderItem)
+    }
+
+    suspend fun getPendingOrder(customerId: Long): Flow<Resource<OrderItem>> {
+        return safeApiCall(false) {
+            createOrderOrGetCurrent(customerId)
+        }
+    }
+
+    suspend fun updateOrder(order: SimpleOrder): Resource<OrderItem> {
+        val result = remoteCustomer.updateOrder(order)
+        return result.asSuccess()?.body()?.let {
+            orderToOrderItem(it)
+        } ?: result.map {
+            OrderItem.fromOrder(it, listOf())
+        }
     }
 
     fun getFinishedOrders(customerId: Long): Flow<PagingData<Order>> {

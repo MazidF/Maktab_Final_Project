@@ -1,9 +1,9 @@
 package com.example.onlineshop.ui.model
 
 import com.example.onlineshop.data.model.Product
+import com.example.onlineshop.data.model.order.LineItem
 
-data class ProductCartItem(
+data class LineItemWithImage (
+    val lineItem: LineItem,
     val product: Product,
-    var count: Int,
-    // TODO: use val instead
 )

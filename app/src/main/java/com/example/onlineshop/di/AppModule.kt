@@ -3,7 +3,7 @@ package com.example.onlineshop.di
 import com.example.onlineshop.data.local.ILocalDataSource
 import com.example.onlineshop.data.remote.RemoteCustomerDataSource
 import com.example.onlineshop.data.remote.RemoteProductDataSource
-import com.example.onlineshop.data.repository.ProductRepository
+import com.example.onlineshop.data.repository.ShopRepository
 import com.example.onlineshop.di.qualifier.DispatcherIO
 import com.example.onlineshop.di.qualifier.LocalCustomerDataStoreAnnotation
 import dagger.Module
@@ -24,8 +24,8 @@ class AppModule {
         remoteCustomer: RemoteCustomerDataSource,
         @LocalCustomerDataStoreAnnotation local: ILocalDataSource,
         @DispatcherIO dispatcher: CoroutineDispatcher,
-    ) : ProductRepository {
-        return ProductRepository(
+    ) : ShopRepository {
+        return ShopRepository(
             remoteProduct = remoteProduct,
             remoteCustomer = remoteCustomer,
             local = local,

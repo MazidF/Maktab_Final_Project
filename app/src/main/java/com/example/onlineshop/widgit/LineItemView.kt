@@ -4,33 +4,33 @@ import android.content.Context
 import android.view.View
 import android.widget.LinearLayout
 import com.example.onlineshop.R
-import com.example.onlineshop.databinding.ProductCartItemBinding
-import com.example.onlineshop.ui.model.ProductCartItem
+import com.example.onlineshop.databinding.LineItemBinding
+import com.example.onlineshop.ui.model.LineItemWithImage
 import com.example.onlineshop.utils.loadImageInto
-import com.google.android.material.card.MaterialCardView
 
-class ProductCartItemView @JvmOverloads constructor(
+class LineItemView @JvmOverloads constructor(
     context: Context,
-) : LinearLayout(context), Bindable<ProductCartItem> {
-    private val binding: ProductCartItemBinding
+) : LinearLayout(context), Bindable<LineItemWithImage> {
+    private val binding: LineItemBinding
 
     private var onCountChangeListener: ((Int) -> Unit)? = null
 
     init {
-        val view = inflate(context, R.layout.product_cart_item, this)
-        binding = ProductCartItemBinding.bind(view)
+        val view = inflate(context, R.layout.line_item, this)
+        binding = LineItemBinding.bind(view)
         binding.productCartCounter.setOnCountChangeListener {
             onCountChangeListener?.invoke(it)
         }
     }
 
-    override fun bind(t: ProductCartItem?): Unit = with(binding) {
+    override fun bind(t: LineItemWithImage?): Unit = with(binding) {
         t?.let { item ->
+            val lineItem = item.lineItem
             val product = item.product
-            productCartName.text = product.name
-            productCartPrice.text = product.price
+            productCartName.text = lineItem.name
+            productCartPrice.text = lineItem.price
             loadImageInto(product.imageUrl, productCartImage)
-            productCartCounter.setupCount(t.count)
+            productCartCounter.setupCount(lineItem.count)
         }
     }
 
@@ -45,5 +45,9 @@ class ProductCartItemView @JvmOverloads constructor(
 
     fun setOnCountChangedListener(block: ((Int) -> Unit)?) {
         this.onCountChangeListener = block
+    }
+
+    fun setLoadingResult(newCount: Int) {
+        binding.productCartCounter.setLoadingResult(newCount)
     }
 }

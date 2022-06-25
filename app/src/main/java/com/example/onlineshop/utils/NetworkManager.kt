@@ -17,7 +17,8 @@ class NetworkManager @Inject constructor(
     @ApplicationContext context: Context
 ) {
     private val liveData = MutableLiveData<ConnectionState>()
-    private val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    private val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
     fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ConnectionState>) {
         liveData.observe(lifecycleOwner, observer)
@@ -65,8 +66,8 @@ class NetworkManager @Inject constructor(
     }
 
     fun notifyWhenConnected(cb: () -> Unit) {
-        liveData.observeOnce({ cb() }) {
-            it == ConnectionState.CONNECTED
+        liveData.observeOnce({ it == ConnectionState.CONNECTED }) {
+            cb()
         }
     }
 
