@@ -8,6 +8,7 @@ import com.example.onlineshop.data.repository.ShopRepository
 import com.example.onlineshop.data.result.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -16,31 +17,17 @@ import javax.inject.Inject
 @HiltViewModel
 class ViewModelLogin @Inject constructor(
     private val repository: ShopRepository,
-    private val mainDataStore: MainDataStore,
 ) : ViewModel() {
 
-    private val _customerStateFlow = MutableStateFlow<Resource<Customer>>(Resource.loading())
-    val customerStateFlow get() = _customerStateFlow.asStateFlow()
-
-    fun signIn(email: String, password: String) {
-        viewModelScope.launch {
-            repository.signIn(email, password).collect {
-                _customerStateFlow.emit(it)
-            }
-        }
+    suspend fun signIn(email: String, password: String): Flow<Boolean> {
+        return repository.signIn(email, password)
     }
 
-    fun login(email: String, password: String) {
-        viewModelScope.launch {
-            repository.logIn(email, password).collect {
-                _customerStateFlow.emit(it)
-            }
-        }
+    suspend fun login(email: String, password: String): Flow<Boolean> {
+        return repository.logIn(email, password)
     }
 
-    fun login(customerId: Long): Job {
-        return viewModelScope.launch {
-            mainDataStore.updateCustomerId(customerId)
-        }
+    suspend fun login(customerId: Long): Flow<Boolean> {
+        return repository.logIn(customerId)
     }
 }

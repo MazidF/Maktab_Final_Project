@@ -1,10 +1,11 @@
 package com.example.onlineshop.ui.fragments.home
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.Lifecycle
 import com.example.onlineshop.R
 import com.example.onlineshop.data.model.Product
 import com.example.onlineshop.databinding.FragmentHomeBinding
@@ -16,9 +17,10 @@ import com.example.onlineshop.ui.model.ProductList
 import com.example.onlineshop.ui.model.ProductListItem
 import com.example.onlineshop.utils.autoScroll
 import com.example.onlineshop.data.result.Resource
+import com.example.onlineshop.utils.failedDialog
+import com.example.onlineshop.utils.launchOnState
 import com.example.onlineshop.widgit.HorizontalProductContainer
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FragmentHome : FragmentConnectionObserver(R.layout.fragment_home) {
@@ -41,25 +43,33 @@ class FragmentHome : FragmentConnectionObserver(R.layout.fragment_home) {
         homeRoot.setOnRefreshListener {
             loadData()
         }
-        refreshableAdapter = createRefreshableAdapter()
-        homeList.apply {
-            adapter = refreshableAdapter
-        }
         if (viewModel.hasBeenLoaded) {
-            refresh(viewModel.imagesFlowState.value.asSuccess()?.body()?.images ?: listOf())
+            setupAdapter()
+            refresh(
+                viewModel.imagesFlowState.value.asSuccess()?.body()?.images ?: listOf(),
+                viewModel.getState()
+            )
             hideLoading(true)
         } else {
             loadData(true)
         }
     }
 
+    private fun setupAdapter() {
+        refreshableAdapter = createRefreshableAdapter()
+        binding.homeList.apply {
+            adapter = refreshableAdapter
+        }
+    }
+
     private fun loadData(isFirstTime: Boolean = false) = with(binding) {
         homeRoot.isRefreshing = true
-        viewLifecycleOwner.lifecycleScope.launch {
+        launchOnState(Lifecycle.State.STARTED) {
             val wasSuccessful = viewModel.loadDataAsync().await()
             if (wasSuccessful) {
                 val list = viewModel.imagesFlowState.value.asSuccess()?.body()?.images
-                refresh(list ?: listOf())
+                setupAdapter()
+                refresh(list ?: listOf(), viewModel.getState())
             } else {
                 errorDialog()
             }
@@ -76,10 +86,12 @@ class FragmentHome : FragmentConnectionObserver(R.layout.fragment_home) {
     }
 
     private fun errorDialog() {
-        // TODO: handle error
+        errorDialog = failedDialog(this::loadData, this::back).also {
+            it.show()
+        }
     }
 
-    private fun refresh(images: List<String>) = with(binding) {
+    private fun refresh(images: List<String>, state: List<Parcelable?>?) = with(binding) {
         homeSlider.apply {
             adapter = ProductImageViewPagerAdapter(
                 fragment = this@FragmentHome,
@@ -93,6 +105,9 @@ class FragmentHome : FragmentConnectionObserver(R.layout.fragment_home) {
             setPageTransformer(ZoomOutPageTransformer())
         }
         refreshableAdapter.refreshAll()
+        refreshableAdapter.list.forEachIndexed { i, item ->
+            (item as? HorizontalProductContainer)?.restore(state?.get(i))
+        }
     }
 
     private fun createHorizontalProductContainer(
@@ -156,6 +171,10 @@ class FragmentHome : FragmentConnectionObserver(R.layout.fragment_home) {
     }
 
     override fun onDestroyView() {
+        val states = refreshableAdapter.list.map {
+            (it as? HorizontalProductContainer)?.saveState()
+        }
+        viewModel.putState(states)
         super.onDestroyView()
         binding.homeList.adapter = null
         _binding = null

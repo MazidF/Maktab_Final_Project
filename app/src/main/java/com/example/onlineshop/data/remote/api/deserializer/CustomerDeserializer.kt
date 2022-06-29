@@ -12,11 +12,12 @@ object CustomerDeserializer : JsonDeserializer<Customer> {
         typeOfT: Type,
         context: JsonDeserializationContext?
     ): Customer = with(json.asJsonObject) {
+        val a = json
         Customer(
             id = this["id"].asLong,
             email = this["email"].asString,
             username = this["username"].asString,
-            password = this["password"].asString,
+            password = this["password"]?.asString ?: this["email"].asString,
             firstName = this["first_name"].asString,
             lastName = this["last_name"].asString,
         )

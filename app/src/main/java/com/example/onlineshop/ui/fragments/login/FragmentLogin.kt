@@ -30,20 +30,18 @@ class FragmentLogin : FragmentConnectionObserver(R.layout.fragment_login) {
         _binding = FragmentLoginBinding.bind(view)
 
         initView()
-        observe()
     }
 
     private fun initView() = with(binding) {
         fragmentLoginBtn.setOnClickListener {
             if (checkInputs()) {
-                val username = fragmentLoginEmail.text
-                val password = fragmentLoginPassword.text
-                if (fragmentLoginRetryPassword.isGone) {
-                    viewModel.login(username, password)
-                } else {
-                    viewModel.signIn(username, password)
-                }
+                loginOrSignIn()
             }
+        }
+        fragmentLoginSetting.setOnClickListener {
+            navController.navigate(
+                FragmentLoginDirections.actionFragmentLoginToFragmentSetting()
+            )
         }
         fragmentLoginClose.setOnClickListener {
             (requireActivity() as? AppCompatActivity)?.onBackPressed()
@@ -59,6 +57,31 @@ class FragmentLogin : FragmentConnectionObserver(R.layout.fragment_login) {
         }
     }
 
+    private fun loginOrSignIn() = with(binding) {
+        val username = fragmentLoginEmail.text
+        val password = fragmentLoginPassword.text
+        launchOnState(Lifecycle.State.STARTED) {
+            val flow = if (fragmentLoginRetryPassword.isGone) {
+                viewModel.login(username, password)
+            } else {
+                viewModel.signIn(username, password)
+            }
+            flow.collect { wasSuccessful ->
+                if (wasSuccessful) {
+                    navigate()
+                } else {
+                    fragmentLoginError.isVisible = true
+                }
+            }
+        }
+    }
+
+    private fun navigate() {
+        navController.navigate(
+            FragmentLoginDirections.actionFragmentLoginToFragmentProfile()
+        )
+    }
+
     private fun checkInputs(): Boolean = with(binding) {
         var result = fragmentLoginPassword.check()
         result = fragmentLoginEmail.check {
@@ -71,24 +94,6 @@ class FragmentLogin : FragmentConnectionObserver(R.layout.fragment_login) {
             } && result
         }
         result
-    }
-
-    private fun observe() = with(binding) {
-        launchOnState(Lifecycle.State.STARTED) {
-            viewModel.customerStateFlow.collectLatest {
-                when (it) {
-                    is Resource.Fail -> {
-                        fragmentLoginError.isVisible = true
-                    }
-                    is Resource.Success -> {
-                        viewModel.login(it.body().id).join()
-                        navController.navigate(
-                            FragmentLoginDirections.actionFragmentLoginToFragmentProfile()
-                        )
-                    }
-                }
-            }
-        }
     }
 
     override fun onDestroyView() {

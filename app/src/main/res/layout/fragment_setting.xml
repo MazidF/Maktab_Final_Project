@@ -1,6 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.example.onlineshop.widgit.SettingItemView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:iconSrc="@drawable/ic_question"
+        app:text="پرسش های متداول"
+        app:tint="@color/black" />
+
+    <com.example.onlineshop.widgit.SettingItemView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:iconSrc="@drawable/ic_private"
+        app:text="حریم خصوصی"
+        app:tint="@color/black" />
+
+    <com.example.onlineshop.widgit.SettingItemView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:iconSrc="@drawable/ic_assignment"
+        app:text="شرایط استفاده"
+        app:tint="@color/black" />
+
+    <com.example.onlineshop.widgit.SettingItemView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:iconSrc="@drawable/ic_phone"
+        app:text="تماس با ما"
+        app:tint="@color/black" />
+
+    <com.example.onlineshop.widgit.SettingItemView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:iconSrc="@drawable/ic_bug"
+        app:text="گزارش خطا"
+        app:tint="@color/black" />
+
+    <com.example.onlineshop.widgit.SettingItemView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:iconSrc="@drawable/ic_star_empty"
+        app:text="امتیاز دهی"
+        app:tint="@color/black" />
+
+    <com.example.onlineshop.widgit.SettingItemView
+        android:id="@+id/fragment_setting_worker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hasSwitch="true"
+        app:iconSrc="@drawable/ic_info"
+        app:text="مطلع کردن از کالای جدید"
+        app:tint="@color/black" />
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/fragment_setting_worker_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checkedButton="1"
+        android:gravity="center_horizontal">
+
+        <com.example.onlineshop.widgit.CheckableItemView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:itemText="4h" />
+
+        <com.example.onlineshop.widgit.CheckableItemView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:itemText="8h" />
+
+        <com.example.onlineshop.widgit.CheckableItemView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:itemText="12h" />
+
+        <com.example.onlineshop.widgit.CheckableItemView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:itemText="24h" />
+
+    </LinearLayout>
+
+    <com.example.onlineshop.widgit.SettingItemView
+        android:id="@+id/fragment_setting_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hide="true"
+        app:iconSrc="@drawable/ic_login"
+        app:text="خروخ از حساب کاربری"
+        app:tint="@color/discount_red" />
+
+</LinearLayout>

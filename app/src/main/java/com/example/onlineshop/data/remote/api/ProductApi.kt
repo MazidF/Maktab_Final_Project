@@ -2,9 +2,7 @@ package com.example.onlineshop.data.remote.api
 
 import com.example.onlineshop.data.model.*
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ProductApi {
 
@@ -16,6 +14,13 @@ interface ProductApi {
     @GET("products")
     suspend fun getProductsById(
         @Query("include") ids: String,
+    ): Response<List<Product>>
+
+    @GET("products")
+    suspend fun getProductByDate(
+        @Query("after") date: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int,
     ): Response<List<Product>>
 
     @GET("products")
@@ -54,4 +59,21 @@ interface ProductApi {
 
     @GET("products/608")
     suspend fun getMainPosterProducts(): Response<ProductImages>
+
+    @POST("products/reviews")
+    suspend fun createReview(
+        @Body review: ProductReview,
+    ): Response<ProductReview>
+
+    @GET("products/reviews/{id}")
+    suspend fun getReview(
+        @Path("id") reviewId: Long,
+    ): Response<ProductReview>
+
+    @GET("products/reviews")
+    suspend fun getReviewOfProduct(
+        @Query("product") productId: String,
+        @Query("per_page") perPage: Int,
+        @Query("page") page: Int,
+    ): Response<List<ProductReview>>
 }

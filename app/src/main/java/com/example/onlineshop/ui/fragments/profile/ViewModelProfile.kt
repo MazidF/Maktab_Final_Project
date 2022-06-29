@@ -15,25 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ViewModelProfile @Inject constructor(
     private val repository: ShopRepository,
-    private val mainDataStore: MainDataStore,
 ) : ViewModel() {
 
-    private lateinit var mainInfoStateFlow: StateFlow<MainInfo>
+    val customer = repository.customer
 
-    private val _customerStateFlow = MutableStateFlow<Resource<Customer>>(Resource.loading())
-    val customerStateFlow get() = _customerStateFlow.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            mainInfoStateFlow = mainDataStore.preferences.stateIn(viewModelScope)
-        }
-    }
-
-    fun getCustomer(customerId: Long) {
-        viewModelScope.launch {
-            repository.getCustomerById(customerId, false).collect {
-                _customerStateFlow.emit(it)
-            }
-        }
-    }
 }

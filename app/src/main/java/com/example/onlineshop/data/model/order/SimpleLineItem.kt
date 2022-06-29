@@ -3,6 +3,7 @@ package com.example.onlineshop.data.model.order
 import com.google.gson.annotations.SerializedName
 
 data class SimpleLineItem(
+    val id: Long,
     @SerializedName("product_id")
     val productId: Long,
     @SerializedName("quantity")
@@ -18,6 +19,7 @@ data class SimpleLineItem(
 
     fun copy(count: Int = this.count): SimpleLineItem {
         return SimpleLineItem(
+            id = id,
             productId = productId,
             count = count,
         )

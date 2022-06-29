@@ -21,6 +21,8 @@ import com.example.onlineshop.ui.fragments.productinfo.viewpager.ProductImageVie
 import com.example.onlineshop.ui.fragments.productinfo.viewpager.ZoomOutPageTransformer
 import com.example.onlineshop.utils.launchOnState
 import com.example.onlineshop.data.result.Resource
+import com.example.onlineshop.ui.fragments.FragmentConnectionObserver
+import com.example.onlineshop.utils.failedDialog
 import com.example.onlineshop.utils.setHtmlText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -28,10 +30,7 @@ import kotlinx.coroutines.launch
 // TODO: handle rotation
 
 @AndroidEntryPoint
-class FragmentProductInfo : Fragment(R.layout.fragment_product_info) {
-    private val navController by lazy {
-        findNavController()
-    }
+class FragmentProductInfo : FragmentConnectionObserver(R.layout.fragment_product_info) {
     private val args: FragmentProductInfoArgs by navArgs()
 
     private var _binding: FragmentProductInfoBinding? = null
@@ -55,10 +54,12 @@ class FragmentProductInfo : Fragment(R.layout.fragment_product_info) {
             viewModel.loadProductInfo(args.product)
         }
         productInfoClose.setOnClickListener {
-            requireActivity().onBackPressed()
+            back()
         }
-        productInfoOption.setOnClickListener {
-            // TODO: do something :)
+        productInfoCart.setOnClickListener {
+            navController.navigate(
+                FragmentProductInfoDirections.actionFragmentProductInfoToFragmentCart()
+            )
         }
         productInfoSimilar.apply {
             setOnItemClick {
@@ -88,10 +89,9 @@ class FragmentProductInfo : Fragment(R.layout.fragment_product_info) {
             viewModel.productInfoStateFlow.collect {
                 when (it) {
                     is Resource.Fail -> {
-                        errorDialog(it.error())
-                    }
-                    is Resource.Loading, is Resource.Reloading -> {
-                        // do nothing
+                        errorDialog {
+                            viewModel.loadProductInfo(args.product)
+                        }
                     }
                     is Resource.Success -> {
                         info = it.body()
@@ -111,17 +111,7 @@ class FragmentProductInfo : Fragment(R.layout.fragment_product_info) {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun setup() : Unit = with(binding) {
-        cartViewModel.run {
-            if (orderStateFlow.value !is Resource.Success) {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    // TODO: show a dialog for retry
-                    retry().join()
-                    setup()
-                }
-                return
-            }
-        }
+    private fun setup(): Unit = with(binding) {
         setupImages(info.imagesUrl)
         with(args.product) {
             productInfoName.text = name
@@ -144,9 +134,6 @@ class FragmentProductInfo : Fragment(R.layout.fragment_product_info) {
                     is Resource.Success -> {
                         productInfoSimilar.refresh(it.body())
                     }
-                    else -> {
-                        // do nothing
-                    }
                 }
             }
         }
@@ -167,12 +154,20 @@ class FragmentProductInfo : Fragment(R.layout.fragment_product_info) {
         }
     }
 
-    private fun errorDialog(error: Throwable) {
-
+    private fun errorDialog(block: () -> Unit) {
+        errorDialog = failedDialog(block, this::back).also {
+            it.show()
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun navigateToConnectionFailed() {
+        navController.navigate(
+            FragmentProductInfoDirections.actionFragmentProductInfoToFragmentNetworkConnectionFailed()
+        )
     }
 }

@@ -8,7 +8,6 @@ import com.example.onlineshop.R
 import com.example.onlineshop.data.model.ProductSearchItem
 import com.example.onlineshop.databinding.ProductSearchItemBinding
 import com.example.onlineshop.utils.loadImageInto
-import com.google.android.material.card.MaterialCardView
 
 class ProductSearchItemView @JvmOverloads constructor(
     context: Context,

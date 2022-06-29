@@ -7,10 +7,10 @@ import androidx.lifecycle.Lifecycle
 import com.example.onlineshop.R
 import com.example.onlineshop.data.local.data_store.main.MainDataStore
 import com.example.onlineshop.data.model.customer.Customer
+import com.example.onlineshop.data.model.order.OrderStatus
 import com.example.onlineshop.databinding.FragmentProfileBinding
 import com.example.onlineshop.ui.fragments.FragmentConnectionObserver
 import com.example.onlineshop.utils.launchOnState
-import com.example.onlineshop.data.result.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -29,39 +29,44 @@ class FragmentProfile : FragmentConnectionObserver(R.layout.fragment_profile) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentProfileBinding.bind(view)
 
-        init()
         observe()
     }
 
-    private fun init() = with(binding) {
+    private fun initView() = with(binding) {
+        val customer = viewModel.customer
+        fragmentProfileUsername.text = customer.username
+        fragmentProfileEmail.text = customer.email
 
+        setupListeners()
+    }
+
+    private fun setupListeners() = with(binding) {
+        fragmentProfileCurrent.setOnClickListener {
+            navigateToOrderHistory(OrderStatus.PROCESSING)
+        }
+        fragmentProfileCompleted.setOnClickListener {
+            navigateToOrderHistory(OrderStatus.COMPLETED)
+        }
+        fragmentProfileRefunded.setOnClickListener {
+            navigateToOrderHistory(OrderStatus.REFUNDED)
+        }
+    }
+
+    private fun navigateToOrderHistory(orderStatus: OrderStatus) {
+        navController.navigate(
+            FragmentProfileDirections.actionFragmentProfileToFragmentOrderHistory(
+                orderStatus
+            )
+        )
     }
 
     private fun observe() = with(binding) {
         launchOnState(Lifecycle.State.STARTED) {
             mainDataStore.preferences.collect {
-                if (it.hasBeenLoggedIn()) {
-                    viewModel.getCustomer(it.userId)
+                if (it.hasBeenLoggedIn) {
+                    initView()
                 } else {
                     navigateToLoginPage()
-                }
-            }
-        }
-        launchOnState(Lifecycle.State.STARTED) {
-            viewModel.customerStateFlow.collect {
-                when(it) {
-                    is Resource.Fail -> {
-                        handleError(it.error())
-                    }
-                    is Resource.Loading -> {
-                        startLoading()
-                    }
-                    is Resource.Reloading -> {
-                        // do nothing
-                    }
-                    is Resource.Success -> {
-                        onSuccess(it.body())
-                    }
                 }
             }
         }
@@ -78,6 +83,7 @@ class FragmentProfile : FragmentConnectionObserver(R.layout.fragment_profile) {
     }
 
     private fun onSuccess(customer: Customer) {
+
         stopLoading()
     }
 

@@ -1,5 +1,8 @@
 package com.example.onlineshop.ui.fragments.home
 
+import android.os.Bundle
+import android.os.Parcelable
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.onlineshop.data.model.ProductImages
@@ -54,7 +57,8 @@ class ViewModelHome @Inject constructor(
 
     private fun getPopularAsync(): Deferred<SafeProducts> {
         return viewModelScope.async {
-            repository.getMostPopularProduct(15, hasBeenLoaded).map(productToProductListItemTransformer).collect {
+            repository.getMostPopularProduct(15, hasBeenLoaded)
+                .map(productToProductListItemTransformer).collect {
                 _mostPopularProductListFLowState.emit(it)
             }
             _mostPopularProductListFLowState.value
@@ -63,16 +67,18 @@ class ViewModelHome @Inject constructor(
 
     private fun getNewestAsync(): Deferred<SafeProducts> {
         return viewModelScope.async {
-            repository.getNewestProduct(15, hasBeenLoaded).map(productToProductListItemTransformer).collect {
-                _newestProductListFLowState.emit(it)
-            }
+            repository.getNewestProduct(15, hasBeenLoaded).map(productToProductListItemTransformer)
+                .collect {
+                    _newestProductListFLowState.emit(it)
+                }
             _newestProductListFLowState.value
         }
     }
 
     private fun getRatedAsync(): Deferred<SafeProducts> {
         return viewModelScope.async {
-            repository.getMostRatedProduct(15, hasBeenLoaded).map(productToProductListItemTransformer).collect {
+            repository.getMostRatedProduct(15, hasBeenLoaded)
+                .map(productToProductListItemTransformer).collect {
                 _mostRatedProductListFLowState.emit(it)
             }
             val a = _mostRatedProductListFLowState.value
@@ -95,6 +101,18 @@ class ViewModelHome @Inject constructor(
             wasSuccessful.also {
                 hasBeenLoaded = it
             }
+        }
+    }
+
+    private var states: List<Parcelable?>? = null
+
+    fun putState(states: List<Parcelable?>) {
+        this.states = states
+    }
+
+    fun getState(): List<Parcelable?>? {
+        return states.also {
+            this.states = null
         }
     }
 }

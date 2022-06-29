@@ -6,6 +6,7 @@ import com.example.onlineshop.data.model.order.OrderStatus
 data class OrderItem(
     val id: Long,
     val customerId: Long,
+    val date: String,
     val total: String,
     val totalTax: String,
     val status: OrderStatus,
@@ -17,6 +18,7 @@ data class OrderItem(
             return OrderItem(
                 id = order.id,
                 lineItems = list,
+                date = order.date,
                 total = order.total,
                 status = order.status,
                 totalTax = order.totalTax,
@@ -28,13 +30,14 @@ data class OrderItem(
     fun toOrder(): Order {
         return Order(
             id = this.id,
+            date = this.date,
             total = this.total,
             status = this.status,
             totalTax = this.totalTax,
             customerId = this.customerId,
             lineItems = lineItems.map {
                 it.lineItem
-            }
+            },
         )
     }
 }

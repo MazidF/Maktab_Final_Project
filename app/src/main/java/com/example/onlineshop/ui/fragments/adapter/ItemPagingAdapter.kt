@@ -1,23 +1,19 @@
 package com.example.onlineshop.ui.fragments.adapter
 
 import android.view.ViewGroup
-import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import com.example.onlineshop.data.model.Product
-import com.example.onlineshop.ui.fragments.adapter.diff_callback.ProductItemDiffItemCallback
-import com.example.onlineshop.ui.model.ProductListItem
 import com.example.onlineshop.widgit.Bindable
 
-abstract class ProductPagingAdapter<T : Any>(
+abstract class ItemPagingAdapter<T : Any>(
     diffCallback: DiffUtil.ItemCallback<T>,
     private val onItemClick: (T) -> Unit,
 ) :
-    PagingDataAdapter<T, ProductPagingAdapter<T>.ProductHolder>(
+    PagingDataAdapter<T, ItemPagingAdapter<T>.ItemHolder>(
         diffCallback
     ) {
 
-    inner class ProductHolder(
+    inner class ItemHolder(
         bindable: Bindable<T>
     ) : BindableHolder<T>(bindable) {
         private var t: T? = null
@@ -34,13 +30,13 @@ abstract class ProductPagingAdapter<T : Any>(
         }
     }
 
-    override fun onBindViewHolder(holder: ProductHolder, position: Int) {
+    override fun onBindViewHolder(holder: ItemHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
     abstract fun onCreateBindable(parent: ViewGroup, viewType: Int): Bindable<T>
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductHolder {
-        return ProductHolder(onCreateBindable(parent, viewType))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
+        return ItemHolder(onCreateBindable(parent, viewType))
     }
 }

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_horizontal"
+    android:layout_margin="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="معمولی"
+        android:textSize="18sp"
+        android:textColor="@color/black"/>
+
+    <SeekBar
+        android:rotation="180"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:progress="2"
+        android:max="4"
+        android:thumb="@drawable/circle"
+        android:progressTint="@color/black"
+        android:thumbTint="@color/black"/>
+
+    <LinearLayout
+        android:layout_marginTop="3dp"
+        android:layout_marginStart="13dp"
+        android:layout_marginEnd="13dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:scaleType="fitStart"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="5dp"
+            android:src="@drawable/circle"/>
+
+        <ImageView
+            android:layout_weight="2"
+            android:layout_width="wrap_content"
+            android:layout_height="5dp"
+            android:src="@drawable/circle"/>
+
+        <ImageView
+            android:layout_weight="2"
+            android:layout_width="wrap_content"
+            android:layout_height="5dp"
+            android:src="@drawable/circle"/>
+
+        <ImageView
+            android:layout_weight="2"
+            android:layout_width="wrap_content"
+            android:layout_height="5dp"
+            android:src="@drawable/circle"/>
+
+        <ImageView
+            android:scaleType="fitEnd"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="5dp"
+            android:src="@drawable/circle"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="1.7dp"
+        android:background="@color/light_gray"/>
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="دیدگاه خود را شرح دهید"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:text="متن نظر*"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_marginTop="5dp"
+            app:cardCornerRadius="8dp"
+            android:backgroundTint="#C8C7C7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:text="این کالا واقعا از کیفیت بدی برخوردار بود.\n\nواقعا راضی کننده نبود"
+                android:lines="3"
+                android:maxLines="5"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="ارسال دیدگاه به صورت ناشناس"
+            android:textColor="@color/black"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/discount_red"
+        android:textSize="17sp"
+        android:text="ثبت دیدگاه"
+        style="@style/AddToCartButton"/>
+
+    <TextView
+        android:gravity="center_horizontal"
+        android:textColor="#3E3E3E"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ثبت دیدگاه به معنی موافقت با قوانین انتشار دیجیکالا است."/>
+
+</LinearLayout>

@@ -1,10 +1,10 @@
 package com.example.onlineshop.ui.fragments.cart.main
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.example.onlineshop.data.local.data_store.main.MainDataStore
-import com.example.onlineshop.data.model.order.LineItem
 import com.example.onlineshop.data.model.order.Order
 import com.example.onlineshop.data.model.order.SimpleLineItem
 import com.example.onlineshop.data.repository.ShopRepository
@@ -24,48 +24,15 @@ import javax.inject.Inject
 @HiltViewModel
 class ViewModelCart @Inject constructor(
     private val repository: ShopRepository,
-    private val mainDataStore: MainDataStore,
 ) : ViewModel() {
+    private val customerId = repository.customer.id
 
-    private var failedCounter: Int = 0
-    private var retryJob: Job? = null
-
-    private val _orderStateFlow = MutableStateFlow<Resource<OrderItem>>(
-        Resource.loading()
-    )
-    val orderStateFlow get() = _orderStateFlow.asStateFlow()
-
-    private val _customerIdStateFlow = MutableStateFlow(-1L)
-
-    init {
-        viewModelScope.launch {
-            mainDataStore.preferences.collect { info ->
-                _customerIdStateFlow.emit(info.userId)
-                loadCurrentOrder(info.userId)
-            }
-        }
-    }
-
-    fun loadLastOrders(userId: Long): Flow<PagingData<Order>> {
-        return repository.getFinishedOrders(userId)
-    }
-
-    private suspend fun loadCurrentOrder(userId: Long) {
-        repository.getPendingOrder(userId).collect {
-            _orderStateFlow.emit(it)
-            if (it is Resource.Fail) {
-                failedCounter++
-                if (failedCounter > 3) {
-                    retry()
-                }
-            } else if (it is Resource.Success) {
-                failedCounter = 0
-            }
-        }
+    fun loadLastOrders(userId: Long): Flow<Resource<List<Order>>> {
+        return repository.getOrders(userId)
     }
 
     fun addToCart(productId: Long, cb: (Int) -> Unit) {
-        val lineItem = getLineItemById(productId) ?: return
+        val lineItem = getLineItemById(productId)
         updateCart(lineItem, lineItem.count + 1, cb)
     }
 
@@ -74,7 +41,7 @@ class ViewModelCart @Inject constructor(
     }
 
     fun removeFromCart(productId: Long, cb: (Int) -> Unit) {
-        val lineItem = getLineItemById(productId) ?: return
+        val lineItem = getLineItemById(productId)
         updateCart(lineItem, lineItem.count - 1, cb)
     }
 
@@ -83,12 +50,12 @@ class ViewModelCart @Inject constructor(
     }
 
     fun updateCart(productId: Long, count: Int, cb: (Int) -> Unit) {
-        val lineItem = getLineItemById(productId) ?: return
+        val lineItem = getLineItemById(productId)
         return updateCart(lineItem, count, cb)
     }
 
     fun updateCart(lineItem: SimpleLineItem, count: Int, cb: (Int) -> Unit) {
-        val lastOrder = lastOrder()!!.toSimpleOrder()
+        val lastOrder = repository.currentOrder.toSimpleOrder()
         val newOrder = lastOrder + lineItem.copy(count)
         viewModelScope.launch {
             repository.updateOrder(newOrder).asSuccess()?.let { success ->
@@ -100,33 +67,25 @@ class ViewModelCart @Inject constructor(
                     }?.count ?: lineItem.count
                     cb(newCount)
                 }
-                _orderStateFlow.emit(success)
+            } ?: run {
+                cb(lineItem.count)
             }
         }
     }
 
-    private fun lastOrder(): Order? {
-        return _orderStateFlow.value.asSuccess()?.body()?.toOrder()
+    private fun getLineItemById(id: Long): SimpleLineItem {
+        val order = repository.currentOrder
+        return order.lineItems.firstOrNull {
+            it.product.id == id
+        }?.toSimpleLineItem() ?: SimpleLineItem(-1, id, 0)
     }
 
-    private fun getLineItemById(id: Long): SimpleLineItem? {
-        val order = lastOrder()
-        return order?.run {
-            lineItems.firstOrNull {
-                it.productId == id
-            }?.toSimpleLineItem() ?: SimpleLineItem(id, 0)
-        }
+    fun refreshOrder(): LiveData<OrderItem> {
+        throw Exception(":)")
     }
 
-    fun retry(): Job {
-        if (retryJob == null) {
-            retryJob = viewModelScope.launch {
-                val userId = mainDataStore.preferences.first().userId
-                loadCurrentOrder(userId)
-                retryJob = null
-            }
-        }
-        return retryJob!!
+    fun currentOrder(): OrderItem {
+        return repository.currentOrder
     }
 
 }

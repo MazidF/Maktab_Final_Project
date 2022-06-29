@@ -36,6 +36,10 @@ class FragmentLocationSetter : FragmentLoadable(R.layout.fragment_location_sette
         _binding = null
     }
 
+    override fun navigateToConnectionFailed() {
+
+    }
+
     override fun refresh() {
         // do nothing
     }

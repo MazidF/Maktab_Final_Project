@@ -13,6 +13,8 @@ data class Order(
     val status: OrderStatus,
     @SerializedName("line_items")
     val lineItems: List<LineItem>,
+    @SerializedName("date_modified_gmt")
+    val date: String,
 ) {
 
     fun changeLineItemCount(lineItem: LineItem, count: Int): Order {
@@ -43,6 +45,7 @@ data class Order(
             totalTax = totalTax,
             customerId = customerId,
             lineItems = newList,
+            date = date
         )
     }
 }

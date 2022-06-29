@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.onlineshop.widgit.Refreshable
 
 class RefreshableAdapter<T>(
-    private val list: List<Refreshable<T>>,
+    val list: List<Refreshable<T>>,
     private val producerList: List<() -> List<T>>
 ) : RecyclerView.Adapter<RefreshableAdapter<T>.RefreshableHolder>() {
 

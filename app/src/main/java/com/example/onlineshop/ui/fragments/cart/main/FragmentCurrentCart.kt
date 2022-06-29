@@ -9,8 +9,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import com.example.onlineshop.R
 import com.example.onlineshop.data.local.data_store.main.MainDataStore
-import com.example.onlineshop.data.model.Product
-import com.example.onlineshop.data.model.order.Order
 import com.example.onlineshop.data.result.Resource
 import com.example.onlineshop.databinding.FragmentCurrentCartBinding
 import com.example.onlineshop.ui.fragments.FragmentConnectionObserver
@@ -71,24 +69,25 @@ class FragmentCurrentCart : FragmentConnectionObserver(R.layout.fragment_current
     private fun observe() = with(binding) {
         launchOnState(Lifecycle.State.STARTED) {
             mainDataStore.preferences.collectLatest {
-                fragmentCartLogin.root.isVisible = it.hasBeenLoggedIn().not()
+                fragmentCartLogin.root.isVisible = it.hasValidId().not()
             }
         }
-        launchOnState(Lifecycle.State.STARTED) {
-            viewModel.orderStateFlow.collect {
-                when (it) {
-                    is Resource.Loading -> {
-                        fragmentCartLottie.isVisible = true
-                    }
-                    is Resource.Fail -> {
-                        onFail(it.error())
-                    }
-                    is Resource.Success -> {
-                        onSuccess(it.body())
-                    }
-                }
-            }
-        }
+        onSuccess(viewModel.currentOrder())
+//        launchOnState(Lifecycle.State.STARTED) {
+//            viewModel.orderStateFlow.collect {
+//                when (it) {
+//                    is Resource.Loading -> {
+//                        fragmentCartLottie.isVisible = true
+//                    }
+//                    is Resource.Fail -> {
+//                        onFail(it.error())
+//                    }
+//                    is Resource.Success -> {
+//                        onSuccess(it.body())
+//                    }
+//                }
+//            }
+//        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -113,7 +112,6 @@ class FragmentCurrentCart : FragmentConnectionObserver(R.layout.fragment_current
 
     private fun onFail(error: Throwable) = with(binding) {
         Toast.makeText(requireContext(), "Failed to load data", Toast.LENGTH_SHORT).show()
-        viewModel.retry()
         fragmentCartLottie.isVisible = false
     }
 

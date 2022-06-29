@@ -18,6 +18,7 @@ object OrderDeserializer : JsonDeserializer<Order> {
             total = this["total"].asString,
             totalTax = this["total_tax"].asString,
             customerId = this["customer_id"].asLong,
+            date = this["date_modified_gmt"].asString,
             status = OrderStatus.get(this["status"].asString),
             lineItems = this["line_items"].asJsonArray.map {
                 LineItemDeserializer.deserialize(

@@ -35,4 +35,8 @@ class FragmentCartBuyingInfo : FragmentLoadable(R.layout.fragment_cart_buying_in
         super.onDestroyView()
         _binding = null
     }
+
+    override fun navigateToConnectionFailed() {
+        TODO("Not yet implemented")
+    }
 }

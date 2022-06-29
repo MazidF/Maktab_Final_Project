@@ -15,6 +15,7 @@ import com.example.onlineshop.ui.model.CategoryListItem
 import com.example.onlineshop.ui.model.ProductList
 import com.example.onlineshop.utils.launchOnState
 import com.example.onlineshop.data.result.Resource
+import com.example.onlineshop.utils.failedDialog
 import com.example.onlineshop.widgit.HorizontalCategoryContainer
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,7 +32,12 @@ class FragmentCategory : FragmentConnectionObserver(R.layout.fragment_category) 
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentCategoryBinding.bind(view)
 
+        initView()
         observe()
+    }
+
+    private fun initView() {
+        viewModel.loadCategoriesTitles()
     }
 
     private fun observe() = with(binding) {
@@ -39,7 +45,7 @@ class FragmentCategory : FragmentConnectionObserver(R.layout.fragment_category) 
             viewModel.categoriesStateFlow.collect {
                 when (it) {
                     is Resource.Fail -> {
-                        errorDialog(it.error())
+                        errorDialog()
                     }
                     is Resource.Success -> {
                         onSuccess()
@@ -59,8 +65,10 @@ class FragmentCategory : FragmentConnectionObserver(R.layout.fragment_category) 
         endLoading()
     }
 
-    private fun errorDialog(error: Throwable): Unit = with(binding) {
-        endLoading()
+    private fun errorDialog() {
+        errorDialog = failedDialog(viewModel::loadCategoriesTitles, this::back).also {
+            it.show()
+        }
     }
 
     private fun createRefreshableAdapter(): RefreshableAdapter<CategoryListItem> = with(viewModel) {

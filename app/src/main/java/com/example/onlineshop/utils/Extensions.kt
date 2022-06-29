@@ -1,7 +1,10 @@
 package com.example.onlineshop.utils
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Handler
@@ -10,24 +13,31 @@ import android.text.Html
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
+import android.view.Window
 import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RadioButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
+import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.example.onlineshop.R
 import com.example.onlineshop.data.result.Resource
+import com.example.onlineshop.databinding.AlertDialogBinding
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.io.File
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
-import java.security.AccessController.getContext
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
 
 
 fun Fragment.launchOnState(state: Lifecycle.State, block: suspend () -> Unit): Job {
@@ -193,4 +203,52 @@ fun getDeviceId(context: Context): String {
         context.contentResolver,
         Secure.ANDROID_ID
     )
+}
+
+fun AlertDialog.hideBackground() = apply {
+    requestWindowFeature(Window.FEATURE_NO_TITLE)
+    window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+}
+
+fun Fragment.failedDialog(positiveBlock: () -> Unit, negativeBlock: () -> Unit): AlertDialog {
+    var dialog: AlertDialog? = null
+    val binding = AlertDialogBinding.inflate(layoutInflater).apply {
+        alertDialogYes.setOnClickListener {
+            positiveBlock()
+            dialog!!.hide()
+        }
+        alertDialogNo.setOnClickListener {
+            negativeBlock()
+            dialog!!.hide()
+        }
+    }
+    dialog = AlertDialog.Builder(requireContext())
+        .setView(binding.root)
+        .setCancelable(false)
+        .create()
+        .hideBackground()
+    return dialog
+}
+
+@SuppressLint("SimpleDateFormat")
+fun Date.toISO8601(): String {
+    val tz: TimeZone = TimeZone.getTimeZone("UTC")
+    val df: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'")
+    df.timeZone = tz
+    return df.format(this)
+}
+
+fun RadioButton.setup(defaultValue: Boolean = false, block: (Boolean) -> Unit = {}) {
+    isSelected = defaultValue
+    isChecked = defaultValue
+    setOnClickListener {
+        if (isSelected) {
+            isSelected = false
+            isChecked = false
+        } else {
+            isSelected = true
+            isChecked = true
+        }
+        block(isChecked)
+    }
 }

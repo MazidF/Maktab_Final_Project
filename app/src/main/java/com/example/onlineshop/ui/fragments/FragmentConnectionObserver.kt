@@ -1,7 +1,9 @@
 package com.example.onlineshop.ui.fragments
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.onlineshop.utils.ConnectionState
@@ -16,6 +18,11 @@ abstract class FragmentConnectionObserver(
     protected val navController by lazy {
         findNavController()
     }
+    protected var errorDialog: AlertDialog? = null
+
+    protected fun back() {
+        (requireActivity() as? AppCompatActivity)?.onBackPressed()
+    }
 
     @Inject
     lateinit var networkManager: NetworkManager
@@ -29,6 +36,12 @@ abstract class FragmentConnectionObserver(
                 }
             }
         }
+    }
+
+    override fun onStop() {
+        errorDialog?.hide()
+        errorDialog = null
+        super.onStop()
     }
 
     abstract fun navigateToConnectionFailed()

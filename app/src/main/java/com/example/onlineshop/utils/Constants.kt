@@ -3,8 +3,10 @@ package com.example.onlineshop.utils
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 
-const val CONSUMER_KEY = "ck_3fb6c37fed38fc42d9b28369c0cbdf8063fcf61e"
-const val CONSUMER_SECRET = "cs_3cb4d01706cca4d74960048e8d7169f3ae046b39"
+//const val CONSUMER_KEY = "ck_3fb6c37fed38fc42d9b28369c0cbdf8063fcf61e"
+const val CONSUMER_KEY = "ck_63f4c52da932ddad1570283b31f3c96c4bd9fd6f"
+//const val CONSUMER_SECRET = "cs_3cb4d01706cca4d74960048e8d7169f3ae046b39"
+const val CONSUMER_SECRET = "cs_294e7de35430398f323b43c21dd1b29f67b5370b"
 const val BASE_URL = "https://woocommerce.maktabsharif.ir/wp-json/wc/v3/"
 
 const val PAGE_SIZE = 20

@@ -1,6 +1,6 @@
 package com.example.onlineshop.di
 
-import com.example.onlineshop.data.local.ILocalDataSource
+import com.example.onlineshop.data.local.data_store.main.MainDataStore
 import com.example.onlineshop.data.remote.RemoteCustomerDataSource
 import com.example.onlineshop.data.remote.RemoteProductDataSource
 import com.example.onlineshop.data.repository.ShopRepository
@@ -22,14 +22,14 @@ class AppModule {
     fun provideProductRepository(
         remoteProduct: RemoteProductDataSource,
         remoteCustomer: RemoteCustomerDataSource,
-        @LocalCustomerDataStoreAnnotation local: ILocalDataSource,
         @DispatcherIO dispatcher: CoroutineDispatcher,
-    ) : ShopRepository {
+        mainDataStore: MainDataStore,
+    ): ShopRepository {
         return ShopRepository(
             remoteProduct = remoteProduct,
             remoteCustomer = remoteCustomer,
-            local = local,
             dispatcher = dispatcher,
+            mainDataStore = mainDataStore,
         )
     }
 }

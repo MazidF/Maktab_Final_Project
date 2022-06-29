@@ -9,6 +9,8 @@ import com.example.onlineshop.data.model.order.SimpleOrder
 import com.example.onlineshop.ui.model.CategoryListItem
 import com.example.onlineshop.ui.model.ProductListItem
 import com.example.onlineshop.data.result.Resource
+import com.example.onlineshop.ui.model.LineItemWithImage
+import com.example.onlineshop.ui.model.OrderItem
 
 val productToProductListItemTransformer = { safeApiCall: Resource<List<Product>> ->
     safeApiCall.map<List<ProductListItem>> { data ->
@@ -28,6 +30,7 @@ val categoryToCategoryListItemTransformer = { safeApiCall: Resource<List<Categor
 
 fun Product.toSimpleLineItem(count: Int): SimpleLineItem {
     return SimpleLineItem(
+        id = -1,
         productId = id,
         count = count,
     )
@@ -35,12 +38,28 @@ fun Product.toSimpleLineItem(count: Int): SimpleLineItem {
 
 fun LineItem.toSimpleLineItem(): SimpleLineItem {
     return SimpleLineItem(
+        id = id,
         productId = productId,
         count = count,
     )
 }
 
+fun LineItemWithImage.toSimpleLineItem(): SimpleLineItem {
+    return lineItem.toSimpleLineItem()
+}
+
 fun Order.toSimpleOrder(): SimpleOrder {
+    return SimpleOrder(
+        id = id,
+        customerId = customerId,
+        status = status,
+        lineItems = ArrayList(lineItems.map {
+            it.toSimpleLineItem()
+        })
+    )
+}
+
+fun OrderItem.toSimpleOrder(): SimpleOrder {
     return SimpleOrder(
         id = id,
         customerId = customerId,

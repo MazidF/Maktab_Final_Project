@@ -14,7 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 abstract class FragmentLoadable(
     private val resource: Int,
     private val hasRefresh: Boolean = true,
-) : Fragment(R.layout.fragment_loadable) {
+) : FragmentConnectionObserver(R.layout.fragment_loadable) {
 
     private var _binding: FragmentLoadableBinding? = null
     private val binding: FragmentLoadableBinding

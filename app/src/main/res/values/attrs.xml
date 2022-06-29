@@ -5,6 +5,7 @@
         <attr name="hideMoreBtn" format="boolean" />
     </declare-styleable>
 
+
     <declare-styleable name="paging_view">
         <attr name="spanCount" />
         <attr name="layoutManager" />
@@ -18,7 +19,28 @@
     <declare-styleable name="ProductCounter">
         <attr name="withLoading" format="boolean" />
     </declare-styleable>
+
     <declare-styleable name="CustomLottie">
-        <attr name="lottie_rawRes" format="reference"/>
+        <attr name="lottie_rawRes" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="CheckableItemView">
+        <attr name="itemText" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="SettingItemView">
+        <attr name="iconSrc" format="reference"/>
+        <attr name="hasSwitch" format="boolean"/>
+        <attr name="hide" format="boolean"/>
+        <attr name="text" format="string"/>
+        <attr name="tint" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="ImageViewWithCounter">
+        <attr name="counterMargin" format="dimension" />
+        <attr name="counterSize" format="dimension" />
+        <attr name="count" format="integer" />
+        <attr name="src" format="reference"/>
+    </declare-styleable>
+
 </resources>

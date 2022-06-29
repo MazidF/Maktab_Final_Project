@@ -28,7 +28,6 @@ class SetupWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted params: WorkerParameters,
     private val repository: ShopRepository,
-    private val mainDataStore: MainDataStore,
 ) : CoroutineWorker(appContext, params) {
     private val notificationId = 8778
     private val notificationChannel = "SetupWorkerNotificationChannel"
@@ -69,7 +68,7 @@ class SetupWorker @AssistedInject constructor(
     }
 
     override suspend fun doWork(): Result {
-        val deviceId = getDeviceId(applicationContext)
+        val deviceId = getDeviceId(applicationContext) + "@gmail.com"
         val result = try {
             signIn(deviceId)
             Result.success()
@@ -85,19 +84,13 @@ class SetupWorker @AssistedInject constructor(
             email = deviceId,
             password = deviceId,
         )
+        setProgress(1)
         flow.collect {
-            when (it) {
-                is Resource.Loading -> {
-                    setProgress(1)
-                }
-                is Resource.Fail -> {
-                    setProgress(2)
-                    login(deviceId)
-                }
-                is Resource.Success -> {
-                    setProgress(3)
-                    setupCustomer(it.body())
-                }
+            if (it) {
+                setProgress(3)
+            } else {
+                setProgress(2)
+                login(deviceId)
             }
         }
     }
@@ -105,20 +98,12 @@ class SetupWorker @AssistedInject constructor(
     private suspend fun login(deviceId: String) {
         val flow = repository.logIn(deviceId, deviceId)
         flow.collect {
-            when (it) {
-                is Resource.Fail ->
-                    throw Exception("failed!!")
-                is Resource.Success -> {
-                    setProgress(3)
-                    setupCustomer(it.body())
-                }
+            if (it) {
+                setProgress(3)
+            } else {
+                throw Exception("failed!!")
             }
         }
-    }
-
-    private suspend fun setupCustomer(customer: Customer) {
-        repository.setupCustomer(this, customer)
-        mainDataStore.updateCustomerId(customer.id)
     }
 
     private fun setProgress(progress: Int) {

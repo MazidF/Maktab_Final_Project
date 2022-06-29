@@ -3,6 +3,7 @@ package com.example.onlineshop.widgit
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color.WHITE
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -67,7 +68,9 @@ class HorizontalProductContainer : LinearLayout, Refreshable<ProductListItem> {
 
     private fun initView() = with(binding) {
         productAdapter = object : ProductAdapter({
-            onItemClick(it)
+            if (it.name.isNotBlank()) {
+                onItemClick(it)
+            }
         }) {
 
             override fun getItemViewType(position: Int): Int {
@@ -181,6 +184,14 @@ class HorizontalProductContainer : LinearLayout, Refreshable<ProductListItem> {
 
     fun setOnItemClick(block: (Product) -> Unit) {
         this.onItemClick = block
+    }
+
+    fun saveState(): Parcelable? {
+        return binding.horizontalContainerList.layoutManager?.onSaveInstanceState()
+    }
+
+    fun restore(state: Parcelable?) {
+        binding.horizontalContainerList.layoutManager?.onRestoreInstanceState(state)
     }
 
 }

@@ -1,13 +1,15 @@
 package com.example.onlineshop.data.local.data_store.main
 
 data class MainInfo(
-    val userId: Long,
+    val customerId: Long,
+    val hasBeenLoggedIn: Boolean,
 ) {
-    fun hasBeenLoggedIn() = userId != -1L
+    fun hasValidId() = customerId != -1L
 
     companion object {
         val empty = MainInfo(
-            userId = -1,
+            customerId = -1,
+            hasBeenLoggedIn = false,
         )
     }
 }

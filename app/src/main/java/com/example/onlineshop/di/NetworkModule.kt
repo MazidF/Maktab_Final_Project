@@ -1,6 +1,12 @@
 package com.example.onlineshop.di
 
 import com.example.onlineshop.data.model.*
+import com.example.onlineshop.data.model.Product
+import com.example.onlineshop.data.model.ProductImages
+import com.example.onlineshop.data.model.ProductInfo
+import com.example.onlineshop.data.model.ProductSearchItem
+import com.example.onlineshop.data.model.customer.Customer
+import com.example.onlineshop.data.model.order.Order
 import com.example.onlineshop.data.remote.api.CustomerApi
 import com.example.onlineshop.data.remote.api.ProductApi
 import com.example.onlineshop.data.remote.api.deserializer.*
@@ -15,8 +21,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
-import okio.BufferedSource
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -75,6 +79,8 @@ class NetworkModule {
     @Singleton
     fun provideGson() : Gson {
         return GsonBuilder()
+            .registerTypeAdapter(Order::class.java, OrderDeserializer)
+            .registerTypeAdapter(Customer::class.java, CustomerDeserializer)
             .registerTypeAdapter(Product::class.java, ProductDeserializer)
             .registerTypeAdapter(Category::class.java, CategoryDeserializer)
             .registerTypeAdapter(ProductInfo::class.java, ProductInfoDeserializer)

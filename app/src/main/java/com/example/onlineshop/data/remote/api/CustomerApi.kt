@@ -2,6 +2,7 @@ package com.example.onlineshop.data.remote.api
 
 import com.example.onlineshop.data.model.customer.Customer
 import com.example.onlineshop.data.model.customer.RawCustomer
+import com.example.onlineshop.data.model.customer.RawOrder
 import com.example.onlineshop.data.model.order.Order
 import com.example.onlineshop.data.model.order.OrderStatus
 import com.example.onlineshop.data.model.order.SimpleOrder
@@ -29,11 +30,11 @@ interface CustomerApi {
     @GET("customers")
     suspend fun getCustomer(
         @Query("email") email: String,
-    ) : Response<Customer>
+    ) : Response<List<Customer>>
 
     @POST("orders")
     suspend fun createOrder(
-        @Body customer: Customer,
+        @Body customer: RawOrder,
     ) : Response<Order>
 
     @PUT("orders/{id}")
@@ -52,7 +53,7 @@ interface CustomerApi {
         @Query("customer") customerId: Long,
         @Query("page") page: Int,
         @Query("per_page") perPage: Int,
-        @Query("orderby") orderBy: String = "data",
+        @Query("orderby") orderBy: String = "date",
         @Query("status") status: String = OrderStatus.ANY.value,
     ) : Response<List<Order>>
 }

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="@dimen/simple_item_icon_size"
+                android:layout_height="@dimen/simple_item_icon_size"
+                android:src="@drawable/toman_icon"/>
+
+            <TextView
+                android:id="@+id/order_item_cost"
+                android:layout_marginStart="5dp"
+                android:textColor="@color/black"
+                android:text="375.859"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/order_item_id"
+                android:textColor="@color/black"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="224379316"/>
+
+            <TextView
+                android:textColor="@color/text_description_gray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="کد سفارش: "/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/order_item_date"
+            android:textColor="@color/text_description_gray"
+            android:layout_marginTop="5sp"
+            android:textSize="12sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1400/08/18"
+            android:gravity="right"/>
+
+        <LinearLayout
+            android:id="@+id/order_item_products_root"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            style="@style/Clickable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/order_item_moreBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_left"
+                app:tint="@color/text_description_gray"/>
+
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:layoutDirection="rtl"
+                android:orientation="horizontal"
+                android:id="@+id/order_item_products"
+                android:layout_marginStart="10dp"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/order_item_img1"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_order_completed"/>
+
+                <View
+                    android:id="@+id/order_item_line1"
+                    android:layout_margin="6sp"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/light_gray"/>
+
+                <ImageView
+                    android:id="@+id/order_item_img2"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_order_completed"/>
+
+                <View
+                    android:id="@+id/order_item_line2"
+                    android:layout_margin="6sp"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/light_gray"/>
+
+                <ImageView
+                    android:id="@+id/order_item_img3"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_order_completed"/>
+
+                <View
+                    android:id="@+id/order_item_line3"
+                    android:layout_margin="6sp"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/light_gray"/>
+
+                <ImageView
+                    android:id="@+id/order_item_img4"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_order_completed"/>
+
+                <View
+                    android:layout_margin="6sp"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/light_gray"/>
+
+
+                <TextView
+                    android:id="@+id/order_item_count"
+                    android:layoutDirection="locale"
+                    android:text="4+"
+                    android:gravity="center"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_order_completed"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

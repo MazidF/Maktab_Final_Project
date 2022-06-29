@@ -13,6 +13,7 @@ import com.example.onlineshop.data.result.Resource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
+import retrofit2.Response
 import javax.inject.Inject
 
 class RemoteProductDataSource @Inject constructor(
@@ -54,6 +55,10 @@ class RemoteProductDataSource @Inject constructor(
         perPage: Int,
     ): Resource<List<Product>> {
         return getProductsOrderBy(ProductOrders.RATING, page, perPage)
+    }
+
+    suspend fun getProductByDate(date: String): Resource<List<Product>> {
+        return api.getProductByDate(date, 1, 100).asResource()
     }
 
     fun getMostRatedProduct(): Flow<PagingData<Product>> {
@@ -117,5 +122,31 @@ class RemoteProductDataSource @Inject constructor(
 
     suspend fun getMainPosterProducts(): Resource<ProductImages> {
         return api.getMainPosterProducts().asResource()
+    }
+
+    suspend fun createReview(review: ProductReview): Response<ProductReview> {
+        return api.createReview(review)
+    }
+
+    suspend fun getReview(reviewId: Long): Response<ProductReview> {
+        return api.getReview(reviewId)
+    }
+
+    suspend fun getReviewOfProduct(
+        productId: String,
+        perPage: Int = 5,
+        page: Int = 1,
+    ): Resource<List<ProductReview>> {
+        return api.getReviewOfProduct(
+            productId, perPage, page
+        ).asResource()
+    }
+
+    fun getReviewOfProduct(
+        productId: String,
+    ): Flow<PagingData<ProductReview>> {
+        return RemotePagingSource.getPager(config = pagingConfig) { page, perPage ->
+            getReviewOfProduct(productId, perPage, page)
+        }.flow.flowOn(dispatcher)
     }
 }

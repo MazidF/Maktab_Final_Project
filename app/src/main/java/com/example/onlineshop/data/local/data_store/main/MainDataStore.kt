@@ -3,6 +3,7 @@ package com.example.onlineshop.data.local.data_store.main
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -29,8 +30,11 @@ class MainDataStore @Inject constructor(
 
     }.map { preference ->
         val userId = preference[MainPreferencesKey.CUSTOMER_ID_KEY] ?: -1
+        val hasBeenLoggedIn = preference[MainPreferencesKey.HAS_BEEN_LOGGED_IN_KEY] ?: false
+
         MainInfo(
-            userId = userId,
+            customerId = userId,
+            hasBeenLoggedIn = hasBeenLoggedIn,
         )
     }.flowOn(dispatcher)
 
@@ -42,5 +46,6 @@ class MainDataStore @Inject constructor(
 
     private object MainPreferencesKey {
         val CUSTOMER_ID_KEY = longPreferencesKey(name = "customerIdKey")
+        val HAS_BEEN_LOGGED_IN_KEY = booleanPreferencesKey(name = "hasBeenLoggedInKey")
     }
 }

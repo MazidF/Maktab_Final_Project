@@ -34,6 +34,9 @@
         <action
             android:id="@+id/action_fragmentProductInfo_to_fragmentNetworkConnectionFailed"
             app:destination="@id/fragmentNetworkConnectionFailed" />
+        <action
+            android:id="@+id/action_fragmentProductInfo_to_fragmentCart"
+            app:destination="@id/fragmentCart" />
     </fragment>
     <fragment
         android:id="@+id/fragmentCategory"
@@ -93,6 +96,12 @@
             app:destination="@id/fragmentLogin"
             app:popUpTo="@id/fragmentHome"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_fragmentProfile_to_fragmentOrderHistory"
+            app:destination="@id/fragmentOrderHistory" />
+        <action
+            android:id="@+id/action_fragmentProfile_to_fragmentSetting"
+            app:destination="@id/fragmentSetting" />
     </fragment>
     <fragment
         android:id="@+id/fragmentSearch"
@@ -116,6 +125,7 @@
         android:name="com.example.onlineshop.ui.fragments.login.FragmentLogin"
         android:label="FragmentLogin"
         tools:layout="@layout/fragment_login">
+
         <action
             android:id="@+id/action_fragmentLogin_to_fragmentNetworkConnectionFailed"
             app:destination="@id/fragmentNetworkConnectionFailed" />
@@ -124,6 +134,9 @@
             app:destination="@id/fragmentProfile"
             app:popUpTo="@id/fragmentHome"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_fragmentLogin_to_fragmentSetting"
+            app:destination="@id/fragmentSetting" />
     </fragment>
     <fragment
         android:id="@+id/fragmentSplash"
@@ -135,6 +148,45 @@
             app:destination="@id/fragmentNetworkConnectionFailed" />
         <action
             android:id="@+id/action_fragmentSplash_to_fragmentHome"
-            app:destination="@id/fragmentHome" />
+            app:destination="@id/fragmentHome"
+            app:popUpTo="@id/fragmentSplash"
+            app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/fragmentOrderHistory"
+        android:name="com.example.onlineshop.ui.fragments.orders.FragmentOrderHistory"
+        android:label="FragmentOrderHistory"
+        tools:layout="@layout/fragment_order_history">
+        <action
+            android:id="@+id/action_fragmentOrderHistory_to_fragmentNetworkConnectionFailed"
+            app:destination="@id/fragmentNetworkConnectionFailed" />
+        <argument
+            android:name="orderStatus"
+            app:argType="com.example.onlineshop.data.model.order.OrderStatus" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentOrderList"
+        android:name="com.example.onlineshop.ui.fragments.orders.sublist.FragmentOrderList"
+        android:label="FragmentOrderList"
+        tools:layout="@layout/fragment_order_list">
+        <action
+            android:id="@+id/action_fragmentOrderList_to_fragmentNetworkConnectionFailed"
+            app:destination="@id/fragmentNetworkConnectionFailed" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentNewProducts"
+        android:name="com.example.onlineshop.ui.fragments.newproducts.FragmentNewProducts"
+        android:label="FragmentNewProducts" >
+        <action
+            android:id="@+id/action_fragmentNewProducts_to_fragmentNetworkConnectionFailed"
+            app:destination="@id/fragmentNetworkConnectionFailed" />
+        <argument
+            android:name="products"
+            app:argType="com.example.onlineshop.ui.model.ProductList" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentSetting"
+        android:name="com.example.onlineshop.ui.fragments.setting.FragmentSetting"
+        android:label="FragmentSetting"
+        tools:layout="@layout/fragment_setting"/>
 </navigation>

@@ -8,19 +8,17 @@ import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.onlineshop.R
 import com.example.onlineshop.data.model.ProductSearchItem
 import com.example.onlineshop.databinding.PagingViewBinding
-import com.example.onlineshop.ui.fragments.adapter.ProductPagingAdapter
+import com.example.onlineshop.ui.fragments.adapter.ItemPagingAdapter
 import com.example.onlineshop.ui.fragments.adapter.diff_callback.ProductSearchItemDiffItemCallback
 import com.example.onlineshop.utils.launchOnState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 
 @SuppressLint("CustomViewStyleable")
 class ProductSearchPagingView @JvmOverloads constructor(
@@ -32,7 +30,7 @@ class ProductSearchPagingView @JvmOverloads constructor(
 
     private var onItemClick: (ProductSearchItem) -> Unit = {}
 
-    private val adapter = object : ProductPagingAdapter<ProductSearchItem>(
+    private val adapter = object : ItemPagingAdapter<ProductSearchItem>(
         ProductSearchItemDiffItemCallback(),
         onItemClick = this::onItemClick,
     ) {

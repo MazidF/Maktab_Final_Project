@@ -38,6 +38,9 @@ class MainActivity : AppCompatActivity() {
         searchBtn.setOnClickListener {
             navController.navigate(R.id.fragmentSearch)
         }
+        cartBtn.setOnClickListener {
+            navController.navigate(R.id.fragmentCart)
+        }
     }
 
     private fun navigationInit() = with(binding) {

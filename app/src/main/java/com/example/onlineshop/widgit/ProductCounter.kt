@@ -1,19 +1,13 @@
 package com.example.onlineshop.widgit
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.TypedArray
 import android.util.AttributeSet
-import android.widget.FrameLayout
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.res.getBooleanOrThrow
 import androidx.core.view.isVisible
 import com.example.onlineshop.R
 import com.example.onlineshop.data.result.Resource
 import com.example.onlineshop.databinding.ProductCounterBinding
-import kotlinx.coroutines.flow.Flow
-import kotlin.contracts.InvocationKind
-import kotlin.contracts.contract
 
 class ProductCounter @JvmOverloads constructor(
     context: Context,
@@ -76,7 +70,7 @@ class ProductCounter @JvmOverloads constructor(
         if (withLoading) {
             if (isLoading.not()) {
                 counterInput = CounterInput.ADD
-                startLoading()
+                startLoading(count + 1)
             }
         } else {
             setupCount(count + 1)
@@ -87,7 +81,7 @@ class ProductCounter @JvmOverloads constructor(
         if (withLoading) {
             if (isLoading.not()) {
                 counterInput = CounterInput.ADD
-                startLoading()
+                startLoading(count - 1)
             }
         } else {
             setupCount(count - 1)
@@ -110,7 +104,6 @@ class ProductCounter @JvmOverloads constructor(
             }
         }
         productCounterCount.text = count.toString()
-        onCountChangeListener?.invoke(count)
     }
 
     fun <T> setLoadingResult(result: Resource<T>) {
@@ -133,7 +126,11 @@ class ProductCounter @JvmOverloads constructor(
         this.onCountChangeListener = block
     }
 
-    private fun startLoading() = with(binding) {
+    private fun startLoading(newCount: Int) = with(binding) {
+        onCountChangeListener?.invoke(newCount)
+        if (count <= 0) {
+            this.productCounterRoot.isVisible = true
+        }
         isLoading = true
     }
 

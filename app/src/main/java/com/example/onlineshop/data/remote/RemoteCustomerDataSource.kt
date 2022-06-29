@@ -4,6 +4,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.onlineshop.data.model.customer.Customer
 import com.example.onlineshop.data.model.customer.RawCustomer
+import com.example.onlineshop.data.model.customer.RawOrder
 import com.example.onlineshop.data.model.order.Order
 import com.example.onlineshop.data.model.order.OrderStatus
 import com.example.onlineshop.data.model.order.SimpleOrder
@@ -19,6 +20,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import retrofit2.Response
+import java.lang.Exception
 import javax.inject.Inject
 
 class RemoteCustomerDataSource @Inject constructor(
@@ -33,12 +35,18 @@ class RemoteCustomerDataSource @Inject constructor(
         initialLoadSize = INITIAL_SIZE,
     )
 
+    suspend fun createOrder(customerId: Long): Resource<Order> {
+        return api.createOrder(RawOrder(customerId)).asResource()
+    }
+
     suspend fun getCustomerById(userId: Long): Resource<Customer> {
         return api.getCustomer(userId).asResource()
     }
 
     suspend fun getCustomerByEmail(userEmail: String): Resource<Customer> {
-        return api.getCustomer(userEmail).asResource()
+        return api.getCustomer(userEmail).asResource().map {
+            it[0]
+        }
     }
 
     suspend fun signIn(rawCustomer: RawCustomer): Resource<Customer> {
@@ -64,16 +72,23 @@ class RemoteCustomerDataSource @Inject constructor(
     ) : Response<List<Order>> {
         return api.getOrders(
             customerId = id, 1, 1,
-            OrderStatus.PROCESSING.value,
+            status = OrderStatus.PROCESSING.value,
         )
     }
 
-    fun getFinishedOrders(customerId: Long): Flow<PagingData<Order>> {
+    fun getOrders(customerId: Long, status: OrderStatus, mapper: suspend (List<Order>) -> Resource<List<OrderItem>>): Flow<PagingData<OrderItem>> {
         return RemotePagingSource.getPager(config = pagingConfig) { page, perPage ->
-            api.getOrders(
+            val result = api.getOrders(
                 customerId, page, perPage,
-                status = OrderStatus.COMPLETED.value,
+                status = status.value,
             ).asResource()
+            result.asSuccess()?.let {
+                mapper(it.body())
+            } ?: Resource.fail(Exception("Failed to load orders for paging"))
         }.flow.flowOn(dispatcher)
+    }
+
+    suspend fun getOrders(customerId: Long): Resource<List<Order>> {
+        return api.getOrders(customerId, 1, 1000).asResource()
     }
 }

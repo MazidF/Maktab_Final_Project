@@ -9,6 +9,8 @@ enum class OrderStatus(
     FAILED("failed"),
     UNKNOWN("unknown"),
     PENDING("pending"),
+    REFUNDED("refunded"),
+    @SerializedName("processing")
     PROCESSING("processing"),
     COMPLETED("completed");
 

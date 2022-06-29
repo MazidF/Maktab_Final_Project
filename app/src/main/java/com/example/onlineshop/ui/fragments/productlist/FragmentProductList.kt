@@ -12,8 +12,9 @@ import com.example.onlineshop.R
 import com.example.onlineshop.databinding.FragmentProductListBinding
 import com.example.onlineshop.ui.fragments.FragmentConnectionObserver
 import com.example.onlineshop.ui.fragments.adapter.LoadingAdapter
-import com.example.onlineshop.ui.fragments.adapter.ProductPagingAdapter
+import com.example.onlineshop.ui.fragments.adapter.ItemPagingAdapter
 import com.example.onlineshop.ui.fragments.adapter.diff_callback.ProductItemDiffItemCallback
+import com.example.onlineshop.ui.model.ProductList
 import com.example.onlineshop.ui.model.ProductListItem
 import com.example.onlineshop.utils.launchOnState
 import com.example.onlineshop.widgit.Bindable
@@ -28,7 +29,7 @@ class FragmentProductList : FragmentConnectionObserver(R.layout.fragment_product
 
     private val viewModel: ViewModelProductList by viewModels()
     private val args: FragmentProductListArgs by navArgs()
-    private lateinit var productAdapter: ProductPagingAdapter<ProductListItem.Item>
+    private lateinit var productAdapter: ItemPagingAdapter<ProductListItem.Item>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,7 +40,7 @@ class FragmentProductList : FragmentConnectionObserver(R.layout.fragment_product
     }
 
     private fun initView() = with(binding) {
-        productAdapter = object : ProductPagingAdapter<ProductListItem.Item>(
+        productAdapter = object : ItemPagingAdapter<ProductListItem.Item>(
             ProductItemDiffItemCallback(),
             onItemClick = this@FragmentProductList::onItemClick
         ) {
