@@ -4,12 +4,9 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.onlineshop.R
 import com.example.onlineshop.data.model.Product
@@ -22,10 +19,10 @@ import com.example.onlineshop.ui.fragments.productinfo.viewpager.ZoomOutPageTran
 import com.example.onlineshop.utils.launchOnState
 import com.example.onlineshop.data.result.Resource
 import com.example.onlineshop.ui.fragments.FragmentConnectionObserver
+import com.example.onlineshop.ui.fragments.productinfo.review.ProductReviewAdapter
 import com.example.onlineshop.utils.failedDialog
 import com.example.onlineshop.utils.setHtmlText
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 // TODO: handle rotation
 
@@ -41,6 +38,8 @@ class FragmentProductInfo : FragmentConnectionObserver(R.layout.fragment_product
     private val viewModel: ViewModelProductInfo by viewModels()
     private lateinit var info: ProductInfo
 
+    private lateinit var reviewAdapter: ProductReviewAdapter
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentProductInfoBinding.bind(view)
@@ -50,9 +49,7 @@ class FragmentProductInfo : FragmentConnectionObserver(R.layout.fragment_product
     }
 
     private fun initView() = with(binding) {
-        if (::info.isInitialized.not()) {
-            viewModel.loadProductInfo(args.product)
-        }
+        viewModel.loadProductInfo(args.product)
         productInfoClose.setOnClickListener {
             back()
         }
@@ -63,8 +60,16 @@ class FragmentProductInfo : FragmentConnectionObserver(R.layout.fragment_product
         }
         productInfoSimilar.apply {
             setOnItemClick {
-                onClick(it)
+                onProductItemClick(it)
             }
+        }
+        productInfoAddReview.
+            setOnClickListener {
+            navController.navigate(
+                FragmentProductInfoDirections.actionFragmentProductInfoToFragmentReviewMaker(
+                    args.product.id
+                )
+            )
         }
         productInfoAddToCart.apply {
             val product = args.product
@@ -74,9 +79,11 @@ class FragmentProductInfo : FragmentConnectionObserver(R.layout.fragment_product
                 }
             }
         }
+        reviewAdapter = ProductReviewAdapter {}
+        binding.productInfoReviews.adapter = reviewAdapter
     }
 
-    private fun onClick(product: Product) {
+    private fun onProductItemClick(product: Product) {
         navController.navigate(
             FragmentProductInfoDirections.actionFragmentProductInfoSelf(
                 product
@@ -97,6 +104,13 @@ class FragmentProductInfo : FragmentConnectionObserver(R.layout.fragment_product
                         info = it.body()
                         setup()
                     }
+                }
+            }
+        }
+        launchOnState(Lifecycle.State.STARTED) {
+            viewModel.reviewsStateFlow.collect {
+                if (it is Resource.Success) {
+                    reviewAdapter.submitList(it.body())
                 }
             }
         }
@@ -128,7 +142,7 @@ class FragmentProductInfo : FragmentConnectionObserver(R.layout.fragment_product
             productInfoSalesCount.text = "($totalSales)"
             productInfoRate.text = ratingCount.toString()
         }
-        lifecycleScope.launch {
+        launchOnState(Lifecycle.State.STARTED) {
             viewModel.similarStateFlow.collect {
                 when (it) {
                     is Resource.Success -> {
@@ -162,6 +176,7 @@ class FragmentProductInfo : FragmentConnectionObserver(R.layout.fragment_product
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.productInfoReviews.adapter = null
         _binding = null
     }
 

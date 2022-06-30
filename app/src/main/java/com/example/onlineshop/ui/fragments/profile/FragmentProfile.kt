@@ -42,7 +42,7 @@ class FragmentProfile : FragmentConnectionObserver(R.layout.fragment_profile) {
 
     private fun setupListeners() = with(binding) {
         fragmentProfileCurrent.setOnClickListener {
-            navigateToOrderHistory(OrderStatus.PROCESSING)
+            navigateToOrderHistory(OrderStatus.ON_HOLD)
         }
         fragmentProfileCompleted.setOnClickListener {
             navigateToOrderHistory(OrderStatus.COMPLETED)

@@ -53,7 +53,7 @@ class NewsWorkerHandler @Inject constructor(
         timeUnit: TimeUnit = TimeUnit.MILLISECONDS,
     ) {
         val request = PeriodicWorkRequestBuilder<NewsCheckerWorker>(periodicHour, TimeUnit.HOURS)
-            .setExpedited(OutOfQuotaPolicy.DROP_WORK_REQUEST)
+//            .setExpedited(OutOfQuotaPolicy.DROP_WORK_REQUEST)
             .setInitialDelay(initialDelay, timeUnit)
             .setConstraints(constraints)
             .setBackoffCriteria(

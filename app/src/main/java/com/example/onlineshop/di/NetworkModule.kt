@@ -80,10 +80,11 @@ class NetworkModule {
     fun provideGson() : Gson {
         return GsonBuilder()
             .registerTypeAdapter(Order::class.java, OrderDeserializer)
-            .registerTypeAdapter(Customer::class.java, CustomerDeserializer)
             .registerTypeAdapter(Product::class.java, ProductDeserializer)
             .registerTypeAdapter(Category::class.java, CategoryDeserializer)
+            .registerTypeAdapter(Customer::class.java, CustomerDeserializer)
             .registerTypeAdapter(ProductInfo::class.java, ProductInfoDeserializer)
+            .registerTypeAdapter(ProductReview::class.java, ProductReviewDeserializer)
             .registerTypeAdapter(ProductImages::class.java, ProductImagesDeserializer)
             .registerTypeAdapter(ProductSearchItem::class.java, ProductSearchItemDeserializer)
             .create()

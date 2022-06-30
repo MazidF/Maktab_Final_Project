@@ -199,10 +199,10 @@ fun ViewPager2.autoScroll(interval: Long) {
 
 @SuppressLint("HardwareIds")
 fun getDeviceId(context: Context): String {
-    return Secure.getString(
+    return /*Secure.getString(
         context.contentResolver,
         Secure.ANDROID_ID
-    )
+    )*/ "mazid_test_1"
 }
 
 fun AlertDialog.hideBackground() = apply {

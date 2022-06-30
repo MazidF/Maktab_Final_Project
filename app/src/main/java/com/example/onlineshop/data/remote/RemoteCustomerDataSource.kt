@@ -72,7 +72,7 @@ class RemoteCustomerDataSource @Inject constructor(
     ) : Response<List<Order>> {
         return api.getOrders(
             customerId = id, 1, 1,
-            status = OrderStatus.PROCESSING.value,
+            status = OrderStatus.ON_HOLD.value,
         )
     }
 

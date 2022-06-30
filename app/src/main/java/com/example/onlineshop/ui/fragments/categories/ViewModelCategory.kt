@@ -31,6 +31,10 @@ class ViewModelCategory @Inject constructor(
 
     val categoryMap = HashMap<Long, ArrayList<CategoryListItem>>()
 
+    init {
+        loadCategoriesTitles()
+    }
+
     fun loadCategoriesTitles() {
         viewModelScope.launch {
             repository.getCategoriesByParentId(0, false).collect {

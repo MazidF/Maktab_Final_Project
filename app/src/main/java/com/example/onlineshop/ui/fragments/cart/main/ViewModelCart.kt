@@ -77,7 +77,7 @@ class ViewModelCart @Inject constructor(
         val order = repository.currentOrder
         return order.lineItems.firstOrNull {
             it.product.id == id
-        }?.toSimpleLineItem() ?: SimpleLineItem(-1, id, 0)
+        }?.toSimpleLineItem() ?: SimpleLineItem(0, id, 0)
     }
 
     fun refreshOrder(): LiveData<OrderItem> {

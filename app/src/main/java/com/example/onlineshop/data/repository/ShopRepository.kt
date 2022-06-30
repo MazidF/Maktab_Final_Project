@@ -135,26 +135,34 @@ class ShopRepository(
         }
     }
 
-    suspend fun createReview(review: ProductReview): Response<ProductReview> {
-        return remoteProduct.createReview(review)
+    fun createReview(review: ProductReview): Flow<Resource<ProductReview>> {
+        return safeApiCall(false) {
+            remoteProduct.createReview(review)
+        }
     }
 
-    suspend fun getReview(reviewId: Long): Response<ProductReview> {
-        return remoteProduct.getReview(reviewId)
-    }
-
-    suspend fun getReviewOfProduct(
-        productId: String,
-        perPage: Int,
-        page: Int,
-    ): Resource<List<ProductReview>> {
-        return remoteProduct.getReviewOfProduct(
-            productId, perPage, page
-        )
+    fun getReview(reviewId: Long): Flow<Resource<ProductReview>> {
+        return safeApiCall(false) {
+            remoteProduct.getReview(reviewId)
+        }
     }
 
     fun getReviewOfProduct(
-        productId: String,
+        productId: Long,
+        size: Int,
+    ): Flow<Resource<List<ProductReview>>> {
+        val seed = System.currentTimeMillis()
+        return safeApiCall(false, fakeData = List(size) {
+            ProductReview.fake(seed + it)
+        }) {
+            remoteProduct.getReviewOfProduct(
+                productId, size
+            )
+        }
+    }
+
+    fun getReviewOfProduct(
+        productId: Long,
     ): Flow<PagingData<ProductReview>> {
         return remoteProduct.getReviewOfProduct(productId)
     }

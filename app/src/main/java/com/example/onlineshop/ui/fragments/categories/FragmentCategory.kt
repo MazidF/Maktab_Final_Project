@@ -32,12 +32,7 @@ class FragmentCategory : FragmentConnectionObserver(R.layout.fragment_category) 
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentCategoryBinding.bind(view)
 
-        initView()
         observe()
-    }
-
-    private fun initView() {
-        viewModel.loadCategoriesTitles()
     }
 
     private fun observe() = with(binding) {

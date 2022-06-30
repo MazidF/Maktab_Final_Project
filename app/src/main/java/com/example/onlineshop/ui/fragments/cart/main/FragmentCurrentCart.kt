@@ -73,21 +73,6 @@ class FragmentCurrentCart : FragmentConnectionObserver(R.layout.fragment_current
             }
         }
         onSuccess(viewModel.currentOrder())
-//        launchOnState(Lifecycle.State.STARTED) {
-//            viewModel.orderStateFlow.collect {
-//                when (it) {
-//                    is Resource.Loading -> {
-//                        fragmentCartLottie.isVisible = true
-//                    }
-//                    is Resource.Fail -> {
-//                        onFail(it.error())
-//                    }
-//                    is Resource.Success -> {
-//                        onSuccess(it.body())
-//                    }
-//                }
-//            }
-//        }
     }
 
     @SuppressLint("SetTextI18n")

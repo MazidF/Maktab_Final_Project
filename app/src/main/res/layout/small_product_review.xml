@@ -1,38 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="300dp"
+    android:layout_width="260dp"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="10dp"
     android:layout_margin="3dp"
+    app:cardCornerRadius="10dp"
     app:cardElevation="10dp">
 
     <LinearLayout
-        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <TextView
-            android:textSize="18sp"
+            android:id="@+id/small_product_review_name"
             style="@style/ProductInfoNameTextView"
-            android:text="احمد مزیدآبادی"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="نام کاربر"
+            android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/small_product_review_text"
             style="@style/SimpleItemNameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minLines="3"
+            android:textSize="14sp"
             android:lines="3"
-            android:maxLines="3"/>
+            android:maxLines="3"
+            android:minLines="3" />
 
         <TextView
-            android:textSize="13sp"
+            android:gravity="right"
+            android:id="@+id/small_product_review_date"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="دو مال پیش"/>
+            android:text="دو مال پیش"
+            android:textSize="13sp" />
 
     </LinearLayout>
 

@@ -30,7 +30,7 @@ val categoryToCategoryListItemTransformer = { safeApiCall: Resource<List<Categor
 
 fun Product.toSimpleLineItem(count: Int): SimpleLineItem {
     return SimpleLineItem(
-        id = -1,
+        id = 0,
         productId = id,
         count = count,
     )

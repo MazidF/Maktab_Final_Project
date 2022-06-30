@@ -37,6 +37,9 @@
         <action
             android:id="@+id/action_fragmentProductInfo_to_fragmentCart"
             app:destination="@id/fragmentCart" />
+        <action
+            android:id="@+id/action_fragmentProductInfo_to_fragmentReviewMaker"
+            app:destination="@id/fragmentReviewMaker" />
     </fragment>
     <fragment
         android:id="@+id/fragmentCategory"
@@ -79,6 +82,9 @@
         <action
             android:id="@+id/action_fragmentCart_to_fragmentProfile"
             app:destination="@id/fragmentProfile" />
+        <action
+            android:id="@+id/action_fragmentCart_to_fragmentCartBuyingInfo"
+            app:destination="@id/fragmentCartBuyingInfo" />
     </fragment>
     <fragment
         android:id="@+id/fragmentProfile"
@@ -176,7 +182,8 @@
     <fragment
         android:id="@+id/fragmentNewProducts"
         android:name="com.example.onlineshop.ui.fragments.newproducts.FragmentNewProducts"
-        android:label="FragmentNewProducts" >
+        android:label="FragmentNewProducts"
+        tools:layout="@layout/fragment_new_products">
         <action
             android:id="@+id/action_fragmentNewProducts_to_fragmentNetworkConnectionFailed"
             app:destination="@id/fragmentNetworkConnectionFailed" />
@@ -189,4 +196,37 @@
         android:name="com.example.onlineshop.ui.fragments.setting.FragmentSetting"
         android:label="FragmentSetting"
         tools:layout="@layout/fragment_setting"/>
+    <fragment
+        android:id="@+id/fragmentCartBuyingInfo"
+        android:name="com.example.onlineshop.ui.fragments.cart.buying.FragmentCartBuyingInfo"
+        android:label="FragmentCartBuyingInfo"
+        tools:layout="@layout/fragment_cart_buying_info">
+        <action
+            android:id="@+id/action_fragmentCartBuyingInfo_to_fragmentNetworkConnectionFailed"
+            app:destination="@id/fragmentNetworkConnectionFailed" />
+        <action
+            android:id="@+id/action_fragmentCartBuyingInfo_to_fragmentLocationSetter"
+            app:destination="@id/fragmentLocationSetter" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentLocationSetter"
+        android:name="com.example.onlineshop.ui.fragments.cart.location.FragmentLocationSetter"
+        android:label="FragmentLocationSetter"
+        tools:layout="@layout/fragment_location_setter">
+        <action
+            android:id="@+id/action_fragmentLocationSetter_to_fragmentNetworkConnectionFailed"
+            app:destination="@id/fragmentNetworkConnectionFailed" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentReviewMaker"
+        android:name="com.example.onlineshop.ui.fragments.reviewmaker.FragmentReviewMaker"
+        android:label="FragmentReviewMaker"
+        tools:layout="@layout/fragment_review_maker">
+        <action
+            android:id="@+id/action_fragmentReviewMaker_to_fragmentNetworkConnectionFailed"
+            app:destination="@id/fragmentNetworkConnectionFailed" />
+        <argument
+            android:name="productId"
+            app:argType="long" />
+    </fragment>
 </navigation>

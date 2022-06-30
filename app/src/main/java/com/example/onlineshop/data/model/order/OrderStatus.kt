@@ -12,6 +12,8 @@ enum class OrderStatus(
     REFUNDED("refunded"),
     @SerializedName("processing")
     PROCESSING("processing"),
+    @SerializedName("on-hold")
+    ON_HOLD("on-hold"),
     COMPLETED("completed");
 
     companion object {

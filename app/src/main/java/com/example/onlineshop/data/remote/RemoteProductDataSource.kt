@@ -124,26 +124,26 @@ class RemoteProductDataSource @Inject constructor(
         return api.getMainPosterProducts().asResource()
     }
 
-    suspend fun createReview(review: ProductReview): Response<ProductReview> {
-        return api.createReview(review)
+    suspend fun createReview(review: ProductReview): Resource<ProductReview> {
+        return api.createReview(review).asResource()
     }
 
-    suspend fun getReview(reviewId: Long): Response<ProductReview> {
-        return api.getReview(reviewId)
+    suspend fun getReview(reviewId: Long): Resource<ProductReview> {
+        return api.getReview(reviewId).asResource()
     }
 
     suspend fun getReviewOfProduct(
-        productId: String,
+        productId: Long,
         perPage: Int = 5,
         page: Int = 1,
     ): Resource<List<ProductReview>> {
         return api.getReviewOfProduct(
-            productId, perPage, page
+            productId.toString(), perPage, page
         ).asResource()
     }
 
     fun getReviewOfProduct(
-        productId: String,
+        productId: Long,
     ): Flow<PagingData<ProductReview>> {
         return RemotePagingSource.getPager(config = pagingConfig) { page, perPage ->
             getReviewOfProduct(productId, perPage, page)

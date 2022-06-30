@@ -6,5 +6,5 @@ import com.google.gson.annotations.SerializedName
 data class RawOrder(
     @SerializedName("customer_id")
     val customerId: Long,
-    val status: String = OrderStatus.PROCESSING.value,
+    val status: String = OrderStatus.ON_HOLD.value,
 )

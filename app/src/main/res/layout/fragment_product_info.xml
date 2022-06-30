@@ -27,10 +27,10 @@
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
 
             <LinearLayout
-                android:paddingEnd="10dp"
-                android:paddingStart="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 app:layout_collapseMode="parallax">
 
                 <ImageView
@@ -72,13 +72,13 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
-        android:visibility="gone"
         android:id="@+id/product_info_scroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/light_gray"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -144,22 +144,75 @@
                 android:id="@+id/product_info_similar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title="محصولات مشابه"
-                app:hideMoreBtn="true"
                 android:layout_marginTop="@dimen/product_info_separator"
-                android:background="@color/white" />
+                android:background="@color/white"
+                app:hideMoreBtn="true"
+                app:title="محصولات مشابه" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/product_info_separator"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/product_info_reviews_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="دیدن همه"
+                        android:textColor="@color/blue" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="دیدگاه کاربران"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/product_info_reviews"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="1" />
+
+                <com.example.onlineshop.widgit.SettingItemView
+                    android:id="@+id/product_info_add_review"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:iconSrc="@drawable/ic_message_empty"
+                    app:text="دیدگاه خود را درباره این کالا بنویسید" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@color/white"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
     </ScrollView>
 
     <LinearLayout
-        android:visibility="gone"
         android:id="@+id/product_info_linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -209,7 +262,7 @@
             android:id="@+id/product_info_add_to_cart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:withLoading="true"/>
+            app:withLoading="true" />
 
     </LinearLayout>
 
