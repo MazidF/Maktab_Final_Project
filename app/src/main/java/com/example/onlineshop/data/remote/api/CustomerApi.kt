@@ -1,6 +1,8 @@
 package com.example.onlineshop.data.remote.api
 
+import com.example.onlineshop.data.model.Coupon
 import com.example.onlineshop.data.model.customer.Customer
+import com.example.onlineshop.data.model.customer.CustomerInfo
 import com.example.onlineshop.data.model.customer.RawCustomer
 import com.example.onlineshop.data.model.customer.RawOrder
 import com.example.onlineshop.data.model.order.Order
@@ -14,39 +16,44 @@ interface CustomerApi {
     @POST("customers")
     suspend fun createCustomer(
         @Body customer: RawCustomer,
-    ) : Response<Customer>
+    ): Response<Customer>
 
     @PUT("customers/{id}")
     suspend fun updateCustomer(
         @Path("id") id: Long,
-        @Body customer: Customer,
-    ) : Response<Customer>
+        @Body customer: RawCustomer,
+    ): Response<Customer>
 
     @GET("customers/{id}")
     suspend fun getCustomer(
         @Path("id") id: Long,
-    ) : Response<Customer>
+    ): Response<Customer>
+
+    @GET("customers/{id}")
+    suspend fun getCustomerInfo(
+        @Path("id") id: Long,
+    ): Response<CustomerInfo>
 
     @GET("customers")
     suspend fun getCustomer(
         @Query("email") email: String,
-    ) : Response<List<Customer>>
+    ): Response<List<Customer>>
 
     @POST("orders")
     suspend fun createOrder(
         @Body customer: RawOrder,
-    ) : Response<Order>
+    ): Response<Order>
 
     @PUT("orders/{id}")
     suspend fun updateOrder(
         @Path("id") id: Long,
         @Body order: SimpleOrder,
-    ) : Response<Order>
+    ): Response<Order>
 
     @GET("orders/{id}")
     suspend fun getOrder(
         @Path("id") id: Long,
-    ) : Response<Order>
+    ): Response<Order>
 
     @GET("orders")
     suspend fun getOrders(
@@ -55,5 +62,10 @@ interface CustomerApi {
         @Query("per_page") perPage: Int,
         @Query("orderby") orderBy: String = "date",
         @Query("status") status: String = OrderStatus.ANY.value,
-    ) : Response<List<Order>>
+    ): Response<List<Order>>
+
+    @GET("coupons")
+    suspend fun getCoupon(
+        @Query("code") serial: String,
+    ): Response<List<Coupon>>
 }

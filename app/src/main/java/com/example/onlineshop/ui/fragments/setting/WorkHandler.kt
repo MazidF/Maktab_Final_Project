@@ -49,12 +49,12 @@ class NewsWorkerHandler @Inject constructor(
 
     fun setup(
         periodicHour: Long,
-        initialDelay: Long = periodicHour * 3600 * 1000,
+        initialDelayMillisecond: Long = periodicHour * 3600 * 1000,
         timeUnit: TimeUnit = TimeUnit.MILLISECONDS,
     ) {
         val request = PeriodicWorkRequestBuilder<NewsCheckerWorker>(periodicHour, TimeUnit.HOURS)
 //            .setExpedited(OutOfQuotaPolicy.DROP_WORK_REQUEST)
-            .setInitialDelay(initialDelay, timeUnit)
+            .setInitialDelay(initialDelayMillisecond, timeUnit)
             .setConstraints(constraints)
             .setBackoffCriteria(
                 BackoffPolicy.EXPONENTIAL,
@@ -63,7 +63,7 @@ class NewsWorkerHandler @Inject constructor(
             )
             .setInputData(
                 workDataOf(
-                    INITIAL_DELAY to initialDelay.toInt(),
+                    INITIAL_DELAY to initialDelayMillisecond.toInt(),
                     PERIODIC_DURATION_HOUR to periodicHour.toInt(),
                 )
             )

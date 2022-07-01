@@ -41,6 +41,9 @@ class FragmentProfile : FragmentConnectionObserver(R.layout.fragment_profile) {
     }
 
     private fun setupListeners() = with(binding) {
+        fragmentProfileSetting.setOnClickListener {
+            navigateToSetting()
+        }
         fragmentProfileCurrent.setOnClickListener {
             navigateToOrderHistory(OrderStatus.ON_HOLD)
         }
@@ -50,6 +53,12 @@ class FragmentProfile : FragmentConnectionObserver(R.layout.fragment_profile) {
         fragmentProfileRefunded.setOnClickListener {
             navigateToOrderHistory(OrderStatus.REFUNDED)
         }
+    }
+
+    private fun navigateToSetting() {
+        navController.navigate(
+            FragmentProfileDirections.actionFragmentProfileToFragmentSetting()
+        )
     }
 
     private fun navigateToOrderHistory(orderStatus: OrderStatus) {

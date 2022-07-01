@@ -40,6 +40,9 @@
         <action
             android:id="@+id/action_fragmentProductInfo_to_fragmentReviewMaker"
             app:destination="@id/fragmentReviewMaker" />
+        <action
+            android:id="@+id/action_fragmentProductInfo_to_fragmentReviewList"
+            app:destination="@id/fragmentReviewList" />
     </fragment>
     <fragment
         android:id="@+id/fragmentCategory"
@@ -195,7 +198,12 @@
         android:id="@+id/fragmentSetting"
         android:name="com.example.onlineshop.ui.fragments.setting.FragmentSetting"
         android:label="FragmentSetting"
-        tools:layout="@layout/fragment_setting"/>
+        tools:layout="@layout/fragment_setting">
+        <action
+            android:id="@+id/action_fragmentSetting_to_fragmentHome"
+            app:destination="@id/fragmentHome"
+            app:popUpTo="@id/fragmentHome" />
+    </fragment>
     <fragment
         android:id="@+id/fragmentCartBuyingInfo"
         android:name="com.example.onlineshop.ui.fragments.cart.buying.FragmentCartBuyingInfo"
@@ -207,6 +215,10 @@
         <action
             android:id="@+id/action_fragmentCartBuyingInfo_to_fragmentLocationSetter"
             app:destination="@id/fragmentLocationSetter" />
+        <action
+            android:id="@+id/action_fragmentCartBuyingInfo_to_fragmentCart"
+            app:destination="@id/fragmentCart"
+            app:popUpTo="@id/fragmentHome" />
     </fragment>
     <fragment
         android:id="@+id/fragmentLocationSetter"
@@ -225,6 +237,14 @@
         <action
             android:id="@+id/action_fragmentReviewMaker_to_fragmentNetworkConnectionFailed"
             app:destination="@id/fragmentNetworkConnectionFailed" />
+        <argument
+            android:name="productId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentReviewList"
+        android:name="com.example.onlineshop.ui.fragments.reviewlist.FragmentReviewList"
+        android:label="FragmentReviewList" >
         <argument
             android:name="productId"
             app:argType="long" />

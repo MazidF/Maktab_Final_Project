@@ -7,6 +7,7 @@ import com.example.onlineshop.R
 import com.example.onlineshop.data.local.data_store.main.MainDataStore
 import com.example.onlineshop.ui.fragments.FragmentConnectionObserver
 import com.example.onlineshop.databinding.FragmentCartBinding
+import com.example.onlineshop.ui.fragments.cart.main.viewpager.SimpleViewPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

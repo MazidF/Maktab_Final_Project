@@ -40,12 +40,12 @@ data class Order(
 
         return Order(
             id = id,
+            date = date,
             total = total,
             status = status,
+            lineItems = newList,
             totalTax = totalTax,
             customerId = customerId,
-            lineItems = newList,
-            date = date
         )
     }
 }

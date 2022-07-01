@@ -202,7 +202,7 @@ fun getDeviceId(context: Context): String {
     return /*Secure.getString(
         context.contentResolver,
         Secure.ANDROID_ID
-    )*/ "mazid_test_1"
+    )*/ "mazid_test_4"
 }
 
 fun AlertDialog.hideBackground() = apply {

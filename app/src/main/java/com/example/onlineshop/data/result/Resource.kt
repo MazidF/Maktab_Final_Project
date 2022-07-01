@@ -52,7 +52,14 @@ sealed class Resource<T>( // Resource, (Result)
             is Fail -> fail(error())
             is Loading -> loading()
             is Reloading -> reloading()
-            is Success -> success(transformer(body()))
+            is Success -> {
+                val newBody = transformer(body())
+                if (newBody == null) {
+                    fail(Exception("Null body"))
+                } else {
+                    success(newBody)
+                }
+            }
         }
     }
 }

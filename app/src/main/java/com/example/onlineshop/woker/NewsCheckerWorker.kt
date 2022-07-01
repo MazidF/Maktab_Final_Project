@@ -1,5 +1,6 @@
 package com.example.onlineshop.woker
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -43,6 +44,18 @@ class NewsCheckerWorker @AssistedInject constructor(
 
     init {
         setupNotificationChannel()
+    }
+
+    override suspend fun getForegroundInfo(): ForegroundInfo {
+        return ForegroundInfo(
+            notificationId,
+            NotificationCompat.Builder(applicationContext, notificationChannel)
+                .setSmallIcon(R.drawable.ic_shopping_cart)
+                .setContentTitle("Check for NEW PRODUCT!!")
+                .setAutoCancel(true)
+                .setOngoing(false)
+                .build()
+        )
     }
 
     private fun setupNotificationChannel() {

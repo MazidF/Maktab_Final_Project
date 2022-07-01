@@ -44,6 +44,12 @@ class MainDataStore @Inject constructor(
         }
     }
 
+    suspend fun updateHasBeenLoggedIn(value: Boolean) {
+        dataStore.edit {
+            it[MainPreferencesKey.HAS_BEEN_LOGGED_IN_KEY] = value
+        }
+    }
+
     private object MainPreferencesKey {
         val CUSTOMER_ID_KEY = longPreferencesKey(name = "customerIdKey")
         val HAS_BEEN_LOGGED_IN_KEY = booleanPreferencesKey(name = "hasBeenLoggedInKey")

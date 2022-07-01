@@ -14,4 +14,9 @@
     <color name="gold">#E1B619</color>
     <color name="blue">#2971FF</color>
     <color name="orange">#FF6A1A</color>
+    <color name="red">#f31818</color>
+    <color name="light_red">#EC4444</color>
+    <color name="yellow">#c3c022</color>
+    <color name="light_green">#20aa21</color>
+    <color name="green">#077308</color>
 </resources>

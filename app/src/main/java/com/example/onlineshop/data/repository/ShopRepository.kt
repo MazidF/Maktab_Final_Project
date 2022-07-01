@@ -1,9 +1,12 @@
 package com.example.onlineshop.data.repository
 
+import android.content.Context
 import androidx.paging.PagingData
 import com.example.onlineshop.data.local.data_store.main.MainDataStore
 import com.example.onlineshop.data.model.*
 import com.example.onlineshop.data.model.customer.Customer
+import com.example.onlineshop.data.model.customer.CustomerInfo
+import com.example.onlineshop.data.model.customer.CustomerMetaData
 import com.example.onlineshop.data.model.customer.RawCustomer
 import com.example.onlineshop.data.model.order.Order
 import com.example.onlineshop.data.model.order.OrderStatus
@@ -14,9 +17,10 @@ import com.example.onlineshop.di.qualifier.DispatcherIO
 import com.example.onlineshop.data.result.Resource
 import com.example.onlineshop.ui.model.LineItemWithImage
 import com.example.onlineshop.ui.model.OrderItem
+import com.example.onlineshop.utils.getDeviceId
+import com.example.onlineshop.utils.toSimpleOrder
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
-import retrofit2.Response
 
 class ShopRepository(
     private val remoteProduct: RemoteProductDataSource,
@@ -169,17 +173,34 @@ class ShopRepository(
 
     //////////////////////////////////// customers /////////////////////////////////////
 
+    fun getCoupon(code: String): Flow<Resource<Coupon?>> {
+        return safeApiCall(false) {
+            remoteCustomer.getCoupon(code)
+        }
+    }
+
     fun getCustomerById(userId: Long, reload: Boolean): Flow<Resource<Customer>> {
         return safeApiCall(reload) {
             remoteCustomer.getCustomerById(userId)
         }
     }
 
+    fun getCustomerInfo(userId: Long): Flow<Resource<CustomerInfo>> {
+        return safeApiCall(false) {
+            remoteCustomer.getCustomerInfo(userId)
+        }
+    }
+
+    suspend fun updateCustomer(customerId: Long, customer: RawCustomer): Resource<Customer> {
+        return remoteCustomer.updateCustomer(customerId, customer)
+    }
+
     suspend fun signIn(email: String, password: String): Flow<Boolean> {
         val flow = safeApiCall(false) {
             val raw = RawCustomer(
                 email = email,
-                password = password
+                password = password,
+                metaData = arrayListOf(),
             )
             remoteCustomer.signIn(raw)
         }
@@ -205,18 +226,24 @@ class ShopRepository(
         return collectCustomerFlow(flow)
     }
 
-    private suspend fun collectCustomerFlow(flow: Flow<Resource<Customer>>): Flow<Boolean> {
+    suspend fun logOut(context: Context): Flow<Boolean> {
+        val deviceId = getDeviceId(context)
+        return logIn(deviceId, deviceId)
+    }
+
+    private suspend fun collectCustomerFlow(
+        flow: Flow<Resource<Customer>>,
+    ): Flow<Boolean> {
         return flow {
             flow.collect {
                 when (it) {
                     is Resource.Fail -> {
-                        val error = it.error()
                         emit(false)
                     }
                     is Resource.Success -> {
                         val customer = it.body()
                         this@ShopRepository.customer = customer
-                        val result = createOrderOrGetCurrent(customer.id)
+                        val result = createOrderOrGetCurrent(customer.id, customer.currentOrderId)
                         mainDataStore.updateCustomerId(customer.id)
                         emit(result.isSuccessful)
                     }
@@ -228,34 +255,97 @@ class ShopRepository(
         }.flowOn(dispatcher)
     }
 
-    private suspend fun createOrderOrGetCurrent(customerId: Long): Resource<OrderItem> {
-        val result = remoteCustomer.getPendingOrders(customerId)
-        return if (result is Resource.Success) {
-            val orders = result.body()
+    suspend fun getOrder(orderId: Long): Resource<Order> {
+        return remoteCustomer.getOrder(orderId)
+    }
+
+    private suspend fun createOrderOrGetCurrent(customerId: Long, currentOrderId: Long): Resource<OrderItem> {
+        val orderResult = if (currentOrderId == -1L) {
+            remoteCustomer.createOrder(customerId)
+        } else {
+            getOrder(currentOrderId)
+        }
+
+        val order = if (orderResult is Resource.Success) {
+            orderResult.body()
+        } else {
+            return orderResult.map {
+                OrderItem.fromOrder(it, listOf())
+            }
+        }
+
+        val orderItemResult = orderToOrderItem(listOf(order)).map {
+            it[0]
+        }
+
+        val customerResult = if (orderItemResult is Resource.Success) {
+            currentOrder = orderItemResult.body()
+            val metaData = arrayListOf(
+                CustomerMetaData(
+                    CustomerInfo.CURRENT_ORDER_ID_KEY,
+                    currentOrder.id.toString(),
+                )
+            )
+            val rawCustomer = RawCustomer.from(
+                customer, metaData
+            )
+            updateCustomer(customerId, rawCustomer)
+        } else {
+            return orderItemResult
+        }
+
+        customer =  if (customerResult is Resource.Success) {
+            customerResult.body()
+        } else {
+            return Resource.fail(Exception("Unable to update the customer"))
+        }
+
+        return orderItemResult
+
+/*        val ordersResult = remoteCustomer.getPendingOrders(customerId)
+        return if (ordersResult is Resource.Success) {
+            val orders = ordersResult.body()
             val order = if (orders.isEmpty()) {
-                val order = remoteCustomer.createOrder(customer.id)
-                if (order is Resource.Success) {
-                    order.body()
+                val orderResult = remoteCustomer.createOrder(customer.id)
+                if (orderResult is Resource.Success) {
+                    orderResult.body()
                 } else {
-                    return order.map {
+                    return orderResult.map {
                         OrderItem.fromOrder(it, listOf())
                     }
                 }
             } else {
                 orders[0]
             }
-            return orderToOrderItem(listOf(order)).map {
+            val orderItemResult = orderToOrderItem(listOf(order)).map {
                 it[0]
-            }.also {
-                if (it is Resource.Success) {
-                    currentOrder = it.body()
+            }
+            return if (orderItemResult is Resource.Success) {
+                val orderItem = orderItemResult.body()
+                val metaData = arrayListOf(
+                    CustomerMetaData(
+                        CustomerInfo.CURRENT_ORDER_ID_KEY,
+                        orderItem.id.toString(),
+                    )
+                )
+                val rawCustomer = RawCustomer.from(
+                    customer, metaData
+                )
+                val customerResult = updateCustomer(customerId, rawCustomer)
+                if (customerResult is Resource.Success) {
+                    orderItemResult
+                } else {
+                    return Resource.fail(java.lang.Exception("Unable to update customer"))
                 }
+            } else {
+                orderItemResult
             }
         } else {
-            result.map {
+            ordersResult.map {
                 OrderItem.fromOrder(it[0], listOf())
             }
-        }
+        }*/
+
     }
 
     private suspend fun orderToOrderItem(orders: List<Order>): Resource<List<OrderItem>> {
@@ -286,7 +376,28 @@ class ShopRepository(
 
     fun getPendingOrder(customerId: Long): Flow<Resource<OrderItem>> {
         return safeApiCall(false) {
-            createOrderOrGetCurrent(customerId)
+            createOrderOrGetCurrent(customerId, customer.currentOrderId)
+        }
+    }
+
+    fun completeOrder(coupon: Coupon?, customerNote: String): Flow<Boolean> {
+        val newOrder = currentOrder.toSimpleOrder(
+            coupons = coupon?.let { arrayOf(it) } ?: arrayOf(),
+            note = customerNote,
+            status = OrderStatus.COMPLETED,
+        )
+        return flow {
+            var response = updateOrder(newOrder).asSuccess()
+            if (response is Resource.Success) {
+                response = createOrderOrGetCurrent(customer.id, customer.currentOrderId).asSuccess()
+                if (response is Resource.Success) {
+                    emit(true)
+                } else {
+                    emit(false)
+                }
+            } else {
+                emit(false)
+            }
         }
     }
 

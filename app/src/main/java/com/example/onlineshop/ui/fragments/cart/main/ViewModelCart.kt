@@ -3,8 +3,6 @@ package com.example.onlineshop.ui.fragments.cart.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import com.example.onlineshop.data.local.data_store.main.MainDataStore
 import com.example.onlineshop.data.model.order.Order
 import com.example.onlineshop.data.model.order.SimpleLineItem
 import com.example.onlineshop.data.repository.ShopRepository
@@ -13,11 +11,7 @@ import com.example.onlineshop.ui.model.OrderItem
 import com.example.onlineshop.utils.toSimpleLineItem
 import com.example.onlineshop.utils.toSimpleOrder
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -55,7 +49,7 @@ class ViewModelCart @Inject constructor(
     }
 
     fun updateCart(lineItem: SimpleLineItem, count: Int, cb: (Int) -> Unit) {
-        val lastOrder = repository.currentOrder.toSimpleOrder()
+        val lastOrder = repository.currentOrder.toSimpleOrder(arrayOf())
         val newOrder = lastOrder + lineItem.copy(count)
         viewModelScope.launch {
             repository.updateOrder(newOrder).asSuccess()?.let { success ->
@@ -64,7 +58,7 @@ class ViewModelCart @Inject constructor(
                         it.lineItem
                     }.firstOrNull { item ->
                         item.productId == lineItem.productId
-                    }?.count ?: lineItem.count
+                    }?.count ?: 0
                     cb(newCount)
                 }
             } ?: run {
@@ -73,11 +67,15 @@ class ViewModelCart @Inject constructor(
         }
     }
 
-    private fun getLineItemById(id: Long): SimpleLineItem {
+    private fun getLineItemById(productId: Long): SimpleLineItem {
         val order = repository.currentOrder
         return order.lineItems.firstOrNull {
-            it.product.id == id
-        }?.toSimpleLineItem() ?: SimpleLineItem(0, id, 0)
+            it.product.id == productId
+        }?.toSimpleLineItem() ?: SimpleLineItem(0, productId, 0)
+    }
+
+    fun getCount(productId: Long): Int {
+        return getLineItemById(productId).count
     }
 
     fun refreshOrder(): LiveData<OrderItem> {

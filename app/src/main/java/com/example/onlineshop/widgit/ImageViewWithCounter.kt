@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.core.view.setMargins
 import com.example.onlineshop.R
 import com.example.onlineshop.databinding.ImageViewWithCounterBinding
+import com.example.onlineshop.utils.loadImageInto
 
 class ImageViewWithCounter @JvmOverloads constructor(
     context: Context,
@@ -34,7 +35,7 @@ class ImageViewWithCounter @JvmOverloads constructor(
         val count = attribute.getInteger(R.styleable.ImageViewWithCounter_count, 0)
         setCount(count)
 
-        val src = attribute.getResourceId(R.styleable.ImageViewWithCounter_src, 0)
+        val src = attribute.getResourceId(R.styleable.ImageViewWithCounter_src, R.drawable.ic_product_default)
         setImageSrc(src)
 
         attribute.recycle()
@@ -42,6 +43,10 @@ class ImageViewWithCounter @JvmOverloads constructor(
 
     private fun setImageSrc(resourceId: Int) {
         binding.imageWithCounterImg.setImageResource(resourceId)
+    }
+
+    fun setImage(url: String) {
+        loadImageInto(url, binding.imageWithCounterImg)
     }
 
     private fun setCardSize(size: Int, margin: Int) {

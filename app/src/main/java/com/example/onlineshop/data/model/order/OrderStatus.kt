@@ -14,6 +14,7 @@ enum class OrderStatus(
     PROCESSING("processing"),
     @SerializedName("on-hold")
     ON_HOLD("on-hold"),
+    @SerializedName("completed")
     COMPLETED("completed");
 
     companion object {

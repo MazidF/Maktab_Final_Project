@@ -9,7 +9,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import com.example.onlineshop.R
 import com.example.onlineshop.data.local.data_store.main.MainDataStore
-import com.example.onlineshop.data.result.Resource
 import com.example.onlineshop.databinding.FragmentCurrentCartBinding
 import com.example.onlineshop.ui.fragments.FragmentConnectionObserver
 import com.example.onlineshop.ui.model.LineItemWithImage
@@ -49,12 +48,21 @@ class FragmentCurrentCart : FragmentConnectionObserver(R.layout.fragment_current
             onItemClick = this@FragmentCurrentCart::onItemClick,
             onCountChanged = { item, count, result ->
                 viewModel.updateCart(item.toSimpleLineItem(), count) {
-                    result(it)
+                    if (it <= 0) {
+                        onSuccess(viewModel.currentOrder())
+                    } else {
+                        result(it)
+                    }
                 }
             }
         )
         fragmentCartList.apply {
             adapter = productAdapter
+        }
+        fragmentCartContinueBtn.setOnClickListener {
+            navController.navigate(
+                FragmentCartDirections.actionFragmentCartToFragmentCartBuyingInfo()
+            )
         }
     }
 

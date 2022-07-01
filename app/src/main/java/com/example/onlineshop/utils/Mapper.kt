@@ -1,11 +1,9 @@
 package com.example.onlineshop.utils
 
 import com.example.onlineshop.data.model.Category
+import com.example.onlineshop.data.model.Coupon
 import com.example.onlineshop.data.model.Product
-import com.example.onlineshop.data.model.order.LineItem
-import com.example.onlineshop.data.model.order.Order
-import com.example.onlineshop.data.model.order.SimpleLineItem
-import com.example.onlineshop.data.model.order.SimpleOrder
+import com.example.onlineshop.data.model.order.*
 import com.example.onlineshop.ui.model.CategoryListItem
 import com.example.onlineshop.ui.model.ProductListItem
 import com.example.onlineshop.data.result.Resource
@@ -48,24 +46,32 @@ fun LineItemWithImage.toSimpleLineItem(): SimpleLineItem {
     return lineItem.toSimpleLineItem()
 }
 
-fun Order.toSimpleOrder(): SimpleOrder {
+fun Order.toSimpleOrder(coupons: Array<Coupon>, note: String = ""): SimpleOrder {
     return SimpleOrder(
         id = id,
-        customerId = customerId,
         status = status,
+        coupons = coupons,
+        customerId = customerId,
         lineItems = ArrayList(lineItems.map {
             it.toSimpleLineItem()
-        })
+        }),
+        note = note,
     )
 }
 
-fun OrderItem.toSimpleOrder(): SimpleOrder {
+fun OrderItem.toSimpleOrder(
+    coupons: Array<Coupon>,
+    note: String = "",
+    status: OrderStatus = this.status
+): SimpleOrder {
     return SimpleOrder(
         id = id,
-        customerId = customerId,
         status = status,
+        coupons = coupons,
+        customerId = customerId,
         lineItems = ArrayList(lineItems.map {
             it.toSimpleLineItem()
-        })
+        }),
+        note = note,
     )
 }

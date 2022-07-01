@@ -46,11 +46,11 @@ class MainActivity : AppCompatActivity() {
     private fun navigationInit() = with(binding) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.fragmentCart, R.id.fragmentProfile, R.id.fragmentHome, R.id.fragmentCategory, -> {
+                R.id.fragmentCart, R.id.fragmentHome, R.id.fragmentCategory, -> {
                     showAppbar()
                     bottomNavigation.isVisible = true
                 }
-                R.id.fragmentLogin -> {
+                R.id.fragmentLogin, R.id.fragmentProfile -> {
                     hideAppbar()
                     bottomNavigation.isVisible = true
                 }

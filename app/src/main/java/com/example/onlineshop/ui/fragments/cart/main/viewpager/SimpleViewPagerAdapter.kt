@@ -1,4 +1,4 @@
-package com.example.onlineshop.ui.fragments.cart.main
+package com.example.onlineshop.ui.fragments.cart.main.viewpager
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter

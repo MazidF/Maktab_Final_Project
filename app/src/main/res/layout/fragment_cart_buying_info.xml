@@ -20,7 +20,7 @@
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="7dp"
                 android:background="@color/white"
                 android:padding="10dp">
 
@@ -136,6 +136,7 @@
                             android:gravity="center_vertical">
 
                             <TextView
+                                android:id="@+id/fragment_cart_buying_product_counter"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -160,11 +161,12 @@
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/fragment_cart_buying_product_list"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="100dp"
                             android:layout_marginTop="10dp"
                             android:layout_marginBottom="10dp"
                             android:orientation="horizontal"
                             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                            app:reverseLayout="true"
                             app:spanCount="1" />
 
                         <LinearLayout
@@ -272,12 +274,27 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
-                            <ImageView
-                                android:id="@+id/fragment_cart_buying_discount_btn"
+                            <FrameLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_margin="5dp"
-                                android:src="@drawable/ic_add" />
+                                android:background="@color/light_gray">
+
+                                <ImageView
+                                    android:id="@+id/fragment_cart_buying_discount_btn"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:scaleType="fitCenter"
+                                    android:src="@drawable/ic_add" />
+
+                                <com.example.onlineshop.widgit.CustomLottie
+                                    android:id="@+id/fragment_cart_buying_discount_lottie"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@color/light_gray"
+                                    android:visibility="gone" />
+
+                            </FrameLayout>
 
                             <EditText
                                 android:id="@+id/fragment_cart_buying_discount_text"
@@ -301,11 +318,21 @@
 
             </LinearLayout>
 
+            <EditText
+                android:layout_marginTop="5sp"
+                android:id="@+id/fragment_cart_buying_note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:hint="توضیحات شما:"
+                android:padding="10dp"
+                android:maxLines="5"
+                android:minLines="3" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
                 android:background="@color/white"
                 android:orientation="vertical"
                 android:padding="10dp">
@@ -315,6 +342,7 @@
                     android:layout_height="wrap_content">
 
                     <TextView
+                        android:id="@+id/fragment_cart_buying_product_bottom_counter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="4 کالا" />
@@ -368,7 +396,7 @@
                         android:id="@+id/fragment_cart_buying_send_cost"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="103,100"
+                        android:text="50,000"
                         android:textColor="@color/black" />
 
                     <TextView
@@ -383,7 +411,8 @@
                     android:id="@+id/fragment_cart_buying_discount_box"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp">
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="@dimen/simple_item_icon_size"
@@ -394,7 +423,7 @@
                         android:id="@+id/fragment_cart_buying_discount_cost"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="103,100"
+                        android:text="0"
                         android:textColor="@color/discount_red" />
 
                     <TextView
@@ -433,6 +462,11 @@
 
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@color/white" />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
@@ -445,16 +479,29 @@
         android:paddingStart="20sp"
         android:paddingEnd="20sp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/fragment_cart_buying_save_btn"
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/discount_red"
-            android:padding="10dp"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"
-            android:text="ثبت خرید"
-            android:textSize="18dp" />
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/fragment_cart_buying_save_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/discount_red"
+                android:padding="10dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:text="ثبت خرید"
+                android:textSize="18dp" />
+
+            <com.example.onlineshop.widgit.CustomLottie
+                android:id="@+id/fragment_cart_buying_lottie"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                android:layout_width="60dp"
+                android:layout_height="30dp"/>
+
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="0dp"

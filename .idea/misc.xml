@@ -10,6 +10,7 @@
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_cart_empty.xml" value="0.1935" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_close.xml" value="0.1465" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_delete.xml" value="0.1365" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_green_check.xml" value="0.1415" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_info.xml" value="0.2595" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_left.xml" value="0.213" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_left_pointer.xml" value="0.213" />
@@ -22,6 +23,7 @@
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_private.xml" value="0.2595" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_profile_empty.xml" value="0.1" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_question.xml" value="0.1325" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_red_close.xml" value="0.1415" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_remove.xml" value="0.1" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_search.xml" value="0.1465" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/drawable-anydpi/ic_shopping_cart.xml" value="0.148" />
@@ -52,6 +54,7 @@
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_home.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_image_viewer.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_loadable.xml" value="0.128" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_location_setter.xml" value="0.16486486486486487" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_login.xml" value="0.264" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_network_connection_failed.xml" value="0.4" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_new_products.xml" value="0.16486486486486487" />
@@ -61,6 +64,7 @@
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_product_list.xml" value="0.1" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_profile.xml" value="0.176" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_review_list.xml" value="0.16486486486486487" />
+        <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_review_maker.xml" value="0.16486486486486487" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_search.xml" value="0.24561403508771928" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_setting.xml" value="0.16" />
         <entry key="..\:/Users/vcc/AndroidStudioProjects/OnlineShope/app/src/main/res/layout/fragment_slide_viewer.xml" value="0.25416666666666665" />

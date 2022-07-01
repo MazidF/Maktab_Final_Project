@@ -1,19 +1,21 @@
 package com.example.onlineshop.ui.model
 
-import android.graphics.Color
+import android.content.Context
+import com.example.onlineshop.R
 
 enum class Rate(
-    private val colorString: String,
+    val color: Int,
     val text: String,
 ) {
-    VERY_BAD("#F31818", "خیلی بد"),
-    BAD("#C37522", "بد"),
-    AVERAGE("#C3C022", "متوسط"),
-    GOOD("#20AA21", "خوب"),
-    VERY_GOOD("#077308", "خیلی خوب");
+    UNKNOWN(R.color.black, ""),
+    VERY_BAD(R.color.red, "خیلی بد"),
+    BAD(R.color.orange, "بد"),
+    AVERAGE(R.color.yellow, "معمولی"),
+    GOOD(R.color.light_green, "خوب"),
+    VERY_GOOD(R.color.green, "خیلی خوب");
 
-    fun color(): Int {
-        return Color.parseColor(colorString)
+    fun getColor(context: Context): Int {
+        return context.getColor(color)
     }
 
     companion object {

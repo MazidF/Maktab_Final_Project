@@ -62,7 +62,9 @@ class SettingItemView @JvmOverloads constructor(
             binding.settingItemSwitch.setOnClickListener(l)
             return
         }
-        super.setOnClickListener(l)
+        binding.settingItemBtn.setOnClickListener(l)
+        binding.settingItemText.setOnClickListener(l)
+        binding.settingItemIcon.setOnClickListener(l)
     }
 
     fun setIsChecked(value: Boolean) {

@@ -2,7 +2,9 @@ package com.example.onlineshop.data.remote
 
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.example.onlineshop.data.model.Coupon
 import com.example.onlineshop.data.model.customer.Customer
+import com.example.onlineshop.data.model.customer.CustomerInfo
 import com.example.onlineshop.data.model.customer.RawCustomer
 import com.example.onlineshop.data.model.customer.RawOrder
 import com.example.onlineshop.data.model.order.Order
@@ -43,6 +45,18 @@ class RemoteCustomerDataSource @Inject constructor(
         return api.getCustomer(userId).asResource()
     }
 
+    suspend fun getCustomerInfo(userId: Long): Resource<CustomerInfo> {
+        return api.getCustomerInfo(userId).asResource()
+    }
+
+    suspend fun getCoupon(code: String): Resource<Coupon?> {
+        return api.getCoupon(code).asResource().map {
+            it.firstOrNull { coupon ->
+                coupon.code == code
+            }
+        }
+    }
+
     suspend fun getCustomerByEmail(userEmail: String): Resource<Customer> {
         return api.getCustomer(userEmail).asResource().map {
             it[0]
@@ -55,6 +69,10 @@ class RemoteCustomerDataSource @Inject constructor(
 
     suspend fun logIn(customerId: Long): Resource<Customer> {
         return api.getCustomer(customerId).asResource()
+    }
+
+    suspend fun updateCustomer(customerId: Long, customer: RawCustomer): Resource<Customer> {
+        return api.updateCustomer(customerId, customer).asResource()
     }
 
     suspend fun updateOrder(order: SimpleOrder): Resource<Order> {
@@ -71,7 +89,7 @@ class RemoteCustomerDataSource @Inject constructor(
         id: Long,
     ) : Response<List<Order>> {
         return api.getOrders(
-            customerId = id, 1, 1,
+            customerId = id, 1, 10,
             status = OrderStatus.ON_HOLD.value,
         )
     }
@@ -90,5 +108,9 @@ class RemoteCustomerDataSource @Inject constructor(
 
     suspend fun getOrders(customerId: Long): Resource<List<Order>> {
         return api.getOrders(customerId, 1, 1000).asResource()
+    }
+
+    suspend fun getOrder(orderId: Long): Resource<Order> {
+        return api.getOrder(orderId).asResource()
     }
 }

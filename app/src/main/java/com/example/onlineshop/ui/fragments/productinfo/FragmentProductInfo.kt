@@ -49,7 +49,8 @@ class FragmentProductInfo : FragmentConnectionObserver(R.layout.fragment_product
     }
 
     private fun initView() = with(binding) {
-        viewModel.loadProductInfo(args.product)
+        val product = args.product
+        viewModel.loadProductInfo(product)
         productInfoClose.setOnClickListener {
             back()
         }
@@ -63,21 +64,27 @@ class FragmentProductInfo : FragmentConnectionObserver(R.layout.fragment_product
                 onProductItemClick(it)
             }
         }
-        productInfoAddReview.
-            setOnClickListener {
+        productInfoAddReview.setOnClickListener {
             navController.navigate(
                 FragmentProductInfoDirections.actionFragmentProductInfoToFragmentReviewMaker(
-                    args.product.id
+                    product.id
                 )
             )
         }
         productInfoAddToCart.apply {
-            val product = args.product
+            this.setupCount(cartViewModel.getCount(product.id))
             setOnCountChangeListener { count ->
                 cartViewModel.updateCart(product.id, count) { newCount ->
                     setLoadingResult(newCount)
                 }
             }
+        }
+        productInfoReviewsBtn.setOnClickListener {
+            navController.navigate(
+                FragmentProductInfoDirections.actionFragmentProductInfoToFragmentReviewList(
+                    product.id
+                )
+            )
         }
         reviewAdapter = ProductReviewAdapter {}
         binding.productInfoReviews.adapter = reviewAdapter
@@ -110,7 +117,13 @@ class FragmentProductInfo : FragmentConnectionObserver(R.layout.fragment_product
         launchOnState(Lifecycle.State.STARTED) {
             viewModel.reviewsStateFlow.collect {
                 if (it is Resource.Success) {
-                    reviewAdapter.submitList(it.body())
+                    val list = it.body()
+                    if (list.isEmpty()) {
+                        productInfoReviewsBtn.isVisible = false
+                        binding.productInfoReviews.isVisible = false
+                    } else {
+                        reviewAdapter.submitList(list)
+                    }
                 }
             }
         }

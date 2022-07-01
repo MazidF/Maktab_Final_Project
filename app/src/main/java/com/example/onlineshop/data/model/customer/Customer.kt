@@ -12,6 +12,7 @@ data class Customer(
     @SerializedName("last_name") val lastName: String,
     val username: String,
     val password: String,
+    val currentOrderId: Long,
 ) : Serializable {
 
     fun isFake(context: Context): Boolean {
